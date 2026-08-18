@@ -28,6 +28,7 @@ Additional Phase D artifacts:
 - `models/Qwen2.5-1.5B-GRPO-Smoke-step200/`
 - `reports/eval_Qwen2.5-1.5B-GRPO-Smoke-step200_pass1_results.json`
 - the saved training trace for the `step200` run
+- additional standalone `step200` seed outputs captured from Kaggle notebook logs
 
 Task definition:
 
@@ -484,6 +485,7 @@ All trained checkpoints below were evaluated with greedy pass@1 on the frozen `2
 | GRPO `step100` | `4.50%` | `9` | `2.50%` | `96.50%` | `51.00%` | `93` | `91` |
 | GRPO `step200`, seed `42` | `5.50%` | `11` | `0.00%` | `99.00%` | `65.50%` | `120` | `67` |
 | GRPO `step200`, seed `123` | `5.50%` | `11` | `0.00%` | `99.00%` | `61.50%` | `112` | `75` |
+| GRPO `step200`, seed `777` | `4.50%` | `9` | `0.50%` | `98.00%` | `60.00%` | `111` | `76` |
 | GRPO `step300` | `3.50%` | `7` | `0.50%` | `98.00%` | `61.50%` | `116` | `73` |
 
 Additional literal diagnostics:
@@ -494,6 +496,7 @@ Additional literal diagnostics:
 | GRPO `step100` | `84` | `7` |
 | GRPO `step200`, seed `42` | `61` | `6` |
 | GRPO `step200`, seed `123` | `70` | `5` |
+| GRPO `step200`, seed `777` | `72` | `4` |
 | GRPO `step300` | `68` | `5` |
 
 Puzzle-size success:
@@ -504,13 +507,14 @@ Puzzle-size success:
 | GRPO `step100` | `7` | `2` | `0` |
 | GRPO `step200`, seed `42` | `8` | `3` | `0` |
 | GRPO `step200`, seed `123` | `9` | `2` | `0` |
+| GRPO `step200`, seed `777` | `7` | `2` | `0` |
 | GRPO `step300` | `5` | `2` | `0` |
 
-The seed `123` standalone `step200` JSON report was not preserved locally, but the full metric output was captured from the Kaggle notebook output and is documented here. This is sufficient for smoke-run research notes, while future confirmatory runs should preserve the JSON report artifact.
+The seed `123` standalone `step200` JSON report was not preserved locally, but the full metric output was captured from the Kaggle notebook output and is documented here. The seed `777` standalone `step200` result was also captured from notebook output. This is sufficient for smoke-run research notes, while future confirmatory runs should preserve the JSON report artifact.
 
 ### Checkpoint sweep result
 
-After the standalone `step200` result reproduced across two seeds, a checkpoint-sweep run was executed with:
+After the first two standalone `step200` runs improved over baseline, a checkpoint-sweep run was executed with:
 
 - `max_steps = 300`
 - `seed = 123`
@@ -573,23 +577,23 @@ The training trace alone is not sufficient to judge success. The decisive metric
 
 ### Main Phase D findings
 
-The revised reward shaping improved structural compliance:
+The revised reward shaping improved structural compliance across standalone `step200` seeds:
 
 - format errors dropped strongly
 - safe parseability improved strongly
-- exact number usage improved from `40.50%` to `65.50%` at `step200`
-- forbidden literal introduction dropped from `54` cases to `6` at `step200`
+- exact number usage improved from the `40.50%` baseline to `60.00%`-`65.50%`
+- forbidden literal introduction dropped from `54` baseline cases to `4`-`6`
 
 The remaining dominant failure mode shifted toward arithmetic:
 
-- `step200` had `120` wrong-value failures
+- standalone `step200` seeds had `111`-`120` wrong-value failures
 - this means the model often obeyed the input-number constraint but still failed to compute the target expression
 
-The best training recipe so far is standalone `max_steps=200`:
+The best training recipe so far remains standalone `max_steps=200`, but the pass@1 improvement is not yet robust:
 
 - `step100` matched baseline at `4.50%`
-- standalone `step200` improved to `5.50%`
-- standalone `step200` reproduced `5.50%` across seeds `42` and `123`
+- standalone `step200` improved to `5.50%` for seeds `42` and `123`
+- standalone `step200` matched the `4.50%` baseline for seed `777`
 - `step300` regressed to `3.50%`
 - the `300`-step checkpoint sweep did not beat baseline at any saved checkpoint
 
@@ -597,8 +601,9 @@ Research interpretation:
 
 - Phase D has shown a real training signal
 - GRPO can improve verifier compliance reliably
-- there is replicated smoke-scale evidence of a small greedy pass@1 improvement with standalone `max_steps=200`
-- the `+2/200` gain is still small, but it is no longer a single-seed one-off
+- there is smoke-scale evidence that standalone `max_steps=200` can improve greedy pass@1, but the gain is not seed-robust yet
+- the `+2/200` gain appeared in `2/3` standalone seeds and disappeared in `1/3`
+- this is promising engineering evidence, not a final training result
 - training longer with the same schedule is not automatically better
 
 The `k=5` frontier remains unsolved:
@@ -607,6 +612,7 @@ The `k=5` frontier remains unsolved:
 - step100: `0` correct
 - standalone step200 seed `42`: `0` correct
 - standalone step200 seed `123`: `0` correct
+- standalone step200 seed `777`: `0` correct
 - step300: `0` correct
 - 300-step sweep checkpoints: `0` correct
 
@@ -614,7 +620,7 @@ This confirms that the first GRPO runs mostly affect easier `k=3` and `k=4` task
 
 ### Current checkpoint decision
 
-Preserve both standalone `step200` runs as the current best GRPO smoke artifacts.
+Preserve the standalone `step200` artifacts as the most informative GRPO smoke artifacts.
 
 Required preserved artifacts:
 
@@ -625,15 +631,17 @@ Required preserved artifacts:
 - training trace or notebook output
 - exact code snapshot used for the run
 
-Do not treat standalone `step300` or the `300`-step sweep checkpoints as improved checkpoints. They improved structural compliance but did not improve the primary metric.
+The seed `42` and seed `123` standalone `step200` runs are the best observed checkpoints by pass@1. The seed `777` run is equally important scientifically because it matched baseline while still improving structural compliance. Do not treat standalone `step300` or the `300`-step sweep checkpoints as improved checkpoints. They improved structural compliance but did not improve the primary metric.
 
 ### Next experiment decision
 
-The immediate reproducibility question has been answered at smoke scale:
+The immediate reproducibility question has been partially answered at smoke scale:
 
-- standalone `200`-step GRPO reached `5.50%` on two different seeds
+- standalone `200`-step GRPO reached `5.50%` on two seeds
+- standalone `200`-step GRPO matched the `4.50%` baseline on a third seed
+- therefore, the structural effect is reliable, but the pass@1 improvement is not yet reliable
 
-The next experiment should now target the remaining bottleneck rather than simply increasing steps.
+The next experiment should target the remaining bottleneck rather than simply increasing steps or repeating the same seed sweep.
 
 Recommended next direction:
 
@@ -664,16 +672,18 @@ What is established:
 - verifier reranking behaved as expected
 - GRPO smoke training runs successfully on Kaggle `T4`
 - revised reward shaping improves structural verifier compliance
-- standalone `max_steps=200` is the current best training recipe by greedy `pass@1`
-- standalone `step200` reproduced `5.50%` across two seeds
+- standalone `max_steps=200` is the most informative training recipe so far
+- standalone `step200` improved pass@1 in `2/3` seeds and matched baseline in `1/3`
 
 What remains unresolved:
 
 - whether additional training can convert `wrong_value` failures into correct solutions
 - whether `k=5` can be improved by this setup or needs a stronger curriculum/model/training recipe
+- whether pass@1 gains can be made robust across seeds
 
 Current recommendation:
 
-- keep standalone `step200` artifacts as the current best checkpoints
-- treat the `5.50%` result as promising and replicated at smoke scale
+- keep standalone `step200` artifacts as the current most informative smoke checkpoints
+- treat the `5.50%` result as promising but not yet robust
+- treat the seed `777` result as evidence that current GRPO mostly teaches verifier compliance, not reliably better arithmetic
 - next, test targeted recipe changes for arithmetic correctness rather than longer training alone
