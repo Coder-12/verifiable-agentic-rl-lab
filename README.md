@@ -127,7 +127,7 @@ Interpretation:
 ```text
 best-of-8 shows nontrivial latent capability
 GRPO improves verifier compliance strongly
-standalone step200 reproduced a small pass@1 gain across two seeds
+standalone step200 improved pass@1 in 2/3 seeds but matched baseline in 1/3
 longer training with the same setup did not reliably improve pass@1
 k=5 examples remain unsolved and are the main next frontier
 ```
