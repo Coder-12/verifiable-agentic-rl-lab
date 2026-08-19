@@ -10,6 +10,7 @@ Covered phases:
 - Phase B: `0.5B` verifier-reranked best-of-N debugging and latent-capability check
 - Phase C: `1.5B` main baseline evaluation on the frozen `200`-example set
 - Phase D: initial `1.5B` GRPO smoke training and checkpoint selection
+- Base-policy trainability audit under the exact GRPO rollout configuration
 
 This note is intended to be the professional reference point for Milestone 1
 baseline and first-pass GRPO smoke results.
@@ -22,6 +23,7 @@ Use these files as the baseline record:
 - `reports/eval_Qwen2.5-0.5B-Instruct_best_of_4_results.json`
 - `reports/eval_Qwen2.5-1.5B-Instruct_pass1_results.json`
 - `reports/eval_Qwen2.5-1.5B-Instruct_best_of_8_results.json`
+- `reports/eval_Qwen2.5-1.5B-Instruct_base_policy_capability_tasks200_g4_seed42.json`
 
 Additional Phase D artifacts:
 
@@ -114,6 +116,19 @@ KMP_DUPLICATE_LIB_OK=TRUE python scripts/eval_best_of_n.py \
   --batch-size 1 \
   --n 8 \
   --seed 42
+```
+
+### `1.5B` base-policy capability audit
+
+```bash
+python scripts/eval_base_policy_capability.py \
+  --model Qwen/Qwen2.5-1.5B-Instruct \
+  --num-prompts 200 \
+  --num-generations 4 \
+  --max-new-tokens 128 \
+  --batch-size 4 \
+  --dataset-seed 42 \
+  --generation-seed 42
 ```
 
 ## Phase A and B Summary: `0.5B`
@@ -299,6 +314,28 @@ Meaning:
 - measures whether verifier-guided selection can recover good samples reliably
 - especially important because Phase D training will optimize against the same verifier logic
 
+### Base-policy rollout audit metrics
+
+Question answered:
+
+- under the exact GRPO rollout configuration, does the base policy expose enough reward-diverse and occasionally correct trajectories for RL to learn from?
+
+Important distinction:
+
+- this is not greedy `pass@1`
+- this is not the official frozen-set best-of-N baseline
+- this is an inference-only trainability diagnostic on fresh training-distribution tasks
+
+Key metrics:
+
+- `sample_1_success_rate`: correctness of the first sampled rollout in each group; useful as a one-sample stochastic reference, but not decisive for GRPO
+- `correct_rollout_rate`: correct completions divided by all sampled completions
+- `group_success_rate`: groups with at least one correct completion among the sampled rollouts
+- `success_variance_group_rate`: groups containing a correct sample and at least one lower-reward sample
+- `structural_only_variance_group_rate`: groups with reward variation but no correct sample
+
+For GRPO trainability, `group_success_rate` and `success_variance_group_rate` are more important than `sample_1_success_rate`, because GRPO learns from within-group relative rewards.
+
 ## Main Research Conclusion Before Training
 
 At the end of Phase C:
@@ -412,6 +449,137 @@ What it does not prove:
 - that every best-of-N uplift should be interpreted as independent-sample capability
 
 This distinction is important. The current weakness profile should be understood primarily as model weakness, which is exactly the motivation for Phase D training.
+
+## Base-Policy Trainability Audit
+
+After the first GRPO smoke runs, an additional inference-only audit was run on the untouched `Qwen/Qwen2.5-1.5B-Instruct` base policy.
+
+Purpose:
+
+- diagnose whether direct GRPO has enough successful and reward-diverse rollouts to exploit
+- avoid guessing whether weak GRPO improvement was caused by model capability, exploration, optimization, or task difficulty
+- measure the starting policy under the same rollout settings used during GRPO training
+
+Source:
+
+- `reports/eval_Qwen2.5-1.5B-Instruct_base_policy_capability_tasks200_g4_seed42.json`
+
+Configuration:
+
+- model: `Qwen/Qwen2.5-1.5B-Instruct`
+- dataset: fresh training-distribution Countdown tasks
+- prompt: current locked Countdown prompt
+- verifier: strict symbolic verifier
+- reward mapping: current GRPO reward mapping
+- prompt groups: `200`
+- rollouts per prompt: `4`
+- total completions: `800`
+- decoding: `temperature = 0.7`, `top_p = 0.95`, `max_new_tokens = 128`
+- dataset seed: `42`
+- generation seed: `42`
+- device used: local `mps`
+
+### Overall Audit Result
+
+| Metric | Value |
+| --- | ---: |
+| Sample-1 success rate | `1.50%` |
+| Correct rollout rate | `3.12%` |
+| Group success rate | `10.50%` |
+| Verifier-reranked group success | `10.50%` |
+| Nonzero reward-variance group rate | `91.50%` |
+| Success-variance group rate | `10.50%` |
+| Structural-only variance group rate | `81.00%` |
+| All-zero group rate | `8.00%` |
+
+Reward distribution across `800` sampled completions:
+
+| Reward | Count | Meaning |
+| ---: | ---: | --- |
+| `1.0` | `25` | correct expression |
+| `0.3` | `140` | exact numbers, wrong value |
+| `0.05` | `221` | wrong number usage |
+| `0.0` | `414` | invalid, unsafe, parse/format failure, or zero-reward failure |
+
+Status counts across all sampled completions:
+
+| Status | Count |
+| --- | ---: |
+| `format_error` | `367` |
+| `wrong_numbers` | `221` |
+| `wrong_value` | `140` |
+| `parse_error` | `27` |
+| `unsafe_expression` | `20` |
+| `correct` | `25` |
+
+Interpretation:
+
+- the model exposes real correct trajectories under GRPO-style sampling, but they are sparse
+- reward variance is abundant, but most of it is structural rather than success-based
+- direct GRPO therefore has enough signal to improve compliance, but limited signal to reliably improve final correctness
+- this explains why smoke GRPO improved formatting, parseability, and number usage more reliably than `pass@1`
+
+### Audit Result by Puzzle Size
+
+| Puzzle size | Groups | Correct rollout rate | Group success | Success variance | Structural-only variance | All-zero groups |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `k=3` | `67` | `7.46%` | `23.88%` | `23.88%` | `73.13%` | `2.99%` |
+| `k=4` | `67` | `1.49%` | `5.97%` | `5.97%` | `82.09%` | `10.45%` |
+| `k=5` | `66` | `0.38%` | `1.52%` | `1.52%` | `87.88%` | `10.61%` |
+
+Additional by-size diagnostics:
+
+| Puzzle size | Safe parseable | Exact number usage | Mean reward | Selected mean reward |
+| --- | ---: | ---: | ---: | ---: |
+| `k=3` | `61.94%` | `36.94%` | `0.176` | `0.425` |
+| `k=4` | `45.52%` | `19.03%` | `0.081` | `0.232` |
+| `k=5` | `37.12%` | `5.68%` | `0.035` | `0.108` |
+
+Interpretation by difficulty:
+
+- `k=3` is directly trainable with GRPO under the current rollout settings
+- `k=4` has sparse but real success discovery and is a reasonable curriculum target
+- `k=5` has almost no success discovery under `G=4`, making direct sparse GRPO unlikely to improve it reliably at this stage
+
+### Relationship to Best-of-N and GRPO Smoke Results
+
+The audit complements the earlier frozen-set best-of-8 baseline.
+
+Best-of-8 showed:
+
+- the base model has latent Countdown capability
+- correct samples can be found for `k=3` and `k=4`
+- `k=5` remained unsolved in the official best-of-8 baseline
+
+The base-policy audit shows:
+
+- under the actual GRPO rollout setting of `G=4`, success signal is much weaker than the best-of-8 headline might suggest
+- `k=3` provides useful success-variance signal
+- `k=4` provides limited but nonzero success-variance signal
+- `k=5` provides almost no success-variance signal
+
+This explains the observed GRPO smoke behavior:
+
+- GRPO learned structural compliance because structural reward variance was common
+- GRPO did not reliably improve `pass@1` because success-variance signal was sparse
+- `k=5` did not improve because successful `k=5` rollouts were almost never discovered
+
+Important caveat:
+
+- length-limit diagnostics in this audit should be treated as approximate, because batched generation and padding can make length-limit flags conservative
+- the correctness, reward, verifier status, and by-size capability metrics are the primary decision evidence
+
+### Audit Conclusion
+
+The current `1.5B` instruction-tuned model is a valid small-model starting point for Milestone 1, but direct full-distribution GRPO is not the highest-ROI next step.
+
+Evidence-supported conclusion:
+
+- direct GRPO is supported for `k=3`
+- direct GRPO is weakly supported for `k=4`
+- direct GRPO is not yet supported for `k=5` under the current rollout budget
+
+The next experiment should therefore use curriculum/data shaping toward `k=3` and `k=4`, while continuing to evaluate on the unchanged frozen `200`-example set.
 
 ## Phase D GRPO Smoke Training
 
@@ -641,6 +809,8 @@ The immediate reproducibility question has been partially answered at smoke scal
 - standalone `200`-step GRPO matched the `4.50%` baseline on a third seed
 - therefore, the structural effect is reliable, but the pass@1 improvement is not yet reliable
 
+The base-policy trainability audit further explains why: the current rollout distribution has abundant structural reward variance but sparse success variance, especially beyond `k=3`.
+
 The next experiment should target the remaining bottleneck rather than simply increasing steps or repeating the same seed sweep.
 
 Recommended next direction:
@@ -651,13 +821,14 @@ Recommended next direction:
 
 Most likely next intervention:
 
-- curriculum or data shaping toward easier `k=3` and `k=4` tasks first
+- curriculum or data shaping toward `k=3` and `k=4` tasks first
 - continue evaluating on the full frozen `200`-example set
 
 Reason:
 
 - all observed gains are in `k=3` and `k=4`
-- `k=5` remains at `0` correct
+- the base-policy audit shows enough success-variance signal for `k=3`, sparse but usable signal for `k=4`, and almost no signal for `k=5`
+- `k=5` remains at `0` correct in trained-checkpoint evaluation
 - the dominant remaining failure mode is `wrong_value`, not format error or forbidden literals
 - reward shaping is now doing its structural job, so the next bottleneck is arithmetic search/reasoning
 
@@ -670,6 +841,7 @@ What is established:
 - baseline eval was completed on the intended main model
 - latent capability was demonstrated with best-of-8
 - verifier reranking behaved as expected
+- base-policy trainability under GRPO-style rollout settings was measured directly
 - GRPO smoke training runs successfully on Kaggle `T4`
 - revised reward shaping improves structural verifier compliance
 - standalone `max_steps=200` is the most informative training recipe so far
@@ -686,4 +858,5 @@ Current recommendation:
 - keep standalone `step200` artifacts as the current most informative smoke checkpoints
 - treat the `5.50%` result as promising but not yet robust
 - treat the seed `777` result as evidence that current GRPO mostly teaches verifier compliance, not reliably better arithmetic
-- next, test targeted recipe changes for arithmetic correctness rather than longer training alone
+- use the base-policy trainability audit to justify a targeted `k=3/k=4` curriculum GRPO experiment
+- do not expect direct full-distribution GRPO to solve `k=5` yet under the current rollout budget
