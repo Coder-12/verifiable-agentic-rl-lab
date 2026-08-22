@@ -21,7 +21,11 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from src.tasks.countdown.eval_utils import analyze_expression, trim_generated_ids
+from src.tasks.countdown.eval_utils import (
+    analyze_expression,
+    resolve_pass1_report_path,
+    trim_generated_ids,
+)
 from src.tasks.countdown.prompts import (
     COUNTDOWN_SYSTEM_PROMPT,
     extract_answer,
@@ -117,6 +121,12 @@ def main() -> None:
     parser.add_argument("--dataset", type=str, default="data/countdown_eval_200.json")
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--max-new-tokens", type=int, default=256)
+    parser.add_argument(
+        "--report-path",
+        type=str,
+        default=None,
+        help="Optional explicit artifact path; required when checkpoint names would collide.",
+    )
     args = parser.parse_args()
 
     device = get_device()
@@ -259,10 +269,8 @@ def main() -> None:
         print(f"  - k={k}: {dict(counts)}")
     print("=" * 40)
 
-    reports_dir = Path("reports")
-    reports_dir.mkdir(parents=True, exist_ok=True)
-    safe_checkpoint_name = Path(args.model).name
-    report_path = reports_dir / f"eval_{safe_checkpoint_name}_pass1_results.json"
+    report_path = resolve_pass1_report_path(args.model, args.report_path)
+    report_path.parent.mkdir(parents=True, exist_ok=True)
     with report_path.open("w", encoding="utf-8") as f:
         json.dump(
             {

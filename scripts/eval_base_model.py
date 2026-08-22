@@ -14,6 +14,7 @@ Edge cases handled:
 import sys
 import os
 import argparse
+from importlib import metadata as importlib_metadata
 import json
 import platform
 from collections import Counter, defaultdict
@@ -34,7 +35,11 @@ from src.tasks.countdown.prompts import (
     extract_answer,
     format_countdown_prompt,
 )
-from src.tasks.countdown.eval_utils import analyze_expression, trim_generated_ids
+from src.tasks.countdown.eval_utils import (
+    analyze_expression,
+    resolve_pass1_report_path,
+    trim_generated_ids,
+)
 from src.tasks.countdown.reward import reward_from_verification_result
 from src.tasks.countdown.verifier import verify_countdown_expression
 
@@ -89,6 +94,8 @@ def build_report_config(
     device: torch.device,
     model_dtype: torch.dtype,
     dataset_size: int,
+    model_revision: str | None = None,
+    tokenizer_revision: str | None = None,
 ) -> dict[str, Any]:
     """Captures the run configuration needed to reproduce an evaluation artifact."""
     return {
@@ -98,20 +105,42 @@ def build_report_config(
         "batch_size": args.batch_size,
         "device": str(device),
         "torch_dtype": str(model_dtype),
+        "model_revision": model_revision,
+        "tokenizer_revision": tokenizer_revision,
         "decoding": {
             "strategy": "greedy",
-            "max_new_tokens": 256,
+            "max_new_tokens": args.max_new_tokens,
             "do_sample": False,
         },
         "environment": {
             "python": platform.python_version(),
             "torch": torch.__version__,
             "transformers": transformers.__version__,
+            "packages": {
+                name: _package_version(name)
+                for name in ("torch", "transformers", "datasets", "accelerate", "trl", "peft")
+            },
         },
         "command": {
             "argv": sys.argv,
         },
     }
+
+
+def _package_version(name: str) -> str | None:
+    try:
+        return importlib_metadata.version(name)
+    except importlib_metadata.PackageNotFoundError:
+        return None
+
+
+def _resolved_revision(resource: Any) -> str | None:
+    commit_hash = getattr(resource, "_commit_hash", None)
+    if commit_hash:
+        return str(commit_hash)
+    init_kwargs = getattr(resource, "init_kwargs", {})
+    commit_hash = init_kwargs.get("_commit_hash") if isinstance(init_kwargs, dict) else None
+    return str(commit_hash) if commit_hash else None
 
 
 @torch.no_grad()
@@ -123,6 +152,13 @@ def main() -> None:
                         help="Path to the evaluation dataset")
     parser.add_argument("--batch-size", type=int, default=1,
                         help="Batch size for generation. Adjust based on M1 RAM.")
+    parser.add_argument("--max-new-tokens", type=int, default=256)
+    parser.add_argument(
+        "--report-path",
+        type=str,
+        default=None,
+        help="Optional explicit artifact path; avoids overwriting historical reports.",
+    )
     args = parser.parse_args()
 
     # 1. Setup Environment
@@ -149,6 +185,8 @@ def main() -> None:
         device=device,
         model_dtype=model_dtype,
         dataset_size=len(dataset),
+        model_revision=_resolved_revision(model.config),
+        tokenizer_revision=_resolved_revision(tokenizer),
     )
     
     # 3. Generation Loop
@@ -165,7 +203,7 @@ def main() -> None:
         # Greedy decoding for pass@1 (temperature=0.0 is deterministic)
         output_ids = model.generate(
             **inputs,
-            max_new_tokens=256,
+            max_new_tokens=args.max_new_tokens,
             do_sample=False,
             pad_token_id=tokenizer.pad_token_id,
         )
@@ -272,11 +310,8 @@ def main() -> None:
     print("="*40)
 
     # 6. Save Artifacts for Manual Analysis
-    reports_dir = Path("reports")
-    reports_dir.mkdir(parents=True, exist_ok=True)
-    
-    safe_model_name = args.model.split("/")[-1]
-    report_path = reports_dir / f"eval_{safe_model_name}_pass1_results.json"
+    report_path = resolve_pass1_report_path(args.model, args.report_path)
+    report_path.parent.mkdir(parents=True, exist_ok=True)
     
     with report_path.open("w", encoding="utf-8") as f:
         json.dump(

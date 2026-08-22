@@ -1,0 +1,86 @@
+{
+  "base_report": "reports/eval_Qwen2.5-1.5B-Instruct_pass1_results.json",
+  "comparisons": {
+    "seed42": {
+      "treatment_report": "reports/eval_Qwen2.5-1.5B-GRPO-correctness-only-step200-seed42_pass1_results.json",
+      "base_correct_count": 9,
+      "treatment_correct_count": 9,
+      "task_count": 200,
+      "transitions": {
+        "gained": 6,
+        "lost": 6,
+        "both_correct": 3,
+        "both_incorrect": 185
+      },
+      "transitions_by_k": {
+        "3": {
+          "gained": 5,
+          "lost": 4,
+          "both_correct": 3,
+          "both_incorrect": 73
+        },
+        "4": {
+          "gained": 1,
+          "lost": 2,
+          "both_correct": 0,
+          "both_incorrect": 62
+        },
+        "5": {
+          "gained": 0,
+          "lost": 0,
+          "both_correct": 0,
+          "both_incorrect": 50
+        }
+      },
+      "descriptive_exact_sign_test_p_value": 1.0,
+      "metric_deltas": {
+        "pass_at_1": 0.0,
+        "format_error_rate": -7.0,
+        "safe_parseable_rate": 11.5,
+        "exact_number_usage_rate": 7.0,
+        "mean_reward": -0.006750000000000395
+      }
+    },
+    "seed777": {
+      "treatment_report": "reports/eval_Qwen2.5-1.5B-GRPO-correctness-only-step200-seed777_pass1_results.json",
+      "base_correct_count": 9,
+      "treatment_correct_count": 8,
+      "task_count": 200,
+      "transitions": {
+        "gained": 3,
+        "lost": 4,
+        "both_correct": 5,
+        "both_incorrect": 188
+      },
+      "transitions_by_k": {
+        "3": {
+          "gained": 3,
+          "lost": 3,
+          "both_correct": 4,
+          "both_incorrect": 75
+        },
+        "4": {
+          "gained": 0,
+          "lost": 1,
+          "both_correct": 1,
+          "both_incorrect": 63
+        },
+        "5": {
+          "gained": 0,
+          "lost": 0,
+          "both_correct": 0,
+          "both_incorrect": 50
+        }
+      },
+      "descriptive_exact_sign_test_p_value": 1.0,
+      "metric_deltas": {
+        "pass_at_1": -0.5,
+        "format_error_rate": 9.0,
+        "safe_parseable_rate": -9.5,
+        "exact_number_usage_rate": -8.0,
+        "mean_reward": -0.05824999999999986
+      }
+    }
+  },
+  "note": "Paired uncertainty is descriptive for this 200-task Milestone 1 protocol; it is not a population-level significance claim."
+}

@@ -1,0 +1,5277 @@
+{
+  "config": {
+    "adapter_path": "models/Qwen2.5-1.5B-GRPO-correctness-only-step200-seed42/checkpoint-100",
+    "dataset": "data/countdown_eval_200.json",
+    "dataset_size": 200,
+    "batch_size": 1,
+    "device": "cuda",
+    "torch_dtype": "torch.float16",
+    "decoding": {
+      "strategy": "greedy",
+      "max_new_tokens": 256,
+      "do_sample": false
+    },
+    "environment": {
+      "python": "3.12.13",
+      "torch": "2.10.0+cu128",
+      "transformers": "5.0.0"
+    },
+    "command": {
+      "argv": [
+        "scripts/eval_grpo_model.py",
+        "--model",
+        "models/Qwen2.5-1.5B-GRPO-correctness-only-step200-seed42/checkpoint-100",
+        "--dataset",
+        "data/countdown_eval_200.json",
+        "--batch-size",
+        "1",
+        "--max-new-tokens",
+        "256",
+        "--report-path",
+        "reports/eval_Qwen2.5-1.5B-GRPO-correctness-only-step100-seed42_pass1_results.json"
+      ]
+    }
+  },
+  "metrics": {
+    "pass_at_1": 4.5,
+    "format_error_rate": 3.0,
+    "safe_parseable_rate": 95.5,
+    "exact_number_usage_rate": 50.0,
+    "mean_reward": 0.20424999999999977,
+    "avg_output_length": 125.835,
+    "status_counts": {
+      "wrong_numbers": 91,
+      "wrong_value": 91,
+      "correct": 9,
+      "format_error": 6,
+      "unsafe_expression": 3
+    },
+    "status_counts_by_k": {
+      "4": {
+        "wrong_numbers": 40,
+        "wrong_value": 21,
+        "unsafe_expression": 1,
+        "format_error": 2,
+        "correct": 1
+      },
+      "3": {
+        "wrong_value": 68,
+        "correct": 8,
+        "format_error": 3,
+        "wrong_numbers": 6
+      },
+      "5": {
+        "wrong_numbers": 45,
+        "wrong_value": 2,
+        "unsafe_expression": 2,
+        "format_error": 1
+      }
+    },
+    "uses_too_few_literals_count": 79,
+    "introduces_forbidden_literals_count": 12
+  },
+  "results": [
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          10,
+          13
+        ],
+        "target": 23,
+        "expected_solution": "(10 - (13 * (5 - 6)))"
+      },
+      "completion": "<reasoning>\n(10 - 5) * 13 = 23.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 5) * 13</answer>",
+      "extracted_math": "(10 - 5) * 13",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        10,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          8,
+          9,
+          11
+        ],
+        "target": 4,
+        "expected_solution": "(11 - (7 / (9 - 8)))"
+      },
+      "completion": "<reasoning>\n(11 - 9) * 7 = 4.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(11 - 9) * 7</answer>",
+      "extracted_math": "(11 - 9) * 7",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        11,
+        9
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          7,
+          8,
+          11
+        ],
+        "target": 168,
+        "expected_solution": "(7 * (5 + (11 + 8)))"
+      },
+      "completion": "<reasoning>\n(11 * 8) + (7 * 5) = 168.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(11 * 8) + (7 * 5)</answer>",
+      "extracted_math": "(11 * 8) + (7 * 5)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        8,
+        7,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          16,
+          18
+        ],
+        "target": 198,
+        "expected_solution": "(18 * (16 - 5))"
+      },
+      "completion": "<reasoning>\n(16 * 18) + 5 = 198.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 * 18) + 5</answer>",
+      "extracted_math": "(16 * 18) + 5",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        16,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          4,
+          17
+        ],
+        "target": 25,
+        "expected_solution": "(4 + (17 + 4))"
+      },
+      "completion": "<reasoning>\n(17 - 4) * 4 = 25.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 4) * 4</answer>",
+      "extracted_math": "(17 - 4) * 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        17,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          12,
+          13,
+          15
+        ],
+        "target": 2340,
+        "expected_solution": "(13 * (12 * 15))"
+      },
+      "completion": "<reasoning>\n(15 * 13) * 12 = 2340.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 13) * 12</answer>",
+      "extracted_math": "(15 * 13) * 12",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        15,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          12,
+          17
+        ],
+        "target": 197,
+        "expected_solution": "(17 + (3 * (12 * 5)))"
+      },
+      "completion": "<reasoning>\n(17 * 12) + (5 * 3) = 197.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 * 12) + (5 * 3)</answer>",
+      "extracted_math": "(17 * 12) + (5 * 3)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        12,
+        5,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          9,
+          12,
+          15
+        ],
+        "target": 22,
+        "expected_solution": "(4 - (9 - (15 + 12)))"
+      },
+      "completion": "<reasoning>\n(12 - 4) * 15 = 180.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 4) * 15</answer>",
+      "extracted_math": "(12 - 4) * 15",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        12,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          10,
+          14,
+          16
+        ],
+        "target": 3680,
+        "expected_solution": "(16 * (10 * (14 + 9)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 10 to get 160.\nNext, we can add 9 to 160 to get 169.\nThen, we can subtract 14 from 169 to get 155.\nFinally, we can multiply 155 by 10 again to get 1550.\nWe then need to multiply 1550 by 2 to get 3100.\nFinally, we need to multiply 3100 by 16 to get 3680.\n</reasoning>\n<answer>16 * (169 - 14 + 10 * 10)</answer>",
+      "extracted_math": "16 * (169 - 14 + 10 * 10)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        169,
+        14,
+        10,
+        10
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          11,
+          13,
+          20
+        ],
+        "target": 55,
+        "expected_solution": "(11 + (13 + (20 + 11)))"
+      },
+      "completion": "<reasoning>\n(11 + 11) * 13 = 55.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(11 + 11) * 13</answer>",
+      "extracted_math": "(11 + 11) * 13",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        11,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          11,
+          16,
+          19
+        ],
+        "target": 15,
+        "expected_solution": "(16 - (8 / (19 - 11)))"
+      },
+      "completion": "<reasoning>\n(19 - 11) * 8 = 15.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 11) * 8</answer>",
+      "extracted_math": "(19 - 11) * 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        19,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          10,
+          14,
+          16
+        ],
+        "target": 682,
+        "expected_solution": "(10 + (16 * (14 * 3)))"
+      },
+      "completion": "<reasoning>\n(16 * 14) + (10 * 3) = 682.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 * 14) + (10 * 3)</answer>",
+      "extracted_math": "(16 * 14) + (10 * 3)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        14,
+        10,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          17,
+          17,
+          18
+        ],
+        "target": 144,
+        "expected_solution": "(8 / (17 / (18 * 17)))"
+      },
+      "completion": "<reasoning>\n(17 - 8) * 18 = 144.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 8) * 18</answer>",
+      "extracted_math": "(17 - 8) * 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        17,
+        8
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          14,
+          15,
+          18
+        ],
+        "target": 9,
+        "expected_solution": "(14 + (18 - (15 + 8)))"
+      },
+      "completion": "<reasoning>\n(15 - 14) * 18 = 9.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 - 14) * 18</answer>",
+      "extracted_math": "(15 - 14) * 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        15,
+        14
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          7,
+          7,
+          9
+        ],
+        "target": 79,
+        "expected_solution": "(7 + (9 * (7 + 1)))"
+      },
+      "completion": "<reasoning>\n(9 - 7) * 7 = 79.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(9 - 7) * 7</answer>",
+      "extracted_math": "(9 - 7) * 7",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        9,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          13,
+          13,
+          20,
+          20
+        ],
+        "target": 5720,
+        "expected_solution": "(20 * (13 * (20 - (11 - 13))))"
+      },
+      "completion": "<reasoning>\n(20 * 20) + (13 * 13) = 5720.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 * 20) + (13 * 13)</answer>",
+      "extracted_math": "(20 * 20) + (13 * 13)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        20,
+        13,
+        13
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          12,
+          17
+        ],
+        "target": 264,
+        "expected_solution": "(12 * (17 + 5))"
+      },
+      "completion": "<reasoning>\n(17 * 12) + 5 = 209.\n209 * 1.2 = 249.8.\n249.8 - 4.2 = 245.6.\n245.6 - 8.4 = 237.2.\n237.2 - 0.8 = 236.4.\n236.4 - 0.6 = 235.8.\n235.8 - 0.2 = 235.6.\n235.6 - 0.6 = 235.\n235 - 0.4 = 234.6.\n234.6 - 0.4 = 234.\n234 - 0.6 = 233.4.\n233.4 - 0.6 = 232.8.\n232.8 - 0.6 = 232.2.\n232.2 - 0.6 = 231.6.\n231.6 - 0.6 =",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          6,
+          16,
+          18,
+          18
+        ],
+        "target": 7,
+        "expected_solution": "(16 + (6 * (18 / (6 - 18))))"
+      },
+      "completion": "<reasoning>\n(18 - 16) * 6 = 7.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 16) * 6</answer>",
+      "extracted_math": "(18 - 16) * 6",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        18,
+        16
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          9,
+          12,
+          18,
+          18
+        ],
+        "target": 1,
+        "expected_solution": "(9 - (18 / (18 / (12 - 4))))"
+      },
+      "completion": "<reasoning>\n(18 - 12) * (18 - 9) = 6 * 9 = 54.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 12) * (18 - 9)</answer>",
+      "extracted_math": "(18 - 12) * (18 - 9)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        12,
+        18,
+        9
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          3,
+          12,
+          15,
+          18
+        ],
+        "target": 36,
+        "expected_solution": "(12 * (3 * (18 / (15 + 3))))"
+      },
+      "completion": "<reasoning>\n(12 / 3) * (15 / 3) = 36.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 / 3) * (15 / 3)</answer>",
+      "extracted_math": "(12 / 3) * (15 / 3)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        3,
+        15,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          9,
+          12
+        ],
+        "target": 4,
+        "expected_solution": "(3 * (12 / 9))"
+      },
+      "completion": "<reasoning>\n(12 - 9) * 3 = 4.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 9) * 3</answer>",
+      "extracted_math": "(12 - 9) * 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        12,
+        9
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          4,
+          7,
+          16
+        ],
+        "target": 9,
+        "expected_solution": "(4 - (16 - (7 * (3 * 1))))"
+      },
+      "completion": "<reasoning>\n(16 - 7) * 3 = 9.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 - 7) * 3</answer>",
+      "extracted_math": "(16 - 7) * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        16,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          7,
+          12,
+          15
+        ],
+        "target": 7,
+        "expected_solution": "(15 - (12 - (6 + (5 - 7))))"
+      },
+      "completion": "<reasoning>\n(12 / 6) * 5 = 10.\n15 - 10 = 5.\n5 - 7 = -2.\n(-2) * (-1) = 2.\n</reasoning>\n<answer>(12 / 6) * 5 - 15 + 7</answer>",
+      "extracted_math": "(12 / 6) * 5 - 15 + 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        15,
+        5,
+        12,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          18,
+          20,
+          20
+        ],
+        "target": 18,
+        "expected_solution": "(18 / (20 / 20))"
+      },
+      "completion": "<reasoning>\n(20 - 18) * 20 = 18.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 - 18) * 20</answer>",
+      "extracted_math": "(20 - 18) * 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        20,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          3,
+          19
+        ],
+        "target": 25,
+        "expected_solution": "(19 + (3 + (1 * 3)))"
+      },
+      "completion": "<reasoning>\n(19 - 3) * 3 = 25.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 3) * 3</answer>",
+      "extracted_math": "(19 - 3) * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        19,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          18,
+          18,
+          20
+        ],
+        "target": 6480,
+        "expected_solution": "(20 * (18 * 18))"
+      },
+      "completion": "<reasoning>\n(18 * 18) * 20 = 6480.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 * 18) * 20</answer>",
+      "extracted_math": "(18 * 18) * 20",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        18,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          10,
+          14,
+          19
+        ],
+        "target": 61,
+        "expected_solution": "(14 - (10 - (19 * 3)))"
+      },
+      "completion": "<reasoning>\n(19 - 10) * 14 = 61.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 10) * 14</answer>",
+      "extracted_math": "(19 - 10) * 14",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        19,
+        10
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          1,
+          5
+        ],
+        "target": 6,
+        "expected_solution": "(1 * (5 + 1))"
+      },
+      "completion": "<reasoning>\n(1 + 1) * 5 = 6.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(1 + 1) * 5</answer>",
+      "extracted_math": "(1 + 1) * 5",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        1,
+        1
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          6,
+          17
+        ],
+        "target": 104,
+        "expected_solution": "(2 + (6 * 17))"
+      },
+      "completion": "<reasoning>\n(17 - 6) * 2 = 104.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 6) * 2</answer>",
+      "extracted_math": "(17 - 6) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        17,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          15,
+          18
+        ],
+        "target": 34,
+        "expected_solution": "(1 + (18 + 15))"
+      },
+      "completion": "<reasoning>\n(15 - 1) * 18 = 34.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 - 1) * 18</answer>",
+      "extracted_math": "(15 - 1) * 18",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        15,
+        1
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          9
+        ],
+        "target": 1,
+        "expected_solution": "(9 - (3 + 5))"
+      },
+      "completion": "<reasoning>\n(9 - 5) / 3 = 1.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(9 - 5) / 3</answer>",
+      "extracted_math": "(9 - 5) / 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        9,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          19
+        ],
+        "target": 96,
+        "expected_solution": "(4 * (5 + 19))"
+      },
+      "completion": "<reasoning>\n(19 - 4) * 5 = 96.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 4) * 5</answer>",
+      "extracted_math": "(19 - 4) * 5",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        19,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          15,
+          15
+        ],
+        "target": 2250,
+        "expected_solution": "(15 * (15 * 10))"
+      },
+      "completion": "<reasoning>\n(15 * 15) * 10 = 2250.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 15) * 10</answer>",
+      "extracted_math": "(15 * 15) * 10",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        15,
+        15
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          8,
+          12
+        ],
+        "target": 32,
+        "expected_solution": "(12 / (3 / 8))"
+      },
+      "completion": "<reasoning>\n(12 - 8) * 3 = 32.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 8) * 3</answer>",
+      "extracted_math": "(12 - 8) * 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        12,
+        8
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          4,
+          11
+        ],
+        "target": 132,
+        "expected_solution": "(4 * (11 * 3))"
+      },
+      "completion": "<reasoning>\n(11 * 3) + 4 = 33 + 4 = 37.\n37 * 4 = 148.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(11 * 3) + 4 * 4</answer>",
+      "extracted_math": "(11 * 3) + 4 * 4",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        3,
+        4,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          7,
+          12,
+          14
+        ],
+        "target": 27,
+        "expected_solution": "(14 + (12 + (7 - 6)))"
+      },
+      "completion": "<reasoning>\n(12 - 6) * 14 = 27.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 6) * 14</answer>",
+      "extracted_math": "(12 - 6) * 14",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        12,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          6,
+          8,
+          8,
+          8
+        ],
+        "target": 14,
+        "expected_solution": "(8 - (6 - (8 + (8 - 4))))"
+      },
+      "completion": "<reasoning>\n(8 - 6) * 8 = 14.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(8 - 6) * 8</answer>",
+      "extracted_math": "(8 - 6) * 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        8,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          2,
+          13
+        ],
+        "target": 16,
+        "expected_solution": "(1 + (13 + 2))"
+      },
+      "completion": "<reasoning>\n(13 - 1) * 2 = 16.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(13 - 1) * 2</answer>",
+      "extracted_math": "(13 - 1) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        13,
+        1
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          10
+        ],
+        "target": 19,
+        "expected_solution": "(3 + (6 + 10))"
+      },
+      "completion": "<reasoning>\n(10 - 3) * 6 = 19.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 3) * 6</answer>",
+      "extracted_math": "(10 - 3) * 6",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        10,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          13,
+          18
+        ],
+        "target": 39,
+        "expected_solution": "(18 / (6 / 13))"
+      },
+      "completion": "<reasoning>\n(13 + 18) * 6 = 39.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(13 + 18) * 6</answer>",
+      "extracted_math": "(13 + 18) * 6",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        13,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          10,
+          16,
+          16,
+          19
+        ],
+        "target": 6080,
+        "expected_solution": "(19 * (10 / (8 / (16 * 16))))"
+      },
+      "completion": "<reasoning>\n(19 * 16) * (10 + 8) = 6080.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 * 16) * (10 + 8)</answer>",
+      "extracted_math": "(19 * 16) * (10 + 8)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        16,
+        10,
+        8
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          17,
+          19,
+          20
+        ],
+        "target": 16,
+        "expected_solution": "(17 - (20 - 19))"
+      },
+      "completion": "<reasoning>\n(19 - 17) * 20 = 16.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 17) * 20</answer>",
+      "extracted_math": "(19 - 17) * 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        19,
+        17
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          7
+        ],
+        "target": 21,
+        "expected_solution": "(7 + (2 * 7))"
+      },
+      "completion": "<reasoning>\n(7 - 2) * 7 = 21.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(7 - 2) * 7</answer>",
+      "extracted_math": "(7 - 2) * 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        7,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          2,
+          6,
+          13
+        ],
+        "target": 18,
+        "expected_solution": "(6 - (2 - (1 + 13)))"
+      },
+      "completion": "<reasoning>\n(13 - 6) * 2 = 18.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(13 - 6) * 2</answer>",
+      "extracted_math": "(13 - 6) * 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        13,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          9,
+          18
+        ],
+        "target": 117,
+        "expected_solution": "(9 + (18 * 6))"
+      },
+      "completion": "<reasoning>\n(18 + 9) * 6 = 117.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 + 9) * 6</answer>",
+      "extracted_math": "(18 + 9) * 6",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        18,
+        9
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          11,
+          12,
+          19
+        ],
+        "target": 27,
+        "expected_solution": "(19 + (11 - (12 - 9)))"
+      },
+      "completion": "<reasoning>\n(19 - 11) * 12 = 27.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 11) * 12</answer>",
+      "extracted_math": "(19 - 11) * 12",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        19,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          9,
+          15
+        ],
+        "target": 1,
+        "expected_solution": "(9 + (7 - 15))"
+      },
+      "completion": "<reasoning>\n(15 - 9) / 7 = 1.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 - 9) / 7</answer>",
+      "extracted_math": "(15 - 9) / 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        15,
+        9
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          10,
+          14
+        ],
+        "target": 23,
+        "expected_solution": "(10 - (1 - 14))"
+      },
+      "completion": "<reasoning>\n(10 - 1) * 14 = 136.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 1) * 14</answer>",
+      "extracted_math": "(10 - 1) * 14",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        10,
+        1
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          12,
+          15,
+          20
+        ],
+        "target": 209,
+        "expected_solution": "(9 + (20 + (15 * 12)))"
+      },
+      "completion": "<reasoning>\n(20 - 15) * 12 = 209.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 - 15) * 12</answer>",
+      "extracted_math": "(20 - 15) * 12",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        20,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          14,
+          16,
+          16
+        ],
+        "target": 19,
+        "expected_solution": "(16 + (16 - (14 - (5 - 4))))"
+      },
+      "completion": "<reasoning>\n(16 - 14) * 5 = 19.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 - 14) * 5</answer>",
+      "extracted_math": "(16 - 14) * 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        16,
+        14
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          14,
+          19
+        ],
+        "target": 31,
+        "expected_solution": "(19 - (2 - 14))"
+      },
+      "completion": "<reasoning>\n(19 - 2) * 14 = 31.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 2) * 14</answer>",
+      "extracted_math": "(19 - 2) * 14",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        19,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          11,
+          17,
+          18
+        ],
+        "target": 35,
+        "expected_solution": "(11 - (6 * (18 - (17 + 5))))"
+      },
+      "completion": "<reasoning>\n(17 - 11) * 5 = 35.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 11) * 5</answer>",
+      "extracted_math": "(17 - 11) * 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        17,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          9,
+          13,
+          18
+        ],
+        "target": 41,
+        "expected_solution": "(18 - (13 - (4 * 9)))"
+      },
+      "completion": "<reasoning>\n(13 + 9) * 4 = 41.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(13 + 9) * 4</answer>",
+      "extracted_math": "(13 + 9) * 4",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        13,
+        9
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          18,
+          18
+        ],
+        "target": 15,
+        "expected_solution": "(18 - (18 / 6))"
+      },
+      "completion": "<reasoning>\n(18 - 6) / 18 = 15.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 6) / 18</answer>",
+      "extracted_math": "(18 - 6) / 18",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        18,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          11,
+          13
+        ],
+        "target": 3,
+        "expected_solution": "(1 + (4 - (13 - 11)))"
+      },
+      "completion": "<reasoning>\n(11 - 4) / 13 = 3.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(11 - 4) / 13</answer>",
+      "extracted_math": "(11 - 4) / 13",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        11,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          8,
+          11
+        ],
+        "target": 12,
+        "expected_solution": "(11 + (8 / 8))"
+      },
+      "completion": "<reasoning>\n(11 - 8) * 8 = 12.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(11 - 8) * 8</answer>",
+      "extracted_math": "(11 - 8) * 8",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        11,
+        8
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          13,
+          19,
+          19
+        ],
+        "target": 6916,
+        "expected_solution": "(19 * (13 * (7 + (19 + 2))))"
+      },
+      "completion": "<reasoning>\n(19 * 19) + (13 * 7) = 6916.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 * 19) + (13 * 7)</answer>",
+      "extracted_math": "(19 * 19) + (13 * 7)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        19,
+        13,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          13,
+          17,
+          20
+        ],
+        "target": 26520,
+        "expected_solution": "(20 * (17 * (13 * 6)))"
+      },
+      "completion": "<reasoning>\n(20 * 17) * (13 + 6) = 26520.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 * 17) * (13 + 6)</answer>",
+      "extracted_math": "(20 * 17) * (13 + 6)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        17,
+        13,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          17,
+          17,
+          19
+        ],
+        "target": 121,
+        "expected_solution": "(19 + (17 + (17 * (4 + 1))))"
+      },
+      "completion": "<reasoning>\n(17 - 1)^2 = 16^2 = 256.\n19 - 17 = 2.\n2 * 16 = 32.\n</reasoning>\n<answer>((17 - 1)^2) * (19 - 17)</answer>",
+      "extracted_math": "((17 - 1)^2) * (19 - 17)",
+      "is_valid": false,
+      "reason": "unsafe_expression",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          13,
+          17
+        ],
+        "target": 1547,
+        "expected_solution": "(13 * (7 * 17))"
+      },
+      "completion": "<reasoning>\n(17 * 13) + 7 = 221 + 7 = 228.\n228 * 7 = 1596.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 * 13) + 7 * 7</answer>",
+      "extracted_math": "(17 * 13) + 7 * 7",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        13,
+        7,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          3,
+          8,
+          9,
+          14
+        ],
+        "target": 130,
+        "expected_solution": "(3 - (9 - (8 * (14 + 3))))"
+      },
+      "completion": "<reasoning>\n(14 * 9) + (8 * 3) = 126 + 24 = 150.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(14 * 9) + (8 * 3)</answer>",
+      "extracted_math": "(14 * 9) + (8 * 3)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        9,
+        8,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          8,
+          17,
+          17,
+          20
+        ],
+        "target": 139,
+        "expected_solution": "(17 - (20 - (6 + (8 * 17))))"
+      },
+      "completion": "<reasoning>\n(17 - 6) * 20 = 139.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 6) * 20</answer>",
+      "extracted_math": "(17 - 6) * 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        17,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          6,
+          9,
+          14,
+          17
+        ],
+        "target": 46,
+        "expected_solution": "(14 + (9 + (6 + (17 / 1))))"
+      },
+      "completion": "<reasoning>\n(17 - 9) * 14 = 46.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 9) * 14</answer>",
+      "extracted_math": "(17 - 9) * 14",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        17,
+        9
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          6,
+          12,
+          13,
+          15
+        ],
+        "target": 20,
+        "expected_solution": "(6 + (12 + (13 - (15 - 4))))"
+      },
+      "completion": "<reasoning>\n(12 - 4) * 13 = 20.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 4) * 13</answer>",
+      "extracted_math": "(12 - 4) * 13",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        12,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          16,
+          20
+        ],
+        "target": 45,
+        "expected_solution": "(9 + (20 + 16))"
+      },
+      "completion": "<reasoning>\n(16 - 9) * 20 = 45.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 - 9) * 20</answer>",
+      "extracted_math": "(16 - 9) * 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        16,
+        9
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          11,
+          16
+        ],
+        "target": 288,
+        "expected_solution": "(16 * (11 + 7))"
+      },
+      "completion": "<reasoning>\n(16 * 11) + 7 = 183.\n(183 * 7) + 11 = 1280.\n(1280 * 7) + 16 = 8960.\n</reasoning>\n<answer>(16 * 11) + 7 * 7 + 11 + 16</answer>",
+      "extracted_math": "(16 * 11) + 7 * 7 + 11 + 16",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        11,
+        16,
+        11,
+        7,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          12
+        ],
+        "target": 168,
+        "expected_solution": "(2 * (7 * 12))"
+      },
+      "completion": "<reasoning>\n(12 * 7) + 2 = 168.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 * 7) + 2</answer>",
+      "extracted_math": "(12 * 7) + 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        12,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          2,
+          8,
+          19
+        ],
+        "target": 137,
+        "expected_solution": "(1 - (8 * (2 - 19)))"
+      },
+      "completion": "<reasoning>\n(19 - 1) * 2^8 = 137.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 1) * 2^8</answer>",
+      "extracted_math": "(19 - 1) * 2^8",
+      "is_valid": false,
+      "reason": "unsafe_expression",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          12,
+          13
+        ],
+        "target": 30,
+        "expected_solution": "(5 + (13 + 12))"
+      },
+      "completion": "<reasoning>\n(12 - 5) * 13 = 30.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 5) * 13</answer>",
+      "extracted_math": "(12 - 5) * 13",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        12,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          10,
+          12,
+          18
+        ],
+        "target": 19440,
+        "expected_solution": "(18 * (9 * (10 * 12)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 12 by 18 to get 216.\nThen, we can add 9 to 10 to get 19.\nFinally, we can multiply 216 by 19 to get 19440.\n</reasoning>\n<answer>(12 * 18) * (9 + 10)</answer>",
+      "extracted_math": "(12 * 18) * (9 + 10)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        18,
+        9,
+        10
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          12,
+          14,
+          15,
+          19
+        ],
+        "target": 40,
+        "expected_solution": "(19 + (14 + (15 + (4 - 12))))"
+      },
+      "completion": "<reasoning>\n(15 - 12) * 19 = 40.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 - 12) * 19</answer>",
+      "extracted_math": "(15 - 12) * 19",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        15,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          9,
+          17,
+          18
+        ],
+        "target": 459,
+        "expected_solution": "(17 * (18 + (1 * 9)))"
+      },
+      "completion": "<reasoning>\n(17 * 18) + 1 = 306.\n306 + 9 = 315.\n315 + 18 = 333.\n333 + 18 = 351.\n351 + 18 = 369.\n369 + 18 = 387.\n387 + 18 = 405.\n405 + 18 = 423.\n423 + 18 = 441.\n441 + 18 = 459.\n</reasoning>\n<answer>(17 * 18) + 1 + 9 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 1",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          11,
+          12
+        ],
+        "target": 2,
+        "expected_solution": "(2 * (12 - 11))"
+      },
+      "completion": "<reasoning>\n(11 - 12) / 2 = 2.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(11 - 12) / 2</answer>",
+      "extracted_math": "(11 - 12) / 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        11,
+        12
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          12
+        ],
+        "target": 20,
+        "expected_solution": "(5 / (3 / 12))"
+      },
+      "completion": "<reasoning>\n(12 - 3) * 5 = 20.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 3) * 5</answer>",
+      "extracted_math": "(12 - 3) * 5",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        12,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          10,
+          15,
+          16
+        ],
+        "target": 112,
+        "expected_solution": "(16 - (4 * (1 - (10 + 15))))"
+      },
+      "completion": "<reasoning>\n(16 - 1) * 10 = 150.\n150 / 15 = 10.\n10 * 4 = 40.\n40 + 15 = 55.\n55 + 1 = 56.\n56 * 10 = 560.\n560 / 10 = 56.\n56 * 16 = 896.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 - 1) * (150 / 15) * (10 + 4) * 16</answer>",
+      "extracted_math": "(16 - 1) * (150 / 15) * (10 + 4) * 16",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        10,
+        4,
+        16,
+        1,
+        150,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          13,
+          17
+        ],
+        "target": 26,
+        "expected_solution": "(13 - (4 - 17))"
+      },
+      "completion": "<reasoning>\n(13 - 4) * 17 = 26.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(13 - 4) * 17</answer>",
+      "extracted_math": "(13 - 4) * 17",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        13,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          13,
+          17,
+          20
+        ],
+        "target": 10,
+        "expected_solution": "(17 + (13 - 20))"
+      },
+      "completion": "<reasoning>\n(17 - 13) * 20 = 10.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 13) * 20</answer>",
+      "extracted_math": "(17 - 13) * 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        17,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          5,
+          7,
+          18
+        ],
+        "target": 3150,
+        "expected_solution": "(7 * (5 * (18 * 5)))"
+      },
+      "completion": "<reasoning>\n(18 * 5) * (5 + 7) = 3150.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 * 5) * (5 + 7)</answer>",
+      "extracted_math": "(18 * 5) * (5 + 7)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        5,
+        5,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          6,
+          20
+        ],
+        "target": 120,
+        "expected_solution": "(6 / (1 / 20))"
+      },
+      "completion": "<reasoning>\n(20 * 6) / 1 = 120.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 * 6) / 1</answer>",
+      "extracted_math": "(20 * 6) / 1",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        20,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          6,
+          14
+        ],
+        "target": 108,
+        "expected_solution": "(6 * (14 + 4))"
+      },
+      "completion": "<reasoning>\n(14 + 6) * 4 = 108.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(14 + 6) * 4</answer>",
+      "extracted_math": "(14 + 6) * 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        14,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          3,
+          4,
+          17,
+          19
+        ],
+        "target": 122,
+        "expected_solution": "(2 + (3 * (4 + (19 + 17))))"
+      },
+      "completion": "<reasoning>\n(17 * 4) + 3 = 68 + 3 = 71.\n(19 * 4) + 3 = 76 + 3 = 79.\n(17 * 4) + 19 = 68 + 19 = 87.\n(19 * 4) + 17 = 76 + 17 = 93.\n(17 * 4) + 19 + 17 = 87 + 17 = 104.\n(19 * 4) + 17 + 19 = 93 + 19 = 112.\n(17 * 4) + 19 + 17 + 19 = 104 + 19 = 123.\n(19 * 4) + 17 + 19 + 17 = 112 + 17 = 129.\n(17 * 4) + 19 + 17 + 19 + 17 = 123 + 17 = ",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          1,
+          4
+        ],
+        "target": 5,
+        "expected_solution": "(1 * (1 + 4))"
+      },
+      "completion": "<reasoning>\n(1 + 1) * 4 = 5.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(1 + 1) * 4</answer>",
+      "extracted_math": "(1 + 1) * 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        1,
+        1
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          10,
+          17
+        ],
+        "target": 78,
+        "expected_solution": "(10 + (17 * 4))"
+      },
+      "completion": "<reasoning>\n(10 - 4) * 17 = 78.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 4) * 17</answer>",
+      "extracted_math": "(10 - 4) * 17",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        10,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          10,
+          12,
+          20
+        ],
+        "target": 24,
+        "expected_solution": "(20 + (6 - (12 - 10)))"
+      },
+      "completion": "<reasoning>\n(10 - 6) * 20 = 24.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 6) * 20</answer>",
+      "extracted_math": "(10 - 6) * 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        10,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          8,
+          16,
+          19
+        ],
+        "target": 133,
+        "expected_solution": "(3 - (16 + (6 - (19 * 8))))"
+      },
+      "completion": "<reasoning>\n(19 - 6) * 8 = 133.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 6) * 8</answer>",
+      "extracted_math": "(19 - 6) * 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        19,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          19
+        ],
+        "target": 25,
+        "expected_solution": "(1 + (19 + 5))"
+      },
+      "completion": "<reasoning>\n(19 - 5) * 1 = 25.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 5) * 1</answer>",
+      "extracted_math": "(19 - 5) * 1",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        19,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          5,
+          10,
+          13,
+          17
+        ],
+        "target": 110,
+        "expected_solution": "(2 + (13 + (10 + (17 * 5))))"
+      },
+      "completion": "<reasoning>\n(17 - 13) * (10 + 5) = 4 * 15 = 60.\n(17 - 13) * (10 + 5) = 4 * 15 = 60.\n</reasoning>\n<answer>(17 - 13) * (10 + 5)</answer>",
+      "extracted_math": "(17 - 13) * (10 + 5)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        13,
+        10,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          14,
+          15,
+          20
+        ],
+        "target": 49,
+        "expected_solution": "(20 + (14 + 15))"
+      },
+      "completion": "<reasoning>\n(15 - 14) * 20 = 49.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 - 14) * 20</answer>",
+      "extracted_math": "(15 - 14) * 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        15,
+        14
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          14,
+          20
+        ],
+        "target": 40,
+        "expected_solution": "(20 + (14 + 6))"
+      },
+      "completion": "<reasoning>\n(14 + 6) * 20 = 40.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(14 + 6) * 20</answer>",
+      "extracted_math": "(14 + 6) * 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        14,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          12,
+          15,
+          19
+        ],
+        "target": 420,
+        "expected_solution": "(12 * (6 + (15 - (5 - 19))))"
+      },
+      "completion": "<reasoning>\n(15 * 12) + (19 * 5) = 420.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 12) + (19 * 5)</answer>",
+      "extracted_math": "(15 * 12) + (19 * 5)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        12,
+        19,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          20
+        ],
+        "target": 18,
+        "expected_solution": "(20 - (3 - 1))"
+      },
+      "completion": "<reasoning>\n(20 - 3) * 1 = 17.\n18 - 1 = 17.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 - 3) * 1 - 1</answer>",
+      "extracted_math": "(20 - 3) * 1 - 1",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        1,
+        20,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          11,
+          13,
+          13
+        ],
+        "target": 349,
+        "expected_solution": "(11 + (13 * (13 * 2)))"
+      },
+      "completion": "<reasoning>\n(13 * 13) + 11 = 169 + 11 = 180.\n180 * 2 = 349.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(13 * 13) + 11 * 2</answer>",
+      "extracted_math": "(13 * 13) + 11 * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        13,
+        11,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          12,
+          18,
+          19
+        ],
+        "target": 13,
+        "expected_solution": "(19 + (12 - 18))"
+      },
+      "completion": "<reasoning>\n(19 - 12) * 18 = 13.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 12) * 18</answer>",
+      "extracted_math": "(19 - 12) * 18",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        19,
+        12
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          10,
+          15
+        ],
+        "target": 2,
+        "expected_solution": "(10 + (7 - 15))"
+      },
+      "completion": "<reasoning>\n(10 - 7) / 15 = 2.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 7) / 15</answer>",
+      "extracted_math": "(10 - 7) / 15",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        10,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          15,
+          17,
+          18,
+          19
+        ],
+        "target": 13,
+        "expected_solution": "(19 - (18 / (5 - (17 - 15))))"
+      },
+      "completion": "<reasoning>\n(19 - 17) * 15 = 13.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 17) * 15</answer>",
+      "extracted_math": "(19 - 17) * 15",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        19,
+        17
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          6,
+          15,
+          20
+        ],
+        "target": 55,
+        "expected_solution": "(15 + (20 * (6 - 4)))"
+      },
+      "completion": "<reasoning>\n(20 - 4) * 15 = 55.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 - 4) * 15</answer>",
+      "extracted_math": "(20 - 4) * 15",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        20,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          18,
+          19
+        ],
+        "target": 6840,
+        "expected_solution": "(19 * (5 * (4 * 18)))"
+      },
+      "completion": "<reasoning>\n(19 * 18) * (5 + 4)\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 * 18) * (5 + 4)</answer>",
+      "extracted_math": "(19 * 18) * (5 + 4)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        18,
+        5,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          5,
+          7,
+          9,
+          17
+        ],
+        "target": 5,
+        "expected_solution": "(7 - (5 + (5 - (17 - 9))))"
+      },
+      "completion": "<reasoning>\n(5 + 5) / 7 = 5.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(5 + 5) / 7</answer>",
+      "extracted_math": "(5 + 5) / 7",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        5,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          7,
+          10,
+          12,
+          14
+        ],
+        "target": 21,
+        "expected_solution": "(5 + (10 + (12 / (14 / 7))))"
+      },
+      "completion": "<reasoning>\n(10 + 12) * (14 - 5)\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 + 12) * (14 - 5)</answer>",
+      "extracted_math": "(10 + 12) * (14 - 5)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        12,
+        14,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          11,
+          13,
+          17
+        ],
+        "target": 38,
+        "expected_solution": "(17 + (11 - (3 - (13 / 1))))"
+      },
+      "completion": "<reasoning>\n(17 - 11) * 3 = 38.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 11) * 3</answer>",
+      "extracted_math": "(17 - 11) * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        17,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          6,
+          12,
+          12,
+          18
+        ],
+        "target": 30,
+        "expected_solution": "(12 + (6 + (18 - (12 / 2))))"
+      },
+      "completion": "<reasoning>\n(12 / 6) * 12 = 24.\n24 / 18 = 4.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 / 6) * 12 / 18</answer>",
+      "extracted_math": "(12 / 6) * 12 / 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        12,
+        12,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          3,
+          12,
+          12
+        ],
+        "target": 204,
+        "expected_solution": "(12 * (2 + (3 + 12)))"
+      },
+      "completion": "<reasoning>\n(12 * 12) + (3 * 2) = 204.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 * 12) + (3 * 2)</answer>",
+      "extracted_math": "(12 * 12) + (3 * 2)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        12,
+        3,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          7,
+          17
+        ],
+        "target": 20,
+        "expected_solution": "(1 - (5 - (7 + 17)))"
+      },
+      "completion": "<reasoning>\n(17 - 5) * 1 = 12.\n12 + 5 = 17.\n17 - 1 = 16.\n</reasoning>\n<answer>(17 - 5) * 1 + 5 - 1</answer>",
+      "extracted_math": "(17 - 5) * 1 + 5 - 1",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        5,
+        1,
+        17,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          11,
+          17
+        ],
+        "target": 224,
+        "expected_solution": "(8 * (11 + 17))"
+      },
+      "completion": "<reasoning>\n(17 * 11) + 8 = 224.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 * 11) + 8</answer>",
+      "extracted_math": "(17 * 11) + 8",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        17,
+        11
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          8,
+          9,
+          16
+        ],
+        "target": 27,
+        "expected_solution": "(16 - (6 - (9 + 8)))"
+      },
+      "completion": "<reasoning>\n(16 - 9) * 8 = 27.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 - 9) * 8</answer>",
+      "extracted_math": "(16 - 9) * 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        16,
+        9
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          4,
+          5,
+          6,
+          8
+        ],
+        "target": 6,
+        "expected_solution": "(5 - (2 / (4 / (6 - 8))))"
+      },
+      "completion": "<reasoning>\n(8 - 2) * (5 - 4) = 6.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(8 - 2) * (5 - 4)</answer>",
+      "extracted_math": "(8 - 2) * (5 - 4)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        2,
+        5,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          10,
+          16,
+          18
+        ],
+        "target": 324,
+        "expected_solution": "(18 * (10 + (16 / 2)))"
+      },
+      "completion": "<reasoning>\n(18 - 10) * (16 / 2) = 324.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 10) * (16 / 2)</answer>",
+      "extracted_math": "(18 - 10) * (16 / 2)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        10,
+        16,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          5,
+          7,
+          8,
+          10
+        ],
+        "target": 560,
+        "expected_solution": "(10 * (5 - (5 - (7 * 8))))"
+      },
+      "completion": "<reasoning>\n(10 * 8) * (5 + 5)\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 * 8) * (5 + 5)</answer>",
+      "extracted_math": "(10 * 8) * (5 + 5)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        8,
+        5,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          9
+        ],
+        "target": 7,
+        "expected_solution": "(3 - (5 - 9))"
+      },
+      "completion": "<reasoning>\n(9 - 5) * 3 = 7.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(9 - 5) * 3</answer>",
+      "extracted_math": "(9 - 5) * 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        9,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          7,
+          7,
+          10,
+          18
+        ],
+        "target": 8,
+        "expected_solution": "(10 - (7 + (6 - (18 - 7))))"
+      },
+      "completion": "<reasoning>\n(10 - 7) * 6 = 8.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 7) * 6</answer>",
+      "extracted_math": "(10 - 7) * 6",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        10,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          4,
+          11,
+          15
+        ],
+        "target": 1320,
+        "expected_solution": "(11 * (15 * (4 + 4)))"
+      },
+      "completion": "<reasoning>\n(15 * 11) * (4 + 4)\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 11) * (4 + 4)</answer>",
+      "extracted_math": "(15 * 11) * (4 + 4)",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        11,
+        4,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          15,
+          15,
+          20
+        ],
+        "target": 450,
+        "expected_solution": "(15 * (15 / (10 / 20)))"
+      },
+      "completion": "<reasoning>\n(15 * 15) * 20 = 450.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 15) * 20</answer>",
+      "extracted_math": "(15 * 15) * 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        15,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          3,
+          4
+        ],
+        "target": 18,
+        "expected_solution": "(3 * (4 + 2))"
+      },
+      "completion": "<reasoning>\n(3 + 4) * 2 = 18.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(3 + 4) * 2</answer>",
+      "extracted_math": "(3 + 4) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        3,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          2,
+          10,
+          11,
+          12
+        ],
+        "target": 112,
+        "expected_solution": "(11 * (10 + (2 / (12 - 1))))"
+      },
+      "completion": "<reasoning>\n(12 - 1) * 10 = 110.\n110 + 11 = 121.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 1) * 10 + 11</answer>",
+      "extracted_math": "(12 - 1) * 10 + 11",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        10,
+        12,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          5,
+          8,
+          15
+        ],
+        "target": 30,
+        "expected_solution": "(15 * (5 + (5 - 8)))"
+      },
+      "completion": "<reasoning>\n(5 + 5) * 8 = 30.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(5 + 5) * 8</answer>",
+      "extracted_math": "(5 + 5) * 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        5,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          8,
+          9,
+          12
+        ],
+        "target": 24,
+        "expected_solution": "(8 + (9 - (5 - 12)))"
+      },
+      "completion": "<reasoning>\n(12 - 8) * 9 = 24.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 8) * 9</answer>",
+      "extracted_math": "(12 - 8) * 9",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        9,
+        12,
+        8
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          8,
+          12,
+          18
+        ],
+        "target": 2592,
+        "expected_solution": "(18 * (12 * (4 + 8)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 12 by 18 to get 216.\nThen, we can divide 216 by 4 to get 54.\nNext, we can add 8 to 54 to get 62.\nFinally, we can multiply 62 by 18 to get 2592.\n</reasoning>\n<answer>(12 * 18) / 4 + 8 * 18</answer>",
+      "extracted_math": "(12 * 18) / 4 + 8 * 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        8,
+        18,
+        12,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          6,
+          19
+        ],
+        "target": 132,
+        "expected_solution": "(6 * (4 + (19 - 1)))"
+      },
+      "completion": "<reasoning>\n(19 - 1) * 6 = 132.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 1) * 6</answer>",
+      "extracted_math": "(19 - 1) * 6",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        19,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          9,
+          14,
+          17
+        ],
+        "target": 180,
+        "expected_solution": "(4 * (14 + (9 + (17 + 5))))"
+      },
+      "completion": "<reasoning>\n(17 * 9) + (14 * 5) = 180.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 * 9) + (14 * 5)</answer>",
+      "extracted_math": "(17 * 9) + (14 * 5)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        9,
+        14,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          15,
+          16
+        ],
+        "target": 720,
+        "expected_solution": "(3 * (16 * 15))"
+      },
+      "completion": "<reasoning>\n(16 * 15) * 3 = 720.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 * 15) * 3</answer>",
+      "extracted_math": "(16 * 15) * 3",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        16,
+        15
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          6,
+          7
+        ],
+        "target": 39,
+        "expected_solution": "(3 * (7 + (1 * 6)))"
+      },
+      "completion": "<reasoning>\n(7 * 6) + 3 = 45.\n45 - 6 = 39.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(7 * 6) + 3</answer>",
+      "extracted_math": "(7 * 6) + 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        7,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          11,
+          17
+        ],
+        "target": 45,
+        "expected_solution": "(11 + (2 * 17))"
+      },
+      "completion": "<reasoning>\n(17 - 2) * 11 = 45.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 2) * 11</answer>",
+      "extracted_math": "(17 - 2) * 11",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        17,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          15,
+          16
+        ],
+        "target": 186,
+        "expected_solution": "(6 * (16 + 15))"
+      },
+      "completion": "<reasoning>\n(16 - 6) * 15 = 180.\n180 + 6 = 186.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 - 6) * 15 + 6</answer>",
+      "extracted_math": "(16 - 6) * 15 + 6",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        15,
+        16,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          7,
+          8,
+          14,
+          18
+        ],
+        "target": 1235,
+        "expected_solution": "(3 - (14 * (8 * (7 - 18))))"
+      },
+      "completion": "<reasoning>\n(18 * 14) + (8 * 7) = 1235.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 * 14) + (8 * 7)</answer>",
+      "extracted_math": "(18 * 14) + (8 * 7)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        14,
+        8,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          13,
+          19
+        ],
+        "target": 203,
+        "expected_solution": "(13 + (19 * 10))"
+      },
+      "completion": "<reasoning>\n(10 * 19) + 13 = 203.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 * 19) + 13</answer>",
+      "extracted_math": "(10 * 19) + 13",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        10,
+        19
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          13,
+          14
+        ],
+        "target": 11,
+        "expected_solution": "(10 - (13 - 14))"
+      },
+      "completion": "<reasoning>\n(13 - 10) * 14 = 11.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(13 - 10) * 14</answer>",
+      "extracted_math": "(13 - 10) * 14",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        13,
+        10
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          3,
+          17
+        ],
+        "target": 16,
+        "expected_solution": "(17 - (3 - 2))"
+      },
+      "completion": "<reasoning>\n(17 - 3) * 2 = 16.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 3) * 2</answer>",
+      "extracted_math": "(17 - 3) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        17,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          7,
+          12
+        ],
+        "target": 132,
+        "expected_solution": "(12 * (7 + 4))"
+      },
+      "completion": "<reasoning>\n(12 * 7) + 4 = 132.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 * 7) + 4</answer>",
+      "extracted_math": "(12 * 7) + 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        12,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          7,
+          15
+        ],
+        "target": 144,
+        "expected_solution": "(4 + (7 * (5 + 15)))"
+      },
+      "completion": "<reasoning>\n(15 * 7) + (5 * 4) = 144.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 7) + (5 * 4)</answer>",
+      "extracted_math": "(15 * 7) + (5 * 4)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        7,
+        5,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          13,
+          14,
+          17,
+          18
+        ],
+        "target": 741,
+        "expected_solution": "(13 * (17 + (10 * (18 - 14))))"
+      },
+      "completion": "<reasoning>\n(17 * 18) + (13 * 10) = 741.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 * 18) + (13 * 10)</answer>",
+      "extracted_math": "(17 * 18) + (13 * 10)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        18,
+        13,
+        10
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          1,
+          6,
+          18,
+          19
+        ],
+        "target": 6,
+        "expected_solution": "(6 * (19 - (18 + (1 - 1))))"
+      },
+      "completion": "<reasoning>\n(19 - 1) / 1 = 18.\n18 / 1 = 6.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 1) / 1</answer>",
+      "extracted_math": "(19 - 1) / 1",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        19,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          11,
+          19,
+          19
+        ],
+        "target": 88,
+        "expected_solution": "(11 * (19 - (19 - 8)))"
+      },
+      "completion": "<reasoning>\n(19 - 11) * 19 = 88.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 11) * 19</answer>",
+      "extracted_math": "(19 - 11) * 19",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        19,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          12,
+          12
+        ],
+        "target": 14,
+        "expected_solution": "(12 + (12 - 10))"
+      },
+      "completion": "<reasoning>\n(12 - 10) * 12 = 14.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 - 10) * 12</answer>",
+      "extracted_math": "(12 - 10) * 12",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        12,
+        10
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          10,
+          10
+        ],
+        "target": 700,
+        "expected_solution": "(7 * (10 * 10))"
+      },
+      "completion": "<reasoning>\n(10 * 10) * 7 = 700.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 * 10) * 7</answer>",
+      "extracted_math": "(10 * 10) * 7",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        10,
+        10
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          15,
+          19,
+          19
+        ],
+        "target": 224,
+        "expected_solution": "(19 + (15 + (10 * 19)))"
+      },
+      "completion": "<reasoning>\n(19 * 19) + 10 = 361 + 10 = 371.\n371 - 15 = 356.\n356 - 10 = 346.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 * 19) + 10 - 15 - 10</answer>",
+      "extracted_math": "(19 * 19) + 10 - 15 - 10",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        15,
+        10,
+        19,
+        19
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          14,
+          20,
+          20
+        ],
+        "target": 414,
+        "expected_solution": "(14 + (20 * 20))"
+      },
+      "completion": "<reasoning>\n(20 + 14) * 20 = 414.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 + 14) * 20</answer>",
+      "extracted_math": "(20 + 14) * 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        20,
+        14
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          15,
+          19
+        ],
+        "target": 228,
+        "expected_solution": "(19 * (15 - 3))"
+      },
+      "completion": "<reasoning>\n(19 * 15) + 3 = 285.\n285 - 57 = 228.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 * 15) + 3 - 57</answer>",
+      "extracted_math": "(19 * 15) + 3 - 57",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        57,
+        3,
+        19,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          6,
+          14,
+          17
+        ],
+        "target": 1326,
+        "expected_solution": "(6 * (17 * (14 - 1)))"
+      },
+      "completion": "<reasoning>\n(17 * 14) + 1 = 238.\n238 * 6 = 1326.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 * 14) + 1 * 6</answer>",
+      "extracted_math": "(17 * 14) + 1 * 6",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        14,
+        1,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          7,
+          17
+        ],
+        "target": 8,
+        "expected_solution": "(17 + (3 - (5 + 7)))"
+      },
+      "completion": "<reasoning>\n(17 - 5) * (3 + 7)\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 5) * (3 + 7)</answer>",
+      "extracted_math": "(17 - 5) * (3 + 7)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        5,
+        3,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          14,
+          18
+        ],
+        "target": 378,
+        "expected_solution": "(14 * (9 + 18))"
+      },
+      "completion": "<reasoning>\n(14 * 18) + 9 = 378.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(14 * 18) + 9</answer>",
+      "extracted_math": "(14 * 18) + 9",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        9,
+        14,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          15,
+          18,
+          18,
+          20
+        ],
+        "target": 75,
+        "expected_solution": "(20 * (15 * (9 / (18 + 18))))"
+      },
+      "completion": "<reasoning>\n(18 * 18) / 20 = 1620.\n1620 / 20 = 81.\n81 * 9 = 729.\n729 / 15 = 48.6.\n48.6 * 15 = 729.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 * 18) / 20 * 9 * 15</answer>",
+      "extracted_math": "(18 * 18) / 20 * 9 * 15",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        9,
+        20,
+        18,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          11,
+          17,
+          19
+        ],
+        "target": 20,
+        "expected_solution": "(11 + (19 + (7 - 17)))"
+      },
+      "completion": "<reasoning>\n(17 - 11) * 19 = 20.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 11) * 19</answer>",
+      "extracted_math": "(17 - 11) * 19",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        17,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          8,
+          15,
+          20
+        ],
+        "target": 4,
+        "expected_solution": "(6 + (15 + (8 - (5 + 20))))"
+      },
+      "completion": "<reasoning>\n(20 - 15) * (8 / 6) = 4.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>((20 - 15) * (8 / 6))</answer>",
+      "extracted_math": "((20 - 15) * (8 / 6))",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        15,
+        8,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          11,
+          16
+        ],
+        "target": 34,
+        "expected_solution": "(11 + (7 + 16))"
+      },
+      "completion": "<reasoning>\n(16 - 7) * 11 = 34.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 - 7) * 11</answer>",
+      "extracted_math": "(16 - 7) * 11",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        16,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          13,
+          16
+        ],
+        "target": 2288,
+        "expected_solution": "(13 * (11 * 16))"
+      },
+      "completion": "<reasoning>\n(16 * 13) + 11 = 208 + 11 = 2288.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 * 13) + 11</answer>",
+      "extracted_math": "(16 * 13) + 11",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        16,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          18
+        ],
+        "target": 9,
+        "expected_solution": "(18 - (5 + 4))"
+      },
+      "completion": "<reasoning>\n(18 - 5) / 4 = 9.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 5) / 4</answer>",
+      "extracted_math": "(18 - 5) / 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        18,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          8,
+          10
+        ],
+        "target": 2,
+        "expected_solution": "(8 / (10 - 6))"
+      },
+      "completion": "<reasoning>\n(10 - 8) / 6 = 2.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 8) / 6</answer>",
+      "extracted_math": "(10 - 8) / 6",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        10,
+        8
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          8,
+          12,
+          12
+        ],
+        "target": 60,
+        "expected_solution": "(12 + (8 * (12 - 6)))"
+      },
+      "completion": "<reasoning>\n(12 * 6) + 12 = 60.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 * 6) + 12</answer>",
+      "extracted_math": "(12 * 6) + 12",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        12,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          13,
+          17,
+          17
+        ],
+        "target": 238,
+        "expected_solution": "(17 + (17 * 13))"
+      },
+      "completion": "<reasoning>\n(17 * 17) + 13 = 289 + 13 = 238.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 * 17) + 13</answer>",
+      "extracted_math": "(17 * 17) + 13",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        17,
+        17
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          12,
+          18
+        ],
+        "target": 15,
+        "expected_solution": "(12 + (18 / (5 + 1)))"
+      },
+      "completion": "<reasoning>\n(12 / 1) + 18 = 15.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 / 1) + 18</answer>",
+      "extracted_math": "(12 / 1) + 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        12,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          10,
+          17
+        ],
+        "target": 97,
+        "expected_solution": "(17 + (10 * 8))"
+      },
+      "completion": "<reasoning>\n(10 - 8) * 17 = 97.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 8) * 17</answer>",
+      "extracted_math": "(10 - 8) * 17",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        10,
+        8
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          9,
+          18
+        ],
+        "target": 270,
+        "expected_solution": "(18 * (6 + 9))"
+      },
+      "completion": "<reasoning>\n(18 * 9) * 6 = 270.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 * 9) * 6</answer>",
+      "extracted_math": "(18 * 9) * 6",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        18,
+        9
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          14,
+          17
+        ],
+        "target": 8,
+        "expected_solution": "(14 - (17 - 11))"
+      },
+      "completion": "<reasoning>\n(17 - 11) * 14 = 8.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 11) * 14</answer>",
+      "extracted_math": "(17 - 11) * 14",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        17,
+        11
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          18
+        ],
+        "target": 13,
+        "expected_solution": "(18 + (2 - 7))"
+      },
+      "completion": "<reasoning>\n(18 - 7) * 2 = 13.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 7) * 2</answer>",
+      "extracted_math": "(18 - 7) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        18,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          11,
+          13,
+          20
+        ],
+        "target": 1452,
+        "expected_solution": "(11 * (4 * (13 + 20)))"
+      },
+      "completion": "<reasoning>\n(20 * 13) + (11 * 4) = 1452.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 * 13) + (11 * 4)</answer>",
+      "extracted_math": "(20 * 13) + (11 * 4)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        13,
+        11,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          8,
+          11,
+          15,
+          20
+        ],
+        "target": 321,
+        "expected_solution": "(15 - (2 - (11 * (20 + 8))))"
+      },
+      "completion": "<reasoning>\n(20 - 15) * 11 = 55.\n55 + 2 = 57.\n57 + 8 = 65.\n65 + 20 = 85.\n85 + 32 = 117.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 - 15) * 11 + 8 + 20 + 32</answer>",
+      "extracted_math": "(20 - 15) * 11 + 8 + 20 + 32",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        32,
+        20,
+        8,
+        11,
+        20,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          10,
+          10,
+          15,
+          19
+        ],
+        "target": 817,
+        "expected_solution": "(19 * (8 + (15 + (10 + 10))))"
+      },
+      "completion": "<reasoning>\n(10 + 10) * 15 = 300.\n19^2 = 361.\n361 - 300 = 61.\n8 * 61 = 817.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 + 10) * 15 - 19**2</answer>",
+      "extracted_math": "(10 + 10) * 15 - 19**2",
+      "is_valid": false,
+      "reason": "unsafe_expression",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          10,
+          14,
+          20
+        ],
+        "target": 47,
+        "expected_solution": "(20 + (14 + (10 + 3)))"
+      },
+      "completion": "<reasoning>\n(10 + 20) * 3 = 47.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 + 20) * 3</answer>",
+      "extracted_math": "(10 + 20) * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        10,
+        20
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          12,
+          13,
+          13,
+          16
+        ],
+        "target": 22,
+        "expected_solution": "(12 + (13 - (16 - 13)))"
+      },
+      "completion": "<reasoning>\n(13 - 12) * 16 = 22.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(13 - 12) * 16</answer>",
+      "extracted_math": "(13 - 12) * 16",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        13,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          12,
+          12,
+          16,
+          17
+        ],
+        "target": 68,
+        "expected_solution": "(17 * (12 + (16 - (2 * 12))))"
+      },
+      "completion": "<reasoning>\n(17 - 12) * 16 = 68.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 12) * 16</answer>",
+      "extracted_math": "(17 - 12) * 16",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        17,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          12,
+          19
+        ],
+        "target": 155,
+        "expected_solution": "(5 * (19 + 12))"
+      },
+      "completion": "<reasoning>\n(19 * 12) + 5 = 227.\n227 - 7 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 = 225.\n225 - 5 = 220.\n220 + 5 =",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          4,
+          14
+        ],
+        "target": 68,
+        "expected_solution": "(4 * (3 + 14))"
+      },
+      "completion": "<reasoning>\n(14 + 3) * 4 = 68.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(14 + 3) * 4</answer>",
+      "extracted_math": "(14 + 3) * 4",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        14,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          7,
+          9,
+          14,
+          15
+        ],
+        "target": 11347,
+        "expected_solution": "(7 + (14 * (9 * (6 * 15))))"
+      },
+      "completion": "<reasoning>\n(15 * 14) + (9 * 7) = 11347.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 14) + (9 * 7)</answer>",
+      "extracted_math": "(15 * 14) + (9 * 7)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        14,
+        9,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          13,
+          15,
+          16,
+          20
+        ],
+        "target": 20,
+        "expected_solution": "(16 * (20 / (8 * (15 - 13))))"
+      },
+      "completion": "<reasoning>\n(16 - 13) * 20 = 20.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 - 13) * 20</answer>",
+      "extracted_math": "(16 - 13) * 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        16,
+        13
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          15,
+          15,
+          18
+        ],
+        "target": 75,
+        "expected_solution": "(6 * (15 * (15 / 18)))"
+      },
+      "completion": "<reasoning>\n(15 + 15) * 18 = 75.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 + 15) * 18</answer>",
+      "extracted_math": "(15 + 15) * 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        15,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          11,
+          20
+        ],
+        "target": 33,
+        "expected_solution": "(11 + (2 + 20))"
+      },
+      "completion": "<reasoning>\n(20 - 11) * 2 = 33.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 - 11) * 2</answer>",
+      "extracted_math": "(20 - 11) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        20,
+        11
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          10,
+          17
+        ],
+        "target": 3,
+        "expected_solution": "(10 - (17 - 10))"
+      },
+      "completion": "<reasoning>\n(10 - 17) / 10 = 3.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 17) / 10</answer>",
+      "extracted_math": "(10 - 17) / 10",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        10,
+        17
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          4,
+          6,
+          16
+        ],
+        "target": 17,
+        "expected_solution": "(16 + (6 / (4 + 2)))"
+      },
+      "completion": "<reasoning>\n(16 / 4) + 2 = 5.\n5 * 4 = 20.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 / 4) + 2</answer>",
+      "extracted_math": "(16 / 4) + 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        16,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          13,
+          20
+        ],
+        "target": 30,
+        "expected_solution": "(20 - (6 - (13 + 3)))"
+      },
+      "completion": "<reasoning>\n(20 - 6) * 3 = 30.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 - 6) * 3</answer>",
+      "extracted_math": "(20 - 6) * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        20,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          8,
+          17,
+          19
+        ],
+        "target": 459,
+        "expected_solution": "(1 * (17 * (8 + 19)))"
+      },
+      "completion": "<reasoning>\n(19 * 17) + 1 = 323.\n323 + 19 = 342.\n342 + 1 = 343.\n343 + 1 = 344.\n344 + 1 = 345.\n345 + 1 = 346.\n346 + 1 = 347.\n347 + 1 = 348.\n348 + 1 = 349.\n349 + 1 = 350.\n350 + 1 = 351.\n351 + 1 = 352.\n352 + 1 = 353.\n353 + 1 = 354.\n354 + 1 = 355.\n355 + 1 = 356.\n356 + 1 = 357.\n357 + 1 = 358.\n358 + 1 = 359.\n359 + 1 = 360.\n360 + 1",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          7,
+          14,
+          18
+        ],
+        "target": 167,
+        "expected_solution": "(7 + (5 * (18 + 14)))"
+      },
+      "completion": "<reasoning>\n(18 - 5) * 14 = 167.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 5) * 14</answer>",
+      "extracted_math": "(18 - 5) * 14",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        18,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          8
+        ],
+        "target": 4,
+        "expected_solution": "(3 * (8 / 6))"
+      },
+      "completion": "<reasoning>\n(8 - 6) / 3 = 4.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(8 - 6) / 3</answer>",
+      "extracted_math": "(8 - 6) / 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        8,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          10,
+          13,
+          17,
+          19
+        ],
+        "target": 201,
+        "expected_solution": "(17 - (13 - (7 + (10 * 19))))"
+      },
+      "completion": "<reasoning>\n(19 - 17) * (13 + 10) = 201.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 17) * (13 + 10)</answer>",
+      "extracted_math": "(19 - 17) * (13 + 10)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        17,
+        13,
+        10
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          8,
+          14,
+          16
+        ],
+        "target": 256,
+        "expected_solution": "(14 * (16 / (7 / 8)))"
+      },
+      "completion": "<reasoning>\n(16 * 14) + (8 * 7) = 256.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 * 14) + (8 * 7)</answer>",
+      "extracted_math": "(16 * 14) + (8 * 7)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        14,
+        8,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          14
+        ],
+        "target": 19,
+        "expected_solution": "(14 + (5 * 1))"
+      },
+      "completion": "<reasoning>\n(14 - 5) * 1 = 19.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(14 - 5) * 1</answer>",
+      "extracted_math": "(14 - 5) * 1",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        14,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          10,
+          11,
+          12
+        ],
+        "target": 37,
+        "expected_solution": "(11 + (4 + (10 + 12)))"
+      },
+      "completion": "<reasoning>\n(10 - 4) * 11 = 66.\n66 / 12 = 37.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 4) * 11 / 12</answer>",
+      "extracted_math": "(10 - 4) * 11 / 12",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        11,
+        10,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          18,
+          20
+        ],
+        "target": 1,
+        "expected_solution": "(3 - (20 - 18))"
+      },
+      "completion": "<reasoning>\n(18 / 3) - 20 = 1.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 / 3) - 20</answer>",
+      "extracted_math": "(18 / 3) - 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        18,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          8,
+          18
+        ],
+        "target": 6,
+        "expected_solution": "(7 + (8 - (18 / 2)))"
+      },
+      "completion": "<reasoning>\n(18 - 8) / 2 = 5.\n5 * 7 = 35.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 8) / 2 * 7</answer>",
+      "extracted_math": "(18 - 8) / 2 * 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        2,
+        18,
+        8
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          9,
+          13,
+          19
+        ],
+        "target": 15561,
+        "expected_solution": "(19 * (9 * (13 * 7)))"
+      },
+      "completion": "<reasoning>\n(19 * 13) + (9 * 7) = 15561.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 * 13) + (9 * 7)</answer>",
+      "extracted_math": "(19 * 13) + (9 * 7)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        13,
+        9,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          3,
+          5,
+          7,
+          20
+        ],
+        "target": 17,
+        "expected_solution": "(20 - (3 * (3 - (7 - 5))))"
+      },
+      "completion": "<reasoning>\n(3 + 3) * 5 = 30.\n30 / 20 = 1.5.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(3 + 3) * 5 / 20</answer>",
+      "extracted_math": "(3 + 3) * 5 / 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        5,
+        3,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          14,
+          17
+        ],
+        "target": 1190,
+        "expected_solution": "(14 * (5 * 17))"
+      },
+      "completion": "<reasoning>\n(17 * 14) + 5 = 238 + 5 = 243.\n243 * 5 = 1215.\n1215 + 5 = 1220.\n1220 + 5 = 1225.\n1225 + 5 = 1230.\n1230 + 5 = 1235.\n1235 + 5 = 1240.\n1240 + 5 = 1245.\n1245 + 5 = 1250.\n1250 + 5 = 1255.\n1255 + 5 = 1260.\n1260 + 5 = 1265.\n1265 + 5 = 1270.\n1270 + 5 = 1275.\n1275 + 5 = 1280.\n1280 + 5 = 1285.\n1285 + 5 = 1290.\n1290",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          4,
+          16,
+          19
+        ],
+        "target": 244,
+        "expected_solution": "(16 + (3 * (4 * 19)))"
+      },
+      "completion": "<reasoning>\n(19 - 4) * 16 = 244.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 4) * 16</answer>",
+      "extracted_math": "(19 - 4) * 16",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        19,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          8
+        ],
+        "target": 3,
+        "expected_solution": "(8 - (7 - 2))"
+      },
+      "completion": "<reasoning>\n(8 - 7) * 2 = 3.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(8 - 7) * 2</answer>",
+      "extracted_math": "(8 - 7) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        8,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          4,
+          6,
+          18
+        ],
+        "target": 87,
+        "expected_solution": "(3 - (6 * (4 - 18)))"
+      },
+      "completion": "<reasoning>\n(18 - 6) * 3 = 87.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 - 6) * 3</answer>",
+      "extracted_math": "(18 - 6) * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        18,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          5,
+          10,
+          18
+        ],
+        "target": 7,
+        "expected_solution": "(18 - (10 + (5 - (1 * 4))))"
+      },
+      "completion": "<reasoning>\n(10 - 1) * 18 = 178.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 - 1) * 18</answer>",
+      "extracted_math": "(10 - 1) * 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        10,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          9,
+          16
+        ],
+        "target": 576,
+        "expected_solution": "(9 * (16 * 4))"
+      },
+      "completion": "<reasoning>\n(16 + 9) * 4 = 576.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 + 9) * 4</answer>",
+      "extracted_math": "(16 + 9) * 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        16,
+        9
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          15,
+          17
+        ],
+        "target": 7,
+        "expected_solution": "(1 * (17 - (15 - 5)))"
+      },
+      "completion": "<reasoning>\n(17 - 5) * 1 = 12.\n15 / 1 = 15.\n12 + 15 = 7.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(17 - 5) * 1 + 15</answer>",
+      "extracted_math": "(17 - 5) * 1 + 15",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        1,
+        17,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          7,
+          19
+        ],
+        "target": 133,
+        "expected_solution": "(7 / (1 / 19))"
+      },
+      "completion": "<reasoning>\n(19 - 7) * 1 = 133.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 7) * 1</answer>",
+      "extracted_math": "(19 - 7) * 1",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        19,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          12,
+          12,
+          14,
+          14,
+          15
+        ],
+        "target": 2045,
+        "expected_solution": "(15 + (14 + (14 * (12 * 12))))"
+      },
+      "completion": "<reasoning>\n(15 * 14) + (12 * 12) = 210 + 144 = 2045.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 14) + (12 * 12)</answer>",
+      "extracted_math": "(15 * 14) + (12 * 12)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        14,
+        12,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          7,
+          16
+        ],
+        "target": 140,
+        "expected_solution": "(7 * (4 + 16))"
+      },
+      "completion": "<reasoning>\n(16 * 7) + 4 = 140.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 * 7) + 4</answer>",
+      "extracted_math": "(16 * 7) + 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        16,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          13,
+          20
+        ],
+        "target": 35,
+        "expected_solution": "(20 + (13 + 2))"
+      },
+      "completion": "<reasoning>\n(20 - 13) * 2 = 35.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(20 - 13) * 2</answer>",
+      "extracted_math": "(20 - 13) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        20,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          18,
+          20
+        ],
+        "target": 35,
+        "expected_solution": "(20 + (18 - 3))"
+      },
+      "completion": "<reasoning>\n(18 / 3) * 20 = 35.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(18 / 3) * 20</answer>",
+      "extracted_math": "(18 / 3) * 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        18,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          4,
+          15,
+          19
+        ],
+        "target": 285,
+        "expected_solution": "(19 * (4 / (4 * (1 / 15))))"
+      },
+      "completion": "<reasoning>\n(19 - 1) * 15 = 285.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 - 1) * 15</answer>",
+      "extracted_math": "(19 - 1) * 15",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        19,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          16,
+          18,
+          20,
+          20
+        ],
+        "target": 360,
+        "expected_solution": "(20 * (20 - (18 - 16)))"
+      },
+      "completion": "<reasoning>\n(16 * 20) * (18 / 20) = 360.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(16 * 20) * (18 / 20)</answer>",
+      "extracted_math": "(16 * 20) * (18 / 20)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        20,
+        18,
+        20
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          11
+        ],
+        "target": 5,
+        "expected_solution": "(11 - (5 + 1))"
+      },
+      "completion": "<reasoning>\n(11 - 5) / 1 = 5.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(11 - 5) / 1</answer>",
+      "extracted_math": "(11 - 5) / 1",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        11,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          15,
+          16,
+          18
+        ],
+        "target": 4500,
+        "expected_solution": "(18 * (10 + (15 * 16)))"
+      },
+      "completion": "<reasoning>\n(10 * 15) * (16 * 18)\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(10 * 15) * (16 * 18)</answer>",
+      "extracted_math": "(10 * 15) * (16 * 18)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        15,
+        16,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          12,
+          12,
+          15
+        ],
+        "target": 72,
+        "expected_solution": "(6 * (12 + (15 - (3 + 12))))"
+      },
+      "completion": "<reasoning>\n(12 * 12) / 3 = 48.\n48 * 15 = 720.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(12 * 12) / 3 * 15</answer>",
+      "extracted_math": "(12 * 12) / 3 * 15",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        3,
+        12,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          15,
+          19
+        ],
+        "target": 3135,
+        "expected_solution": "(19 * (11 * 15))"
+      },
+      "completion": "<reasoning>\n(15 * 19) + 11 = 3135.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 19) + 11</answer>",
+      "extracted_math": "(15 * 19) + 11",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        15,
+        19
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          14,
+          14,
+          19,
+          20
+        ],
+        "target": 383,
+        "expected_solution": "(3 + (14 * (20 / (14 / 19))))"
+      },
+      "completion": "<reasoning>\n(14 + 14) * 19 = 366.\n366 + 20 = 386.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(14 + 14) * 19 + 20</answer>",
+      "extracted_math": "(14 + 14) * 19 + 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        19,
+        14,
+        14
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          8,
+          10,
+          13,
+          19
+        ],
+        "target": 19761,
+        "expected_solution": "(1 + (19 * (8 * (10 * 13))))"
+      },
+      "completion": "<reasoning>\n(19 * 10) + (13 * 8) = 19761.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(19 * 10) + (13 * 8)</answer>",
+      "extracted_math": "(19 * 10) + (13 * 8)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        10,
+        13,
+        8
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    }
+  ]
+}

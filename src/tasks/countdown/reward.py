@@ -1,3 +1,6 @@
+from collections.abc import Mapping
+from types import MappingProxyType
+
 from src.tasks.countdown.verifier import (
     VerificationResult,
     VerificationStatus,
@@ -5,7 +8,11 @@ from src.tasks.countdown.verifier import (
 )
 
 
-REWARD_MAPPING: dict[str, float] = {
+SHAPED_REWARD_PRESET = "shaped"
+CORRECTNESS_ONLY_REWARD_PRESET = "correctness_only"
+
+
+SHAPED_REWARD_MAPPING: dict[str, float] = {
     VerificationStatus.CORRECT.value: 1.0,
     VerificationStatus.WRONG_VALUE.value: 0.3,
     VerificationStatus.WRONG_NUMBERS.value: 0.05,
@@ -15,8 +22,37 @@ REWARD_MAPPING: dict[str, float] = {
     VerificationStatus.DIVISION_BY_ZERO.value: 0.0,
 }
 
+# Backwards-compatible default used by the frozen baseline/evaluation path.
+REWARD_MAPPING = SHAPED_REWARD_MAPPING
 
-def reward_from_verification_result(result: VerificationResult) -> float:
+CORRECTNESS_ONLY_REWARD_MAPPING: dict[str, float] = {
+    status.value: (1.0 if status is VerificationStatus.CORRECT else 0.0)
+    for status in VerificationStatus
+}
+
+REWARD_PRESETS: Mapping[str, Mapping[str, float]] = MappingProxyType(
+    {
+        SHAPED_REWARD_PRESET: MappingProxyType(dict(SHAPED_REWARD_MAPPING)),
+        CORRECTNESS_ONLY_REWARD_PRESET: MappingProxyType(dict(CORRECTNESS_ONLY_REWARD_MAPPING)),
+    }
+)
+
+
+def get_reward_mapping(preset: str = SHAPED_REWARD_PRESET) -> dict[str, float]:
+    """Returns a copy of an immutable named training reward preset."""
+    try:
+        return dict(REWARD_PRESETS[preset])
+    except KeyError as error:
+        valid_presets = ", ".join(sorted(REWARD_PRESETS))
+        raise ValueError(
+            f"Unknown Countdown reward preset {preset!r}. Expected one of: {valid_presets}."
+        ) from error
+
+
+def reward_from_verification_result(
+    result: VerificationResult,
+    reward_mapping: dict[str, float] | None = None,
+) -> float:
     """
     Maps a structured verification result to a scalar reward for RL training.
 
@@ -29,7 +65,8 @@ def reward_from_verification_result(result: VerificationResult) -> float:
             or invented literals.
     - 0.0: Invalid, unsafe, empty, parse error, or division by zero.
     """
-    return REWARD_MAPPING[result.reason.value]
+    mapping = REWARD_MAPPING if reward_mapping is None else reward_mapping
+    return mapping[result.reason.value]
 
 
 def countdown_reward(

@@ -1,0 +1,5157 @@
+{
+  "config": {
+    "adapter_path": "models/Qwen2.5-1.5B-GRPO-correctness-only-step200-seed777",
+    "dataset": "data/countdown_eval_200.json",
+    "dataset_size": 200,
+    "batch_size": 1,
+    "device": "cuda",
+    "torch_dtype": "torch.float16",
+    "decoding": {
+      "strategy": "greedy",
+      "max_new_tokens": 256,
+      "do_sample": false
+    },
+    "environment": {
+      "python": "3.12.13",
+      "torch": "2.10.0+cu128",
+      "transformers": "5.0.0"
+    },
+    "command": {
+      "argv": [
+        "scripts/eval_grpo_model.py",
+        "--model",
+        "models/Qwen2.5-1.5B-GRPO-correctness-only-step200-seed777",
+        "--dataset",
+        "data/countdown_eval_200.json",
+        "--batch-size",
+        "1",
+        "--max-new-tokens",
+        "256",
+        "--report-path",
+        "reports/eval_Qwen2.5-1.5B-GRPO-correctness-only-step200-seed777_pass1_results.json"
+      ]
+    }
+  },
+  "metrics": {
+    "pass_at_1": 4.0,
+    "format_error_rate": 18.5,
+    "safe_parseable_rate": 75.0,
+    "exact_number_usage_rate": 32.5,
+    "mean_reward": 0.14675000000000032,
+    "avg_output_length": 372.63,
+    "status_counts": {
+      "wrong_numbers": 85,
+      "format_error": 37,
+      "wrong_value": 57,
+      "parse_error": 11,
+      "correct": 8,
+      "unsafe_expression": 2
+    },
+    "status_counts_by_k": {
+      "4": {
+        "wrong_numbers": 23,
+        "format_error": 14,
+        "wrong_value": 21,
+        "parse_error": 5,
+        "unsafe_expression": 1,
+        "correct": 1
+      },
+      "3": {
+        "wrong_numbers": 34,
+        "parse_error": 4,
+        "wrong_value": 29,
+        "format_error": 11,
+        "correct": 7
+      },
+      "5": {
+        "wrong_value": 7,
+        "format_error": 12,
+        "wrong_numbers": 28,
+        "parse_error": 2,
+        "unsafe_expression": 1
+      }
+    },
+    "uses_too_few_literals_count": 40,
+    "introduces_forbidden_literals_count": 55
+  },
+  "results": [
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          10,
+          13
+        ],
+        "target": 23,
+        "expected_solution": "(10 - (13 * (5 - 6)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 5, 6, 10, and 13 that equals 23. One possible way to do this is by first combining 10 and 13 to get 23 directly, then subtracting 5 from the result. This ensures we use each number exactly once without introducing any additional literals.\n</reasoning>\n<answer>(10 + 13) - 5</answer>",
+      "extracted_math": "(10 + 13) - 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        10,
+        13
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          8,
+          9,
+          11
+        ],
+        "target": 4,
+        "expected_solution": "(11 - (7 / (9 - 8)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 7, 8, 9, and 11 that equals 4. One possible way to do this is by combining them with basic arithmetic operations.\n\nFirst, we can multiply 9 and 11 to get 99. Then, subtract 8 from 99 to get 91. Finally, add 7 to 91 to get 98. However, this does not equal 4.\n\nInstead, let's try another approach. We can divide 9 by 11 to get approximately 0.818. Then, subtract 7 from 9 to get 2. Finally, add 8 to 2 to get 10. This still doesn't work.\n\nLet's try a different combination. We can multiply 9 by 11 to get 99. Then, subtract 8 from 99 to get 91. Finally, add 7 to 91 to get 98. Again, this doesn't equal 4.\n\nAfter trying several combinations, we realize that there might be a mistake in our initial reasoning. Let's re-evaluate the problem carefully.\n\nOne possible solution is to consider",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          7,
+          8,
+          11
+        ],
+        "target": 168,
+        "expected_solution": "(7 * (5 + (11 + 8)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 8 by 11 to get 88. Then, subtract 7 from 5 to get 3. Finally, add 88 and 3 to get 168.\n</reasoning>\n<answer>(8 * 11) - 7 + 5</answer>",
+      "extracted_math": "(8 * 11) - 7 + 5",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        7,
+        8,
+        11
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          16,
+          18
+        ],
+        "target": 198,
+        "expected_solution": "(18 * (16 - 5))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 18 to get a large number quickly. Then, we need to adjust this product to reach 198. We can do this by dividing 198 by 5 and then multiplying the result by our previous product.\n</reasoning>\n<answer>(16 * 18) / 5 * 16 * 18</answer>",
+      "extracted_math": "(16 * 18) / 5 * 16 * 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        16,
+        5,
+        16,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          4,
+          17
+        ],
+        "target": 25,
+        "expected_solution": "(4 + (17 + 4))"
+      },
+      "completion": "<reasoning>\nWe can start by using the first two 4s to get close to our target. We need an additional value that will help us reach 25. Since we have 17 left, we can subtract 17 from 25 to get 8. Now we just need to add another 4 to make 12. So, we can combine the remaining 4 with the previous result to get 16. This gives us \\(4 \\times 4 - 17\\).\n</reasoning>\n<answer>4 \\times 4 - 17</answer>",
+      "extracted_math": "4 \\times 4 - 17",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          12,
+          13,
+          15
+        ],
+        "target": 2340,
+        "expected_solution": "(13 * (12 * 15))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by 13 to get a large number quickly. Then, we need to adjust the result to reach 2340. We can do this by dividing the product by 12 and then multiplying by another factor that will bring us close to 2340. Let's start with the multiplication first.\n</reasoning>\n<answer>(15 * 13) * (20 + 12)</answer>",
+      "extracted_math": "(15 * 13) * (20 + 12)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        13,
+        20,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          12,
+          17
+        ],
+        "target": 197,
+        "expected_solution": "(17 + (3 * (12 * 5)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 12 to get a large number quickly. Then, we subtract 5 from that product and add 3 at the end to reach the target value of 197.\n</reasoning>\n<answer>(17 * 12) - 5 + 3</answer>",
+      "extracted_math": "(17 * 12) - 5 + 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        5,
+        17,
+        12
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          9,
+          12,
+          15
+        ],
+        "target": 22,
+        "expected_solution": "(4 - (9 - (15 + 12)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 4, 9, 12, and 15 that equals 22. One possible way to do this is by first subtracting 4 from 15, then adding 9, and finally adding 12. This ensures we use each number exactly once without introducing any additional literals.\n</reasoning>\n<answer>(15 - 4) + 9 + 12</answer>",
+      "extracted_math": "(15 - 4) + 9 + 12",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        9,
+        15,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          10,
+          14,
+          16
+        ],
+        "target": 3680,
+        "expected_solution": "(16 * (10 * (14 + 9)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to the target value. We can start by multiplying 14 and 16 to get 224. Then, we can multiply that result with 9 to get closer to our target. Finally, we add 10 to reach the exact target value.\n</reasoning>\n<answer>(14 * 16) * 9 + 10</answer>",
+      "extracted_math": "(14 * 16) * 9 + 10",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        9,
+        14,
+        16
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          11,
+          13,
+          20
+        ],
+        "target": 55,
+        "expected_solution": "(11 + (13 + (20 + 11)))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 11 and 11 to get 22.\nNext, we can add 13 to 22 to get 35.\nFinally, we subtract 20 from 35 to get 15.\nHowever, this does not give us the target value of 55.\nWe need to adjust our approach.\nLet's try combining 11 and 13 to get 24.\nThen, we can multiply 24 by 2 to get 48.\nNow, we have 48 left to reach the target of 55.\nTo do this, we can divide 48 by 2 to get 24.\nSo, the final expression would be: (11 + 11) * 2 - 20 / 2.\n</reasoning>\n<answer>((11 + 11) * 2) - (20 / 2)</answer>",
+      "extracted_math": "((11 + 11) * 2) - (20 / 2)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        20,
+        2,
+        11,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          11,
+          16,
+          19
+        ],
+        "target": 15,
+        "expected_solution": "(16 - (8 / (19 - 11)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 8, 11, 16, and 19 exactly once that equals 15. One possible solution is:\n(16 - 11) * 19 / 8\nThis uses all four numbers exactly once and results in the target value of 15.\n</reasoning>\n<answer>((16 - 11) * 19) / 8</answer>",
+      "extracted_math": "((16 - 11) * 19) / 8",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        19,
+        16,
+        11
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          10,
+          14,
+          16
+        ],
+        "target": 682,
+        "expected_solution": "(10 + (16 * (14 * 3)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to the target value. We can start by multiplying 14 and 16 to get 224. Then, we can add 3 to this result to reach around 227. Finally, we can multiply this sum by 3 to get closer to 682. This approach ensures that all numbers are used exactly once without introducing any additional literals.\n</reasoning>\n<answer>(14 * 16 + 3) * 3</answer>",
+      "extracted_math": "(14 * 16 + 3) * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        3,
+        14,
+        16
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          17,
+          17,
+          18
+        ],
+        "target": 144,
+        "expected_solution": "(8 / (17 / (18 * 17)))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 17 and 17 to get 34. Then, multiply by 8 to get 272. Finally, divide by 18 to get 15. Now we have used all the numbers exactly once.\n</reasoning>\n<answer>(17 + 17) * 8 / 18</answer>",
+      "extracted_math": "(17 + 17) * 8 / 18",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        8,
+        17,
+        17
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          14,
+          15,
+          18
+        ],
+        "target": 9,
+        "expected_solution": "(14 + (18 - (15 + 8)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 8, 14, 15, and 18 that equals 9. One possible way to do this is by first creating a product involving 14 and 15, then subtracting 8 from the result, and finally dividing by another 14 to get the desired value.\n</reasoning>\n<answer>((14 * 15) - 8) / 14</answer>",
+      "extracted_math": "((14 * 15) - 8) / 14",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        8,
+        14,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          7,
+          7,
+          9
+        ],
+        "target": 79,
+        "expected_solution": "(7 + (9 * (7 + 1)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that uses all four numbers exactly once and equals 79. One possible way to do this is by using multiplication and addition/subtraction operations.\n\nFirst, we can multiply 7 and 9 to get 63. Then, we subtract 1 from 79 to get 78. Finally, we add 7 to 78 to get 85. However, this does not work because we have used 7 twice.\n\nInstead, let's try another approach. We can start with 7 multiplied by 9 to get 63. Then, we can add 1 to 79 to get 80. Finally, we subtract 7 from 80 to get 73. This still doesn't work because we have used 7 twice again.\n\nLet's try a different combination. We can start with 7 multiplied by 9 to get 63. Then, we can add 1 to 79 to get 80. Finally, we subtract 7 from 80 to get 73. This still doesn't work because we have used 7 twice again.\n\nLet's try a different combination. We can start with 7 multiplied",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          13,
+          13,
+          20,
+          20
+        ],
+        "target": 5720,
+        "expected_solution": "(20 * (13 * (20 - (11 - 13))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 13 by itself twice because \\(13 \\times 13 = 169\\). Then, we add 20 to both sides to get \\(169 + 20 + 20 = 209\\). Finally, we multiply 11 by 209 to get the result.\n</reasoning>\n<answer>11 * (13 * 13 + 20 + 20)</answer>",
+      "extracted_math": "11 * (13 * 13 + 20 + 20)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        20,
+        20,
+        13,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          12,
+          17
+        ],
+        "target": 264,
+        "expected_solution": "(12 * (17 + 5))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 12 to get a large enough base for our calculation without exceeding the target. Then, we need to add 5 to reach the total. We can achieve this with the following steps:\n1. Multiply 17 by 12.\n2. Add 5 to the result.\n</reasoning>\n<answer>(17 * 12) + 5</answer>",
+      "extracted_math": "(17 * 12) + 5",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        17,
+        12
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          6,
+          16,
+          18,
+          18
+        ],
+        "target": 7,
+        "expected_solution": "(16 + (6 * (18 / (6 - 18))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 7 using the given numbers exactly once. One possible way to do this is by combining some operations to get close to 7 and then adjusting with subtraction or division if necessary.\n\nLet's start by trying different combinations:\n1. \\( \\frac{18}{6} = 3 \\)\n2. \\( 16 - 3 = 13 \\)\n\nSince we're close but still off by 6, let's try another approach:\n3. \\( 18 - 16 = 2 \\)\n4. \\( 2 - 1 = 1 \\)\n5. \\( 1 - 6 = -5 \\)\n\nNone of these directly give us 7. Let's try another combination:\n6. \\( 18 - 16 = 2 \\)\n7. \\( 2 - 6 = -4 \\)\n\nStill not working. Let's try another method:\n8. \\( 18 - 16 = 2 \\)\n9. \\( 2 - 1 = 1 \\)\n10. \\( 1 - 6 = -5 \\)\n\nNone of these work either. Let's try another approach:\n11. \\(",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          9,
+          12,
+          18,
+          18
+        ],
+        "target": 1,
+        "expected_solution": "(9 - (18 / (18 / (12 - 4))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 1 using the given numbers exactly once. One way to do this is by subtracting 18 from 18, which gives us 0. Then we can add 9 to get 9, and finally subtract 4 to get 1.\n</reasoning>\n<answer>(18 - 18) + 9 - 4</answer>",
+      "extracted_math": "(18 - 18) + 9 - 4",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        9,
+        18,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          3,
+          12,
+          15,
+          18
+        ],
+        "target": 36,
+        "expected_solution": "(12 * (3 * (18 / (15 + 3))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 12 and 15 using multiplication to get 180. Then, we need to adjust for the remaining numbers. We can use division with 3 and 3 to get 1, which will help us reach our target of 36. So, we have \\( \\frac{180}{3} \\times 3 = 36 \\).\n</reasoning>\n<answer>\\(\\frac{180}{3} \\times 3\\)</answer>",
+      "extracted_math": "\\(\\frac{180}{3} \\times 3\\)",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          9,
+          12
+        ],
+        "target": 4,
+        "expected_solution": "(3 * (12 / 9))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 3, 9, and 12 exactly once that equals 4.\nOne possible solution is to first subtract 3 from 9, which gives us 6. Then we can divide 12 by 6, resulting in 2. Finally, we add 3 to 2, giving us 5. However, since we need to get exactly 4, we can adjust our approach slightly.\nInstead of adding 3 directly, let's try multiplying 3 by 12, which gives us 36. Now, if we subtract 9 from 36, we get 27. Dividing 27 by 9 gives us 3. Adding 3 to 3 results in 6. This doesn't quite work either, so let's try another approach.\nLet's start with dividing 12 by 3, which gives us 4. Multiplying this result by 9 gives us 36. Subtracting 9 from 36 gives us 27. Dividing 27 by 3 gives us 9. Adding 3 to 9 results in 12. This still doesn't give us ",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          4,
+          7,
+          16
+        ],
+        "target": 9,
+        "expected_solution": "(4 - (16 - (7 * (3 * 1))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 3, 4, 7, and 16 that equals 9. One possible way to do this is by combining them in a specific order with operations.\n\nFirst, we can multiply 16 by 3 to get 48. Then, subtract 4 from 48 to get 44. Next, add 7 to 44 to get 51. Finally, divide 51 by 1 to get 51. However, since we need to reach 9, let's try another approach.\n\nInstead of multiplying 16 by 3 first, let's start by adding 16 and 3 to get 19. Now, subtract 4 from 19 to get 15. Add 4 to 15 to get 19 again. Finally, subtract 7 from 19 to get 12. This doesn't work either.\n\nLet's try another combination. Multiply 16 by 3 to get 48. Subtract 4 from 48 to get 44. Add 7 to 44 to get 51. Divide 51",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          7,
+          12,
+          15
+        ],
+        "target": 7,
+        "expected_solution": "(15 - (12 - (6 + (5 - 7))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 5, 6, 7, 12, and 15 that equals 7. One possible way to do this is by combining them in a specific order and operation sequence.\n</reasoning>\n<answer>((15 - 7) * 6) / 5</answer>",
+      "extracted_math": "((15 - 7) * 6) / 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        6,
+        15,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          18,
+          20,
+          20
+        ],
+        "target": 18,
+        "expected_solution": "(18 / (20 / 20))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 18, 20, and 20 exactly once that equals 18.\nOne possible solution is to first subtract 20 from 18, which gives us -2. Then we can add 20 to get 18.\nSo the expression would be (-2 + 20).\n</reasoning>\n<answer>-2 + 20</answer>",
+      "extracted_math": "-2 + 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        2
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          3,
+          19
+        ],
+        "target": 25,
+        "expected_solution": "(19 + (3 + (1 * 3)))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 3 and 3 to get 6.\nThen, subtract 1 from 19 to get 18.\nFinally, add 6 and 18 to get 24.\nWe need to adjust by adding 1 more to reach 25.\nSo, the expression becomes: \n(3 + 3) - 1 + 19 + 1\n</reasoning>\n<answer>(3 + 3) - 1 + 19 + 1</answer>",
+      "extracted_math": "(3 + 3) - 1 + 19 + 1",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        19,
+        1,
+        3,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          18,
+          18,
+          20
+        ],
+        "target": 6480,
+        "expected_solution": "(20 * (18 * 18))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 18 by itself twice to get 324. Then, we need to multiply this result by 20 three times to reach 6480. This ensures that all numbers are used exactly once without introducing any additional integers.\n</reasoning>\n<answer>(18 * 18) * 20 * 20 * 20</answer>",
+      "extracted_math": "(18 * 18) * 20 * 20 * 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        20,
+        20,
+        18,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          10,
+          14,
+          19
+        ],
+        "target": 61,
+        "expected_solution": "(14 - (10 - (19 * 3)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 10 by 14 to get 140. Then, subtract 19 from 140 to get 121. Finally, add 3 to 121 to get the target value of 124. However, since we need to keep the solution concise, let's break down the steps more clearly without introducing unnecessary complexity.\n</reasoning>\n<answer>(10 * 14) - 19 + 3</answer>",
+      "extracted_math": "(10 * 14) - 19 + 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        19,
+        10,
+        14
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          1,
+          5
+        ],
+        "target": 6,
+        "expected_solution": "(1 * (5 + 1))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 1, and 5 that equals 6.\nOne possible solution is: \n(5 - 1) * 1 = 6.\nThis uses all three numbers exactly once.\n</reasoning>\n<answer>(5 - 1) * 1</answer>",
+      "extracted_math": "(5 - 1) * 1",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        5,
+        1
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          6,
+          17
+        ],
+        "target": 104,
+        "expected_solution": "(2 + (6 * 17))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 6 to get a large enough number quickly. Then, we subtract 2 from that product to reach our target of 104.\n</reasoning>\n<answer>17 * 6 - 2</answer>",
+      "extracted_math": "17 * 6 - 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        17,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          15,
+          18
+        ],
+        "target": 34,
+        "expected_solution": "(1 + (18 + 15))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 15 and 18 to get 33. Then, subtract 1 from 33 to get 32. Finally, add 2 to 32 to get 34.\n</reasoning>\n<answer>(15 + 18) - 1 + 2</answer>",
+      "extracted_math": "(15 + 18) - 1 + 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        1,
+        15,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          9
+        ],
+        "target": 1,
+        "expected_solution": "(9 - (3 + 5))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 3, 5, and 9 that equals 1.\nOne possible way to do this is by subtracting 9 from 5 three times, which will give us 1.\n</reasoning>\n<answer>(5 - 9) * (5 - 9) * (5 - 9)</answer>",
+      "extracted_math": "(5 - 9) * (5 - 9) * (5 - 9)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        9,
+        5,
+        9,
+        5,
+        9
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          19
+        ],
+        "target": 96,
+        "expected_solution": "(4 * (5 + 19))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 19 by 4 to get 76. Then, we need to add 5 to reach 81. Finally, subtract 5 from 81 to get 76 again, but since we have already used 5, we will just add 5 directly to our result.\n</reasoning>\n<answer>(19 * 4) + 5</answer>",
+      "extracted_math": "(19 * 4) + 5",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        19,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          15,
+          15
+        ],
+        "target": 2250,
+        "expected_solution": "(15 * (15 * 10))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by itself twice because \\(15 \\times 15 = 225\\). Then, we multiply that result by 10 to get 2250.\n</reasoning>\n<answer>(15 * 15) * 10</answer>",
+      "extracted_math": "(15 * 15) * 10",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        15,
+        15
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          8,
+          12
+        ],
+        "target": 32,
+        "expected_solution": "(12 / (3 / 8))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 12 by 3 to get 36, which is close but slightly more than 32. We then need to adjust for the difference. Subtracting 8 from 36 gives us 28, which is still too much. So, let's subtract 8 from 36 directly without using 12 again since that would repeat a number. This leaves us with 28, which is less than 32. To reach 32, we need an additional 4. Since 8 minus 4 equals 4, we can add 8 and 4 together to get 12. Therefore, the expression becomes \\(3 \\times 12 - 8\\).\n</reasoning>\n<answer>3 * 12 - 8</answer>",
+      "extracted_math": "3 * 12 - 8",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        3,
+        12
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          4,
+          11
+        ],
+        "target": 132,
+        "expected_solution": "(4 * (11 * 3))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 11 by 3 to get 33. Then, we add 4 to 33 to get 37. Finally, we multiply 37 by 3 again to get 111. This uses all the numbers exactly once.\n</reasoning>\n<answer>(11 * 3) + 4 * 3</answer>",
+      "extracted_math": "(11 * 3) + 4 * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        3,
+        4,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          7,
+          12,
+          14
+        ],
+        "target": 27,
+        "expected_solution": "(14 + (12 + (7 - 6)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 6, 7, 12, and 14 exactly once that equals 27. One possible solution is:\n(14 - 7) * 6 = 27.\nThis uses all four numbers exactly once without introducing any other integers.\n</reasoning>\n<answer>(14 - 7) * 6</answer>",
+      "extracted_math": "(14 - 7) * 6",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        14,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          6,
+          8,
+          8,
+          8
+        ],
+        "target": 14,
+        "expected_solution": "(8 - (6 - (8 + (8 - 4))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 4, 6, 8, 8, and 8 exactly once that equals 14.\n\nOne possible solution is:\n(8 - 6) * 8 = 14.\n\nThis uses all the given numbers exactly once and results in the target value.\n</reasoning>\n<answer>(8 - 6) * 8</answer>",
+      "extracted_math": "(8 - 6) * 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        8,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          2,
+          13
+        ],
+        "target": 16,
+        "expected_solution": "(1 + (13 + 2))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 2, and 13 exactly once that equals 16. One possible way to do this is by combining them with basic arithmetic operations.\n\nFirst, we can multiply 13 by 2 to get 26. Then, subtract 1 from 26 to get 25. Finally, add 1 to 25 to get 26 again, but since we want 16, we should adjust our approach slightly.\n\nInstead of directly multiplying 13 by 2, let's try adding 13 to 3, which gives us 16. This works because \\(13 + 3 = 16\\).\n\nSo, the expression would be \\((13 + 3)\\).\n</reasoning>\n<answer>(13 + 3)</answer>",
+      "extracted_math": "(13 + 3)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          10
+        ],
+        "target": 19,
+        "expected_solution": "(3 + (6 + 10))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 3, 6, and 10 exactly once that equals 19.\nOne possible solution is to first multiply 6 by 3 to get 18, then add 10 to reach 19.\n</reasoning>\n<answer>(6 * 3) + 10</answer>",
+      "extracted_math": "(6 * 3) + 10",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        6,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          13,
+          18
+        ],
+        "target": 39,
+        "expected_solution": "(18 / (6 / 13))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 13 and 18 to get 31. Then, subtract 6 from 31 to get 25. Finally, divide 25 by 1 to get 25. However, since we need an integer result, we should multiply 25 by 1 to get 25 again. This step seems unnecessary but ensures that we have used all numbers exactly once.\n</reasoning>\n<answer>(13 + 18) - 6</answer>",
+      "extracted_math": "(13 + 18) - 6",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        13,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          10,
+          16,
+          16,
+          19
+        ],
+        "target": 6080,
+        "expected_solution": "(19 * (10 / (8 / (16 * 16))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by itself twice to get 256. Then, we can add 10 to that result to get 266. Next, we can subtract 19 from 266 to get 247. Finally, we can multiply 247 by 8 to get the target value of 6080.\n</reasoning>\n<answer>(16 * 16) + 10 - 19 * 8</answer>",
+      "extracted_math": "(16 * 16) + 10 - 19 * 8",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        19,
+        8,
+        16,
+        16
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          17,
+          19,
+          20
+        ],
+        "target": 16,
+        "expected_solution": "(17 - (20 - 19))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 16 using the numbers 17, 19, and 20 exactly once. One possible way to do this is by combining them with basic arithmetic operations.\n\nFirst, we can subtract 17 from 19 to get 2. Then, we add 20 to this result to reach our target of 16.\n\nSo, the expression would be: \\( 19 - 17 + 20 \\).\n\nLet's break it down step-by-step:\n1. Subtract 17 from 19: \\( 19 - 17 = 2 \\).\n2. Add 20 to the result: \\( 2 + 20 = 22 \\).\n\nHowever, this does not equal 16. We need to adjust our approach slightly.\n\nInstead, let's try another combination:\n1. Subtract 17 from 19: \\( 19 - 17 = 2 \\).\n2. Multiply the result by 8: \\( 2 \\times 8 = 16 \\).\n\nThis gives us the correct result of 16. So, the expression should be: \\( 19 -",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          7
+        ],
+        "target": 21,
+        "expected_solution": "(7 + (2 * 7))"
+      },
+      "completion": "<reasoning>\nWe can start by using the first two numbers directly since they are small enough to handle easily. We'll try combining them with basic arithmetic operations to reach the target value of 21.\n</reasoning>\n<answer>(7 + 7) * 2</answer>",
+      "extracted_math": "(7 + 7) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        7,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          2,
+          6,
+          13
+        ],
+        "target": 18,
+        "expected_solution": "(6 - (2 - (1 + 13)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 2, 6, and 13 exactly once that equals 18. One possible way to do this is by first multiplying 6 and 3, then adding 13, and finally subtracting 1 from the result. This ensures we use all the numbers exactly once without introducing any additional literals.\n</reasoning>\n<answer>(6 * 3) + 13 - 1</answer>",
+      "extracted_math": "(6 * 3) + 13 - 1",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        13,
+        6,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          9,
+          18
+        ],
+        "target": 117,
+        "expected_solution": "(9 + (18 * 6))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 18 by 9 to get 162, which is close but slightly too high. Then, we need to adjust for the difference between 117 and 162. We can achieve this by subtracting 6 from 18, resulting in 12. Multiplying 12 by 9 gives us 108, which is still too high. Finally, we can add 9 to 108 to reach our target of 117.\n</reasoning>\n<answer>(18 * 9) - 6 + 9</answer>",
+      "extracted_math": "(18 * 9) - 6 + 9",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        9,
+        6,
+        18,
+        9
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          11,
+          12,
+          19
+        ],
+        "target": 27,
+        "expected_solution": "(19 + (11 - (12 - 9)))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 11 and 12 using addition to get 23. Then, we need to reach 27 from 19. We can do this by subtracting 19 from 23, which gives us 4. Finally, we add 9 to 4 to get the result of 27.\n</reasoning>\n<answer>(11 + 12) - 19 + 9</answer>",
+      "extracted_math": "(11 + 12) - 19 + 9",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        9,
+        19,
+        11,
+        12
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          9,
+          15
+        ],
+        "target": 1,
+        "expected_solution": "(9 + (7 - 15))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 1 using the numbers 7, 9, and 15 exactly once. One way to do this is by subtracting 9 from 15 and then dividing by 7.\n</reasoning>\n<answer>(15 - 9) / 7</answer>",
+      "extracted_math": "(15 - 9) / 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        15,
+        9
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          10,
+          14
+        ],
+        "target": 23,
+        "expected_solution": "(10 - (1 - 14))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 10, and 14 exactly once that equals 23. One possible way to do this is by combining them with basic arithmetic operations.\n\nFirst, we can multiply 10 and 14 to get 140. Then, subtract 1 from 140 to get 139. Finally, add 1 to 139 to reach 140 again, but since we want 23, we should adjust our approach slightly.\n\nInstead of directly adding 1 to 139, let's try another combination. We can divide 14 by 7 to get 2, then multiply 10 by 2 to get 20. Now, we have 140 minus 20 which gives us 120. To get closer to 23, we can add 1 more to 120, resulting in 121. However, this doesn't quite work either.\n\nLet's try another method: \n1. Multiply 10 by 14 to get 140.\n2. Subtract 10 from 140 to get ",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          12,
+          15,
+          20
+        ],
+        "target": 209,
+        "expected_solution": "(9 + (20 + (15 * 12)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by 12 to get 180. Then, add 9 to get 189. Finally, subtract 1 from 189 to get 208. This uses all numbers exactly once.\n</reasoning>\n<answer>(15 * 12) + 9 - 1</answer>",
+      "extracted_math": "(15 * 12) + 9 - 1",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        9,
+        15,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          14,
+          16,
+          16
+        ],
+        "target": 19,
+        "expected_solution": "(16 + (16 - (14 - (5 - 4))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 19 using the given numbers exactly once. One possible way to do this is by combining some operations to get close to 19 and then adjusting with fractions if necessary.\n\nFirst, let's try adding and subtracting the numbers directly:\n\\[ 14 + 5 = 19 \\]\n\nHowever, we don't have a direct addition operation available. We can use multiplication and division to adjust our result:\n\\[ 14 \\times 1 = 14 \\]\n\\[ 14 + 5 = 19 \\]\n\nSo, the expression \\( 14 \\times 1 + 5 \\) will give us 19.\n\nNow, let's verify that all numbers are used exactly once:\n- 4 is used twice (in \\( 14 \\times 1 \\)).\n- 5 is used once.\n- 14 is used once.\n- 16 is used once.\n- 16 is used once.\n\nAll numbers are used exactly once.\n\nTherefore, the final expression is:\n\\[ 14 \\times 1 + 5 \\]\n\n</reasoning>\n<answer>14 * 1 + 5</answer>",
+      "extracted_math": "14 * 1 + 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        14,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          14,
+          19
+        ],
+        "target": 31,
+        "expected_solution": "(19 - (2 - 14))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 19 and 2 to get 21. Then, subtract 14 from 21 to get 7. Finally, multiply 7 by 2 to get 14. This uses all numbers exactly once.\n</reasoning>\n<answer>(19 + 2) - 14 * 2</answer>",
+      "extracted_math": "(19 + 2) - 14 * 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        2,
+        14,
+        2
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          11,
+          17,
+          18
+        ],
+        "target": 35,
+        "expected_solution": "(11 - (6 * (18 - (17 + 5))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 11 and 17 to get 28. Then, subtract 6 from 28 to get 22. Finally, add 5 to 22 to get 27. This uses all the numbers exactly once without introducing any other integers.\n</reasoning>\n<answer>(11 + 17 - 6) + 5</answer>",
+      "extracted_math": "(11 + 17 - 6) + 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        6,
+        11,
+        17
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          9,
+          13,
+          18
+        ],
+        "target": 41,
+        "expected_solution": "(18 - (13 - (4 * 9)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that uses all four numbers exactly once and equals 41. One possible way to do this is by using addition, subtraction, multiplication, and division. Here's how we can achieve it:\n\n1. Start with \\( 13 \\times 4 \\).\n2. Add \\( 9 \\) to get \\( 13 \\times 4 + 9 \\).\n3. Subtract \\( 18 \\) from the result to get \\( 13 \\times 4 + 9 - 18 \\).\n\nNow let's break down the steps into a single expression:\n\\[ (13 \\times 4 + 9) - 18 \\]\n\nThis expression uses all the given numbers exactly once and evaluates to 41.\n</reasoning>\n<answer>(13 \\times 4 + 9) - 18</answer>",
+      "extracted_math": "(13 \\times 4 + 9) - 18",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          18,
+          18
+        ],
+        "target": 15,
+        "expected_solution": "(18 - (18 / 6))"
+      },
+      "completion": "<reasoning>\nWe need to use the numbers 6, 18, and 18 exactly once to get the target value of 15. One possible way to do this is by using the following steps:\n1. Divide 18 by 6 to get 3.\n2. Multiply the result by 18 to get 54.\n3. Subtract 3 from 54 to get 51.\n4. Finally, subtract 18 from 51 to get 33.\nHowever, we can simplify this process further by noticing that we don't actually need to divide 18 by 6 at all. We can directly multiply 18 by 6 to get 108, which is close enough to our target of 15. To adjust for the difference, we can then add 18 to 108 to get 126, but since we're working with fractions here, we'll keep it simple and just subtract 18 from 108 to get 90, and then add 18 again to get 108, and finally subtract 18 to get 90, and so on until we reach 15.\n",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          11,
+          13
+        ],
+        "target": 3,
+        "expected_solution": "(1 + (4 - (13 - 11)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 4, 11, and 13 that equals 3. One possible way to do this is by combining them with basic arithmetic operations.\n\nFirst, we can multiply 11 and 13 to get a large number, then subtract 4 from it, and finally divide by 1 to get the result of 3.\n</reasoning>\n<answer>(11 * 13 - 4) / 1</answer>",
+      "extracted_math": "(11 * 13 - 4) / 1",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        4,
+        11,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          8,
+          11
+        ],
+        "target": 12,
+        "expected_solution": "(11 + (8 / 8))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 8, 8, and 11 that equals 12. One possible way to do this is by combining them with basic arithmetic operations.\n</reasoning>\n<answer>(8 + 8) / 11</answer>",
+      "extracted_math": "(8 + 8) / 11",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        8,
+        8
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          13,
+          19,
+          19
+        ],
+        "target": 6916,
+        "expected_solution": "(19 * (13 * (7 + (19 + 2))))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to the target value. We can start by multiplying 19 with itself twice because \\(19 \\times 19 = 361\\). Then, we can add 2 and 7 together to get 9. Finally, we multiply 361 by 9 to reach the target value of 6916.\n</reasoning>\n<answer>(19 * 19) * (2 + 7)</answer>",
+      "extracted_math": "(19 * 19) * (2 + 7)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        19,
+        2,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          13,
+          17,
+          20
+        ],
+        "target": 26520,
+        "expected_solution": "(20 * (17 * (13 * 6)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to the target value. We can start by multiplying 17 and 13 together because their product is relatively large and will help us reach the target quickly. Then, we can multiply that result with 6 and finally add 20 to get the desired sum.\n\nHere's how we can do it step-by-step:\n1. \\( 17 \\times 13 = 221 \\)\n2. \\( 221 \\times 6 = 1326 \\)\n3. Finally, \\( 1326 + 20 = 1346 \\)\n\nHowever, this doesn't quite match our target. Let's try another approach:\n\n1. \\( 17 \\times 13 = 221 \\)\n2. \\( 221 \\times 6 = 1326 \\)\n3. Now, let's adjust for the remaining part:\n   - We know \\( 20 \\) needs to be added somewhere.\n   - Since \\( 20 \\) is small compared to the previous steps, adding it directly won't work well without affecting the multiplication results too much.\n\nInstead",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          17,
+          17,
+          19
+        ],
+        "target": 121,
+        "expected_solution": "(19 + (17 + (17 * (4 + 1))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 17 with itself to get 289. Then, we need to reach 121 using the remaining numbers. We can achieve this by combining 19 with 17 again to get 323, which is too high. Instead, we should try subtracting 1 from 19 to get 18, then add 17 to get 35, and finally add 17 to get 52. This gives us 121.\n</reasoning>\n<answer>(19 - 1) + (17 + 17)</answer>",
+      "extracted_math": "(19 - 1) + (17 + 17)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        1,
+        17,
+        17
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          13,
+          17
+        ],
+        "target": 1547,
+        "expected_solution": "(13 * (7 * 17))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine 13 and 17 using multiplication because their sum is close to 1547 but still needs more factors to reach the target. Then, multiply by 7 to get the final result.\n</reasoning>\n<answer>(13 + 17) * 7</answer>",
+      "extracted_math": "(13 + 17) * 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        13,
+        17
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          3,
+          8,
+          9,
+          14
+        ],
+        "target": 130,
+        "expected_solution": "(3 - (9 - (8 * (14 + 3))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 3 by itself three times to get 27. Then, we add 8 to get 35. Next, we subtract 9 from 35 to get 26. Finally, we multiply 26 by 14 to get the target value of 364.\n</reasoning>\n<answer>(3 ** 3 + 8) - 9 * 14</answer>",
+      "extracted_math": "(3 ** 3 + 8) - 9 * 14",
+      "is_valid": false,
+      "reason": "unsafe_expression",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          8,
+          17,
+          17,
+          20
+        ],
+        "target": 139,
+        "expected_solution": "(17 - (20 - (6 + (8 * 17))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 17 with itself to get 34. Then, we can multiply 6 by 17 to get 102. Next, we add 20 to 102 to get 122. Finally, we subtract 34 from 122 to get 88. This uses all the numbers exactly once without introducing any other integers.\n</reasoning>\n<answer>(6 * 17) + 20 - (17 * 17)</answer>",
+      "extracted_math": "(6 * 17) + 20 - (17 * 17)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        17,
+        17,
+        6,
+        17
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          6,
+          9,
+          14,
+          17
+        ],
+        "target": 46,
+        "expected_solution": "(14 + (9 + (6 + (17 / 1))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that uses all the given numbers exactly once and equals 46. One possible way to do this is by combining some operations to reach the target value.\n\nFirst, let's try breaking down the problem into smaller parts using the available numbers:\n1. We can start with 17 because it's close to our target.\n2. Then we can add 9 to get closer to 26.\n3. Next, subtract 6 from 26 to get 20.\n4. Finally, add 14 to 20 to get 34.\n5. Now, we have 17 left, so we can subtract 17 from 34 to get 17 again.\n\nPutting it all together, we get the following expression:\n(17 + 9 - 6) + 14 - 17\n\nLet's verify if this expression works:\n17 + 9 = 26\n26 - 6 = 20\n20 + 14 = 34\n34 - 17 = 17\n\nSo, the expression (17 + 9 - 6) + 14 - 1",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          6,
+          12,
+          13,
+          15
+        ],
+        "target": 20,
+        "expected_solution": "(6 + (12 + (13 - (15 - 4))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 4, 6, 12, 13, and 15 exactly once that equals 20.\n\nOne possible solution is:\n(15 - 13) * (12 / 6) = 20\n\nHere's how we arrived at this solution:\n1. We start by subtracting 13 from 15, which gives us 2.\n2. Then, we divide 12 by 6, which gives us 2.\n3. Finally, we multiply the results from steps 1 and 2 together, which gives us 20.\n\nEvery number is used exactly once, and no other integers appear in the expression.\n</reasoning>\n<answer>((15 - 13) * (12 / 6))</answer>",
+      "extracted_math": "((15 - 13) * (12 / 6))",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        13,
+        12,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          16,
+          20
+        ],
+        "target": 45,
+        "expected_solution": "(9 + (20 + 16))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 16 and 20 to get 36 by using addition: \n\\[ 16 + 20 = 36 \\]\n\nNext, we need to reach 45 from 9. We can do this by adding 9 to 36:\n\\[ 36 + 9 = 45 \\]\n\nSo, the expression combining all the numbers exactly once is:\n\\[ (16 + 20) + 9 \\]\n</reasoning>\n<answer>(16 + 20) + 9</answer>",
+      "extracted_math": "(16 + 20) + 9",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        9,
+        16,
+        20
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          11,
+          16
+        ],
+        "target": 288,
+        "expected_solution": "(16 * (11 + 7))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 11 to get a large number quickly. Then, we need to reach 288 from there using 7. We can do this by subtracting 7 from 16*11 twice, which will give us the required result.\n</reasoning>\n<answer>(16 * 11) - 7 - 7</answer>",
+      "extracted_math": "(16 * 11) - 7 - 7",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        7,
+        16,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          12
+        ],
+        "target": 168,
+        "expected_solution": "(2 * (7 * 12))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 12 by 7 to get a large enough base for our calculations. Then, we need to add 2 to reach the target of 168. We can achieve this with the expression \\(12 \\times 7 + 2\\).\n</reasoning>\n<answer>12 * 7 + 2</answer>",
+      "extracted_math": "12 * 7 + 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        12,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          2,
+          8,
+          19
+        ],
+        "target": 137,
+        "expected_solution": "(1 - (8 * (2 - 19)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some operations that will lead us closer to our target value of 137 using the given numbers. We can start by multiplying 19 with 8 because \\(19 \\times 8\\) gives us a large enough number close to 137. Then, we can add 2 to get closer to 137. Finally, subtract 1 from the result to reach the exact target.\n</reasoning>\n<answer>(19 \\times 8) + 2 - 1</answer>",
+      "extracted_math": "(19 \\times 8) + 2 - 1",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          12,
+          13
+        ],
+        "target": 30,
+        "expected_solution": "(5 + (13 + 12))"
+      },
+      "completion": "<reasoning>\nFirst, we can calculate \\( \\frac{13}{5} \\).\nThen, multiply by 12 to get \\( \\left(\\frac{13}{5}\\right) \\times 12 \\).\nFinally, add 5 to the result to reach 30.\n</reasoning>\n<answer>\\( \\left(\\frac{13}{5}\\right) \\times 12 + 5 \\)</answer>",
+      "extracted_math": "\\( \\left(\\frac{13}{5}\\right) \\times 12 + 5 \\)",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          10,
+          12,
+          18
+        ],
+        "target": 19440,
+        "expected_solution": "(18 * (9 * (10 * 12)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to break down the target into smaller parts that can be achieved using the given numbers. We start by finding how many times 18 fits into 19440, which gives us 1133 with a remainder. Then, we divide the remainder by 12 to get another part. Finally, we multiply the results together.\n</reasoning>\n<answer>(18 * 1133) / 12</answer>",
+      "extracted_math": "(18 * 1133) / 12",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        18,
+        1133
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          12,
+          14,
+          15,
+          19
+        ],
+        "target": 40,
+        "expected_solution": "(19 + (14 + (15 + (4 - 12))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that uses all the given numbers exactly once and equals 40. One possible way to do this is by using multiplication and addition/subtraction operations.\n\nFirst, we can multiply 12 and 15 to get 180. Then, we subtract 19 from 180 to get 161. Finally, we divide 161 by 4 to get 40.\n\nSo, the expression would be: \\( \\frac{12 \\times 15 - 19}{4} \\).\n\nLet's break it down step-by-step:\n1. Calculate \\( 12 \\times 15 \\): This gives us 180.\n2. Subtract 19 from 180: This gives us 161.\n3. Divide 161 by 4: This gives us 40.\n\nTherefore, the expression is \\( \\frac{12 \\times 15 - 19}{4} \\).\n</reasoning>\n<answer>\\(\\frac{12 \\times 15 - 19}{4}\\)</answer>",
+      "extracted_math": "\\(\\frac{12 \\times 15 - 19}{4}\\)",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          9,
+          17,
+          18
+        ],
+        "target": 459,
+        "expected_solution": "(17 * (18 + (1 * 9)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 18 to get a large number quickly. Then, we need to add some smaller numbers that will help us reach 459. We can start with adding 18 to 17, which gives us 35. Next, we need to add 18 again, but since we've used 18 twice now, we'll subtract 1 from 18 to make up for it. This gives us 17. Now, we need to add 17 to 18, which gives us 35. Finally, we need to add 18 to 17, which gives us 35. Adding these together, we get 459.\n</reasoning>\n<answer>((17 * 18) + (18 - 1)) * ((17 + 18) + 18)</answer>",
+      "extracted_math": "((17 * 18) + (18 - 1)) * ((17 + 18) + 18)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        17,
+        18,
+        18,
+        1,
+        17,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          11,
+          12
+        ],
+        "target": 2,
+        "expected_solution": "(2 * (12 - 11))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 2, 11, and 12 exactly once that equals 2.\nOne possible solution is to multiply 12 by 1/6, which gives us 2.\n</reasoning>\n<answer>12 * (1/6)</answer>",
+      "extracted_math": "12 * (1/6)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        1,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          12
+        ],
+        "target": 20,
+        "expected_solution": "(5 / (3 / 12))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 12 by 3 to get 36. Then, subtract 5 from 36 to get 31. Finally, subtract 12 from 31 to get 20.\n</reasoning>\n<answer>(12 * 3) - 5 - 12</answer>",
+      "extracted_math": "(12 * 3) - 5 - 12",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        5,
+        12,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          10,
+          15,
+          16
+        ],
+        "target": 112,
+        "expected_solution": "(16 - (4 * (1 - (10 + 15))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 10 to get 160. Then, subtract 15 from 160 to get 145. Finally, add 4 to 145 to get 149. This uses all the numbers exactly once.\n</reasoning>\n<answer>160 - 15 + 4</answer>",
+      "extracted_math": "160 - 15 + 4",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        160,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          13,
+          17
+        ],
+        "target": 26,
+        "expected_solution": "(13 - (4 - 17))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 13 and 17 to get 30. Then, subtract 4 from 30 to get 26.\n</reasoning>\n<answer>(13 + 17) - 4</answer>",
+      "extracted_math": "(13 + 17) - 4",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        13,
+        17
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          13,
+          17,
+          20
+        ],
+        "target": 10,
+        "expected_solution": "(17 + (13 - 20))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 10 using the numbers 13, 17, and 20 exactly once.\nOne possible solution is to first subtract 17 from 20 to get 3, then add 13 to get 16, and finally subtract 6 from 16 to get 10.\n</reasoning>\n<answer>(20 - 17) + 13 - 6</answer>",
+      "extracted_math": "(20 - 17) + 13 - 6",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        13,
+        20,
+        17
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          5,
+          7,
+          18
+        ],
+        "target": 3150,
+        "expected_solution": "(7 * (5 * (18 * 5)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 18 by 5 to get 90. Then, we need to multiply 5 by itself three times to get 125. Finally, we add 125 to 90 to get 3150.\n</reasoning>\n<answer>(18 * 5) * (5 * 5 * 5) + 18</answer>",
+      "extracted_math": "(18 * 5) * (5 * 5 * 5) + 18",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        18,
+        5,
+        5,
+        5,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          6,
+          20
+        ],
+        "target": 120,
+        "expected_solution": "(6 / (1 / 20))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 20 by 6 to get 120 quickly.\n</reasoning>\n<answer>20 * 6</answer>",
+      "extracted_math": "20 * 6",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          6,
+          14
+        ],
+        "target": 108,
+        "expected_solution": "(6 * (14 + 4))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 14 by 6 to get 84. Then, we need to add 4 to reach 108. So, we will add 4 to 84.\n</reasoning>\n<answer>(14 * 6) + 4</answer>",
+      "extracted_math": "(14 * 6) + 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        14,
+        6
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          3,
+          4,
+          17,
+          19
+        ],
+        "target": 122,
+        "expected_solution": "(2 + (3 * (4 + (19 + 17))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 4 to get 68. Then, subtract 19 from 68 to get 49. Next, add 3 to 49 to get 52. Finally, add 2 to 52 to get the target value of 54.\n</reasoning>\n<answer>(17 * 4) - 19 + 3 + 2</answer>",
+      "extracted_math": "(17 * 4) - 19 + 3 + 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        3,
+        19,
+        17,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          1,
+          4
+        ],
+        "target": 5,
+        "expected_solution": "(1 * (1 + 4))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 1, and 4 that equals 5.\nOne possible solution is: \n(1 + 1) * 4 / 2\nThis uses all three numbers exactly once and follows the rules of the game.\n</reasoning>\n<answer>((1 + 1) * 4) / 2</answer>",
+      "extracted_math": "((1 + 1) * 4) / 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        4,
+        1,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          10,
+          17
+        ],
+        "target": 78,
+        "expected_solution": "(10 + (17 * 4))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 10 by 7 to get 70. Then, add 17 to get 87. Finally, subtract 17 from 87 to get 78.\n</reasoning>\n<answer>(10 * 7) + 17 - 17</answer>",
+      "extracted_math": "(10 * 7) + 17 - 17",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        17,
+        10,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          10,
+          12,
+          20
+        ],
+        "target": 24,
+        "expected_solution": "(20 + (6 - (12 - 10)))"
+      },
+      "completion": "<reasoning>\nWe can start by using the largest number available, which is 20, and then we need to get close to 24 with the remaining numbers. We can subtract 6 from 20 to get 14, and then add 10 to get 24.\n</reasoning>\n<answer>(20 - 6) + 10</answer>",
+      "extracted_math": "(20 - 6) + 10",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        20,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          8,
+          16,
+          19
+        ],
+        "target": 133,
+        "expected_solution": "(3 - (16 + (6 - (19 * 8))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 19 to get a large number quickly. Then, we need to adjust the result to reach 133 using the remaining numbers. We can subtract 3 from 16 to make up for the difference between our initial multiplication and the target. Finally, we add 6 to the adjusted result to get the desired value.\n</reasoning>\n<answer>(16 * 19) - 3 + 6</answer>",
+      "extracted_math": "(16 * 19) - 3 + 6",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        3,
+        16,
+        19
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          19
+        ],
+        "target": 25,
+        "expected_solution": "(1 + (19 + 5))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 5, and 19 exactly once that equals 25.\nOne possible solution is to first multiply 19 by 5, then subtract 1 from the result.\n</reasoning>\n<answer>(19 * 5) - 1</answer>",
+      "extracted_math": "(19 * 5) - 1",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        19,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          5,
+          10,
+          13,
+          17
+        ],
+        "target": 110,
+        "expected_solution": "(2 + (13 + (10 + (17 * 5))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 10 by 13 to get a large number quickly. Then, we need to adjust for the remaining numbers. We can add 2 to 17 to make it 19, which will help us reach our target of 110. So, the expression becomes \\(10 \\times 13 + 2 + 17\\).\n</reasoning>\n<answer>10 * 13 + 2 + 17</answer>",
+      "extracted_math": "10 * 13 + 2 + 17",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        2,
+        10,
+        13
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          14,
+          15,
+          20
+        ],
+        "target": 49,
+        "expected_solution": "(20 + (14 + 15))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 14 by 15 to get 210.\nThen, subtract 20 from 210 to get 190.\nFinally, divide 190 by 10 to get 19.\nHowever, since we need an exact result of 49, let's try another approach.\nWe can add 14 and 15 to get 29.\nNext, multiply 29 by 20 to get 580.\nNow, subtract 14 from 580 to get 566.\nFinally, divide 566 by 14 to get 40.\nBut still, we're not there yet. Let's try another combination.\nAdd 14 and 15 to get 29.\nMultiply 29 by 20 to get 580.\nSubtract 14 from 580 to get 566.\nDivide 566 by 14 to get 40.\nStill not quite there. Let's try another method.\nAdd 14 and 15 to get 29.\nMultiply 29 by 20 to",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          14,
+          20
+        ],
+        "target": 40,
+        "expected_solution": "(20 + (14 + 6))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 14 and 20 to get 34. Then, subtract 6 from 34 to get 28. Finally, add 2 to 28 to get 30. This uses all numbers exactly once without introducing any other integer literals.\n</reasoning>\n<answer>(14 + 20 - 6) + 2</answer>",
+      "extracted_math": "(14 + 20 - 6) + 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        6,
+        14,
+        20
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          12,
+          15,
+          19
+        ],
+        "target": 420,
+        "expected_solution": "(12 * (6 + (15 - (5 - 19))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by 12 to get 180. Then, we need to add 5 and 6 to reach 420. So, we will add 5 and 6 together first, which gives us 11. Now, we need to multiply 11 by 180 to get the final result of 420.\n</reasoning>\n<answer>(15 * 12) + (5 + 6)</answer>",
+      "extracted_math": "(15 * 12) + (5 + 6)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        12,
+        5,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          20
+        ],
+        "target": 18,
+        "expected_solution": "(20 - (3 - 1))"
+      },
+      "completion": "<reasoning>\nFirst, we can subtract 1 from 20 to get 19. Then, we add 3 to 19 to get 22. Finally, we subtract 3 from 22 to get 18.\n</reasoning>\n<answer>(20 - 1) + 3 - 20</answer>",
+      "extracted_math": "(20 - 1) + 3 - 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        3,
+        20,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          11,
+          13,
+          13
+        ],
+        "target": 349,
+        "expected_solution": "(11 + (13 * (13 * 2)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to the target value. We can start by multiplying 13 with itself twice because \\(13 \\times 13 = 169\\). Then, we add 2 to that result to reach closer to our target. Finally, we multiply the sum by 11 to get the exact target value.\n</reasoning>\n<answer>(13 * 13 + 2) * 11</answer>",
+      "extracted_math": "(13 * 13 + 2) * 11",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        2,
+        13,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          12,
+          18,
+          19
+        ],
+        "target": 13,
+        "expected_solution": "(19 + (12 - 18))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 12, 18, and 19 exactly once that equals 13.\nOne possible solution is to first subtract 12 from 19 to get 7, then add 18 to get 25, but we can't reach 13 with just addition/subtraction.\nInstead, let's try multiplication and division. We can multiply 19 by 12 to get 228, which is too large, so we'll divide by 18 to get approximately 12.555... This isn't close enough either.\nHowever, if we consider the possibility of negative values, we might think about multiplying by -1 to get -12, then adding 18 to get 6, but again, this doesn't work.\nFinally, let's try dividing 19 by 12 to get approximately 1.583..., then multiplying by 18 to get approximately 30. This still isn't close enough.\nAfter trying different combinations, I found that the correct approach involves combining the numbers in a way that allows us to reach the target value. One possible solution is to use the following expression",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          10,
+          15
+        ],
+        "target": 2,
+        "expected_solution": "(10 + (7 - 15))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 7, 10, and 15 that equals 2. One way to do this is by subtracting 15 from 10, which gives us 5. Then we can add 7 to get 12, but since we need to reach 2, we should consider another approach. We can try dividing 10 by 5, which gives us 2 directly.\n</reasoning>\n<answer>10 / 5</answer>",
+      "extracted_math": "10 / 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          15,
+          17,
+          18,
+          19
+        ],
+        "target": 13,
+        "expected_solution": "(19 - (18 / (5 - (17 - 15))))"
+      },
+      "completion": "<reasoning>\nWe need to find an expression that uses all the given numbers exactly once and equals 13. One possible solution could involve combining some of the numbers using operations like addition, subtraction, multiplication, and division.\n\nLet's try breaking down the problem step-by-step:\n1. We start with the largest number, which is 19.\n2. Subtracting 15 from 19 gives us 4.\n3. Adding 17 to 4 results in 21.\n4. Finally, subtracting 18 from 21 yields 3.\n\nSo, we can construct the following expression:\n\\[ 19 - 15 + 17 - 18 \\]\n\nNow let's verify if this expression meets the criteria:\n- Each number from the list [5, 15, 17, 18, 19] appears exactly once.\n- No other integer literals appear in the expression.\n- The expression evaluates correctly to 13.\n\nTherefore, the expression \\( 19 - 15 + 17 - 18 \\) satisfies all the conditions.\n\n</reasoning>\n<answer>19 - 15 + 17 - 18</",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          6,
+          15,
+          20
+        ],
+        "target": 55,
+        "expected_solution": "(15 + (20 * (6 - 4)))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 15 and 20 to get 35. Then, subtract 4 from 35 to get 31. Finally, multiply 31 by 15 to get 55.\n</reasoning>\n<answer>(15 + 20) - 4 * 15</answer>",
+      "extracted_math": "(15 + 20) - 4 * 15",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        20,
+        4,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          18,
+          19
+        ],
+        "target": 6840,
+        "expected_solution": "(19 * (5 * (4 * 18)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to break down the target into smaller parts that can be achieved using the given numbers. We start by calculating \\(18 \\times 19\\), which gives us 342. Next, we calculate \\(4 \\times 5\\) to get 20. Finally, we multiply the results together: \\(342 \\times 20 = 6840\\).\n</reasoning>\n<answer>(18 \\times 19) \\times (4 \\times 5)</answer>",
+      "extracted_math": "(18 \\times 19) \\times (4 \\times 5)",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          5,
+          7,
+          9,
+          17
+        ],
+        "target": 5,
+        "expected_solution": "(7 - (5 + (5 - (17 - 9))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 5, 5, 7, 9, and 17 that equals 5. One way to do this is by combining them in a specific order to achieve the desired result.\n</reasoning>\n<answer>((5 + 5) * 7) / 9 - 17</answer>",
+      "extracted_math": "((5 + 5) * 7) / 9 - 17",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        9,
+        7,
+        5,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          7,
+          10,
+          12,
+          14
+        ],
+        "target": 21,
+        "expected_solution": "(5 + (10 + (12 / (14 / 7))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 5, 7, 10, 12, and 14 exactly once that equals 21.\n\nOne possible solution is:\n(14 - 10) * (7 - 5)\n\nExplanation:\n- First, we subtract 10 from 14 to get 4.\n- Then, we subtract 5 from 7 to get 2.\n- Finally, we multiply the results together: 4 * 2 = 8.\n\nHowever, this does not equal 21. Let's try another approach:\n\n(14 - 10) * (7 - 5) = 4 * 2 = 8\n\nStill not correct. Let's try another combination:\n\n(14 - 10) * (7 - 5) = 4 * 2 = 8\n\nStill incorrect. Let's try again with different combinations:\n\n(14 - 10) * (7 - 5) = 4 * 2 = 8\n\nStill not working. Let's try one more time:\n\n(14 - 10) * (7 - 5) = 4 * 2 =",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          11,
+          13,
+          17
+        ],
+        "target": 38,
+        "expected_solution": "(17 + (11 - (3 - (13 / 1))))"
+      },
+      "completion": "<reasoning>\nWe need to combine the given numbers using arithmetic operations to reach the target value of 38. Let's break down the steps:\n\n1. Start with the largest number, 17.\n2. Add 13 to get 30.\n3. Subtract 1 from 30 to get 29.\n4. Add 3 to 29 to get 32.\n5. Finally, add 1 to 32 to get 33.\n6. Now we have 33, but we need to adjust by adding 5 more to reach 38.\n\nSo, let's modify our approach slightly to ensure we hit exactly 38 without overshooting or undershooting.\n\n1. Start with 17.\n2. Add 13 to get 30.\n3. Subtract 1 from 30 to get 29.\n4. Add 3 to 29 to get 32.\n5. Finally, subtract 4 from 32 to get 28.\n6. Then add 10 to 28 to get 38.\n\nNow, let's construct the expression step-by-step:\n\n\\[ (17 + 13) -",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          6,
+          12,
+          12,
+          18
+        ],
+        "target": 30,
+        "expected_solution": "(12 + (6 + (18 - (12 / 2))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 12 and 12 to get 24.\nThen, subtract 6 from 24 to get 18.\nFinally, divide 18 by 2 to get the result.\n</reasoning>\n<answer>(12 + 12 - 6) / 2</answer>",
+      "extracted_math": "(12 + 12 - 6) / 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        6,
+        12,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          3,
+          12,
+          12
+        ],
+        "target": 204,
+        "expected_solution": "(12 * (2 + (3 + 12)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 12 by itself to get 144. Then, we add 2 to get 146. Finally, we subtract 2 from 146 to get 144. This uses all the numbers exactly once.\n</reasoning>\n<answer>(12 * 12) + 2 - 2</answer>",
+      "extracted_math": "(12 * 12) + 2 - 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        2,
+        12,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          7,
+          17
+        ],
+        "target": 20,
+        "expected_solution": "(1 - (5 - (7 + 17)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 5, 7, and 17 that equals 20. One possible way to do this is by first subtracting 1 from 17, then adding 5, and finally adding 7. This ensures we use each number exactly once without introducing any additional literals.\n</reasoning>\n<answer>(17 - 1) + 5 + 7</answer>",
+      "extracted_math": "(17 - 1) + 5 + 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        5,
+        17,
+        1
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          11,
+          17
+        ],
+        "target": 224,
+        "expected_solution": "(8 * (11 + 17))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 8 to get 136. Then, we add 11 to 136 to get 147. Finally, we subtract 11 from 147 to get 136 again, but since we need to reach 224, we should consider another approach.\nWe can start with multiplying 17 by 8 to get 136. Next, we can add 11 to 136 to get 147. Now, we need to double 147 to reach 294. Since we have an extra 17 left, we can divide 147 by 17 to get 8. This gives us the expression \\( \\frac{147}{17} + 11 \\).\nLet's break down the steps:\n1. Multiply 17 by 8: \\( 17 \\times 8 = 136 \\)\n2. Add 11 to 136: \\( 136 + 11 = 147 \\)\n3. Divide 147 by 17: \\( \\frac",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          8,
+          9,
+          16
+        ],
+        "target": 27,
+        "expected_solution": "(16 - (6 - (9 + 8)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 9 to get 144.\nThen, subtract 8 from 144 to get 136.\nFinally, add 6 to 136 to get 142.\nHowever, this does not give us the target value of 27.\nLet's try another approach.\nWe can divide 16 by 8 to get 2.\nThen, multiply 2 by 9 to get 18.\nNext, subtract 6 from 18 to get 12.\nFinally, add 6 to 12 to get 18.\nAgain, this does not give us the target value of 27.\nLet's try one more approach.\nWe can divide 16 by 8 to get 2.\nThen, multiply 2 by 9 to get 18.\nNext, subtract 6 from 18 to get 12.\nFinally, add 6 to 12 to get 18.\nAgain, this does not give us the target value of 27.\nLet's try one more approach.\nWe can divide 16 by 8 to get 2.\nThen, multiply 2",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          4,
+          5,
+          6,
+          8
+        ],
+        "target": 6,
+        "expected_solution": "(5 - (2 / (4 / (6 - 8))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 2, 4, 5, 6, and 8 exactly once that equals 6.\nOne possible solution is to multiply 2 by 3, which can be achieved by adding 5 and subtracting 1 from 8.\nSo the expression would be: (8 - 1) / (5 - 2)\n</reasoning>\n<answer>((8 - 1) / (5 - 2))</answer>",
+      "extracted_math": "((8 - 1) / (5 - 2))",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        1,
+        5,
+        2
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          10,
+          16,
+          18
+        ],
+        "target": 324,
+        "expected_solution": "(18 * (10 + (16 / 2)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 18 to get a large number quickly. Then, we need to reach 324 from there using the remaining numbers. We can then add 2 to that result to get our final answer.\n</reasoning>\n<answer>((16 * 18) + 2)</answer>",
+      "extracted_math": "((16 * 18) + 2)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        16,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          5,
+          7,
+          8,
+          10
+        ],
+        "target": 560,
+        "expected_solution": "(10 * (5 - (5 - (7 * 8))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 5 by itself twice to get 25. Then, we can add 7 to 25 to get 32. Next, we can multiply 32 by 8 to get 256. Finally, we can multiply 256 by 10 to get 2560. However, since we need the result to be 560, we can divide 2560 by 5 to get 512. But that's still too high. We can try dividing 2560 by 7 to get approximately 365.71. That's close enough for our purposes. So, let's go with that.\n</reasoning>\n<answer>(5 * 5) * (8 * 10) / 7</answer>",
+      "extracted_math": "(5 * 5) * (8 * 10) / 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        5,
+        5,
+        8,
+        10
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          9
+        ],
+        "target": 7,
+        "expected_solution": "(3 - (5 - 9))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 3, 5, and 9 that equals 7.\nOne possible solution is to multiply 5 by 3 and then subtract 9 from the result.\n</reasoning>\n<answer>(5 * 3) - 9</answer>",
+      "extracted_math": "(5 * 3) - 9",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        9,
+        5,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          7,
+          7,
+          10,
+          18
+        ],
+        "target": 8,
+        "expected_solution": "(10 - (7 + (6 - (18 - 7))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 8 using the given numbers exactly once. One possible way to do this is by combining some operations to get close to 8 and then adjusting accordingly.\n\nFirst, let's try to combine 7 with itself to get 49, but we don't have enough 7s yet. We can use 10 and 18 to help us reach 8.\n\nNext, we can subtract 10 from 18 to get 8 directly. This gives us the expression \\( \\frac{18}{10} - 10 \\).\n\nNow, let's simplify this expression step-by-step:\n\\[ \\frac{18}{10} - 10 = 1.8 - 10 = -8.2 \\]\n\nSince we need to adjust our approach slightly, let's consider another combination involving 7 again. We can use 7 twice to make 49, but we still lack the necessary components to reach 8.\n\nInstead, let's try a different strategy:\n\\[ 7 + 7 - 10 = 14 - 10 = 4 \\]\n\nThen, we can add 6 to get closer to 8",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          4,
+          11,
+          15
+        ],
+        "target": 1320,
+        "expected_solution": "(11 * (15 * (4 + 4)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 11 by 4 to get 44. Then, we can add 15 to 44 to get 59. Finally, we can multiply 59 by 4 again to get 236. This uses all the numbers exactly once without introducing any other integers.\n</reasoning>\n<answer>(11 * 4) + 15 * 4</answer>",
+      "extracted_math": "(11 * 4) + 15 * 4",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        4,
+        15,
+        4
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          15,
+          15,
+          20
+        ],
+        "target": 450,
+        "expected_solution": "(15 * (15 / (10 / 20)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by itself twice because \\(15 \\times 15 = 225\\). Then, we divide 20 by 10 to get 2. Finally, we multiply 225 by 2 to get 450.\n</reasoning>\n<answer>(15 * 15) / 10 * 2</answer>",
+      "extracted_math": "(15 * 15) / 10 * 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        10,
+        15,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          3,
+          4
+        ],
+        "target": 18,
+        "expected_solution": "(3 * (4 + 2))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 2, 3, and 4 that equals 18. One possible way to do this is by first multiplying 3 and 4 to get 12, then adding 2 to reach 14, and finally subtracting 2 from 14 to get 18.\n</reasoning>\n<answer>(3 * 4) + 2 - 2</answer>",
+      "extracted_math": "(3 * 4) + 2 - 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        2,
+        3,
+        4
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          2,
+          10,
+          11,
+          12
+        ],
+        "target": 112,
+        "expected_solution": "(11 * (10 + (2 / (12 - 1))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that uses each number exactly once and equals 112. One possible way to do this is by combining multiplication and addition/subtraction operations.\n\nFirst, we can multiply 12 by 10 to get 120. Then, subtract 1 from 11 to get 10. Finally, add 11 to 10 to get 21. This gives us the expression \\(12 \\times 10 - 1 + 11\\).\n\nLet's break it down step-by-step:\n1. Multiply 12 by 10: \\(12 \\times 10 = 120\\).\n2. Subtract 1 from 11: \\(11 - 1 = 10\\).\n3. Add 11 to 10: \\(10 + 11 = 21\\).\n\nCombining these steps, we get the expression \\(12 \\times 10 - 1 + 11\\), which simplifies to 112.\n\nTherefore, the expression is \\(12 \\times 10 - 1 + 11\\).\n</reasoning>\n<answer>",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          5,
+          8,
+          15
+        ],
+        "target": 30,
+        "expected_solution": "(15 * (5 + (5 - 8)))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 5 and 5 to get 10.\nNext, we add 8 to 10 to get 18.\nFinally, we subtract 15 from 18 to get 3.\nThis uses all numbers exactly once.\n</reasoning>\n<answer>(5 + 5) + 8 - 15</answer>",
+      "extracted_math": "(5 + 5) + 8 - 15",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        8,
+        5,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          8,
+          9,
+          12
+        ],
+        "target": 24,
+        "expected_solution": "(8 + (9 - (5 - 12)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 5, 8, 9, and 12 exactly once that equals 24. One possible way to do this is by first combining some of the numbers with operations to get close to 24, then adjusting if necessary.\n\nFirst, let's try adding 5 and 9 together:\n\\[ 5 + 9 = 14 \\]\n\nNext, we can add 8 to this result:\n\\[ 14 + 8 = 22 \\]\n\nFinally, we subtract 12 from this sum:\n\\[ 22 - 12 = 10 \\]\n\nSince 10 is less than 24, we need to adjust our approach. Instead of directly subtracting 12, let's consider multiplying 5 and 9 first:\n\\[ 5 \\times 9 = 45 \\]\n\nNow, we need to reach 24. We can achieve this by dividing 45 by 2:\n\\[ 45 \\div 2 = 22.5 \\]\n\nHowever, since we cannot have a fractional result here, let's reconsider our initial steps. Let's start again with a different combination:\n\nFirst,",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          8,
+          12,
+          18
+        ],
+        "target": 2592,
+        "expected_solution": "(18 * (12 * (4 + 8)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 12 by 18 to get a large number quickly. Then, we can divide that result by 4 to reach our target value of 2592. This ensures that all numbers are used exactly once without introducing any additional integers.\n</reasoning>\n<answer>(12 * 18) / 4</answer>",
+      "extracted_math": "(12 * 18) / 4",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        12,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          6,
+          19
+        ],
+        "target": 132,
+        "expected_solution": "(6 * (4 + (19 - 1)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 19 by 6 to get a large enough number for our calculations. Then, we need to adjust the result so that when we add 1 and 4, we get close to 132. We can achieve this by subtracting 1 from the product of 19 and 6, then adding 19 to the result. This will give us the desired sum.\n</reasoning>\n<answer>(19 * 6) - 1 + 19</answer>",
+      "extracted_math": "(19 * 6) - 1 + 19",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        19,
+        1,
+        19,
+        6
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          9,
+          14,
+          17
+        ],
+        "target": 180,
+        "expected_solution": "(4 * (14 + (9 + (17 + 5))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 14 by 17 to get a large number quickly. Then, we need to adjust the result to reach 180. We can do this by dividing the product by 4 and then adding 5. This will give us the desired result.\n</reasoning>\n<answer>((14 * 17) / 4) + 5</answer>",
+      "extracted_math": "((14 * 17) / 4) + 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        4,
+        14,
+        17
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          15,
+          16
+        ],
+        "target": 720,
+        "expected_solution": "(3 * (16 * 15))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by 3 to get 45. Then, we need to reach 720 from there. We can add 16 repeatedly until we get close enough to 720. Let's calculate step-by-step.\n</reasoning>\n<answer>(15 * 3) * (16 + 16 + 16 + 16 + 16)</answer>",
+      "extracted_math": "(15 * 3) * (16 + 16 + 16 + 16 + 16)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        3,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          3,
+          6,
+          7
+        ],
+        "target": 39,
+        "expected_solution": "(3 * (7 + (1 * 6)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that uses all four numbers exactly once and equals 39. One possible way to do this is by using multiplication and addition/subtraction operations.\n\nFirst, we can multiply 7 and 6 to get 42. Then, subtract 3 from 42 to get 39. This uses all the numbers exactly once.\n\nSo, the expression would be \\( (7 \\times 6) - 3 \\).\n</reasoning>\n<answer>(7 \\times 6) - 3</answer>",
+      "extracted_math": "(7 \\times 6) - 3",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          11,
+          17
+        ],
+        "target": 45,
+        "expected_solution": "(11 + (2 * 17))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 2 to get 34. Then, we add 11 to 34 to get 45.\n</reasoning>\n<answer>17 * 2 + 11</answer>",
+      "extracted_math": "17 * 2 + 11",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        17,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          15,
+          16
+        ],
+        "target": 186,
+        "expected_solution": "(6 * (16 + 15))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 15 to get a large number quickly. Then, we need to add 6 to that product to reach the target of 186. This ensures that all numbers are used exactly once without introducing any additional integers.\n</reasoning>\n<answer>(16 * 15) + 6</answer>",
+      "extracted_math": "(16 * 15) + 6",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        16,
+        15
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          7,
+          8,
+          14,
+          18
+        ],
+        "target": 1235,
+        "expected_solution": "(3 - (14 * (8 * (7 - 18))))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to 1235. We can start by combining 14 and 18 to make 322. Then, we can add 7 to get closer to our target. Finally, we can multiply by 3 to reach the desired result.\n</reasoning>\n<answer>(14 + 18) * 7 * 3</answer>",
+      "extracted_math": "(14 + 18) * 7 * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        7,
+        14,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          13,
+          19
+        ],
+        "target": 203,
+        "expected_solution": "(13 + (19 * 10))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 19 by 10 to get 190. Then, add 13 to 190 to get 203.\n</reasoning>\n<answer>19 * 10 + 13</answer>",
+      "extracted_math": "19 * 10 + 13",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        19,
+        10
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          13,
+          14
+        ],
+        "target": 11,
+        "expected_solution": "(10 - (13 - 14))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 10, 13, and 14 exactly once that equals 11.\nOne possible solution is to multiply 13 by 10 and then subtract 14 from the result.\n</reasoning>\n<answer>(13 * 10) - 14</answer>",
+      "extracted_math": "(13 * 10) - 14",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        13,
+        10
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          3,
+          17
+        ],
+        "target": 16,
+        "expected_solution": "(17 - (3 - 2))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 2, 3, and 17 that equals 16. One possible way to do this is by first subtracting 3 from 17, which gives us 14. Then we can add 2 to get 16.\n</reasoning>\n<answer>(17 - 3) + 2</answer>",
+      "extracted_math": "(17 - 3) + 2",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        17,
+        3
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          7,
+          12
+        ],
+        "target": 132,
+        "expected_solution": "(12 * (7 + 4))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 12 by 7 to get a large enough base for our calculations. Then, we need to add 4 repeatedly until we reach 132. We can achieve this by adding 4 twice more after multiplying by 7.\n</reasoning>\n<answer>(12 * 7) + 4 + 4 + 4</answer>",
+      "extracted_math": "(12 * 7) + 4 + 4 + 4",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        4,
+        4,
+        12,
+        7
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          7,
+          15
+        ],
+        "target": 144,
+        "expected_solution": "(4 + (7 * (5 + 15)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by 4 to get 60.\nThen, we can add 5 to 60 to get 65.\nFinally, we can subtract 7 from 65 to get 58.\nHowever, this does not give us the target value of 144.\nInstead, let's try another approach.\nWe can start with multiplying 15 by 4 to get 60.\nNext, we can divide 60 by 5 to get 12.\nFinally, we can square 12 to get 144.\nThis uses all the given numbers exactly once and gives us the target value of 144.\n</reasoning>\n<answer>(15 * 4) / (5 ** 2)</answer>",
+      "extracted_math": "(15 * 4) / (5 ** 2)",
+      "is_valid": false,
+      "reason": "unsafe_expression",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          13,
+          14,
+          17,
+          18
+        ],
+        "target": 741,
+        "expected_solution": "(13 * (17 + (10 * (18 - 14))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 18 to get a large number quickly. Then, we can subtract 10 from that product. Finally, we add 13 to the result.\n</reasoning>\n<answer>(17 * 18) - 10 + 13</answer>",
+      "extracted_math": "(17 * 18) - 10 + 13",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        10,
+        17,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          1,
+          6,
+          18,
+          19
+        ],
+        "target": 6,
+        "expected_solution": "(6 * (19 - (18 + (1 - 1))))"
+      },
+      "completion": "<reasoning>\nWe need to use the numbers exactly once and achieve the target value of 6. One possible way to do this is by using division and subtraction operations.\nFirst, we can divide 18 by 3 to get 6. Then, subtract 1 from the result to get 5. Finally, add 1 to the previous result to get 6.\n</reasoning>\n<answer>(18 / 3) - 1 + 1</answer>",
+      "extracted_math": "(18 / 3) - 1 + 1",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        1,
+        18,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          11,
+          19,
+          19
+        ],
+        "target": 88,
+        "expected_solution": "(11 * (19 - (19 - 8)))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 19 with itself to get 38. Then, we can add 8 to 38 to get 46. Finally, we subtract 11 from 46 to get the result of 35. However, since we need to reach 88, let's try another approach.\nWe can start by combining 19 with 11 to get 30. Then, we can multiply 8 by 30 to get 240. Now, we have 240 minus 19 to get the desired result of 221. But again, this doesn't work either.\nLet's try another combination. We can take 19 and divide it by 11 to get approximately 1.727. This isn't an exact division, but we can round it up to 2. Then, we can multiply 8 by 2 to get 16. Next, we can add 19 to 16 to get 35. Finally, we can subtract 11 from 35 to get the result of 24. Again, this doesn't work.\nLet's try one more combination",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          12,
+          12
+        ],
+        "target": 14,
+        "expected_solution": "(12 + (12 - 10))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 10, 12, and 12 exactly once that equals 14. One possible way to do this is by first subtracting 12 from 10 to get 8, then adding another 12 to reach 20, and finally dividing by 12 to get 1.5, but since we can't have decimals, we'll adjust our approach slightly.\nFirst, let's try subtracting 12 from 10 to get 8, then add 12 again to make 20, and divide by 12 to get 1.666..., which isn't exact either. However, if we consider the possibility of fractions, we might realize that \\( \\frac{1}{2} \\times 12 = 6 \\), so we could potentially combine this with the remaining numbers to achieve the target.\nLet's see how we can construct this expression without introducing decimals directly.\n</reasoning>\n<answer>\\( \\left(\\frac{1}{2} \\times 12\\right) + \\left(\\frac{1}{2} \\times 12\\right) \\)</answer",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          10,
+          10
+        ],
+        "target": 700,
+        "expected_solution": "(7 * (10 * 10))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 10 by itself twice because \\(10 \\times 10 = 100\\). Then, we add 7 to get \\(100 + 7 = 107\\), and finally, we multiply that result by another 10 to get \\(107 \\times 10 = 1070\\).\n</reasoning>\n<answer>100 + 7 * 10</answer>",
+      "extracted_math": "100 + 7 * 10",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        100,
+        7,
+        10
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          15,
+          19,
+          19
+        ],
+        "target": 224,
+        "expected_solution": "(19 + (15 + (10 * 19)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 19 by itself twice because \\(19 \\times 19 = 361\\). Then, we add 10 and 15 together to get 25. Finally, we divide 361 by 25 to get the result of 14.44, which is close but not exact. We need to adjust our approach slightly.\n</reasoning>\n<answer>((19 * 19) + 10) / 15</answer>",
+      "extracted_math": "((19 * 19) + 10) / 15",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        10,
+        19,
+        19
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          14,
+          20,
+          20
+        ],
+        "target": 414,
+        "expected_solution": "(14 + (20 * 20))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 20 and 20 to get 40. Then, multiply by 14 to reach the target value of 414.\n</reasoning>\n<answer>(20 + 20) * 14</answer>",
+      "extracted_math": "(20 + 20) * 14",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        20,
+        20
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          15,
+          19
+        ],
+        "target": 228,
+        "expected_solution": "(19 * (15 - 3))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by 19 to get a large number quickly. Then, we need to add 3 to that product to reach the target of 228. This ensures that all numbers are used exactly once without introducing any additional integers.\n</reasoning>\n<answer>(15 * 19) + 3</answer>",
+      "extracted_math": "(15 * 19) + 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        15,
+        19
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          6,
+          14,
+          17
+        ],
+        "target": 1326,
+        "expected_solution": "(6 * (17 * (14 - 1)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 14 to get a large number quickly. Then, we need to adjust the result to reach 1326. We can do this by dividing the product by 10 and adding 132. This will give us the desired result.\n</reasoning>\n<answer>(17 * 14) / 10 + 132</answer>",
+      "extracted_math": "(17 * 14) / 10 + 132",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        132,
+        10,
+        17,
+        14
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          5,
+          7,
+          17
+        ],
+        "target": 8,
+        "expected_solution": "(17 + (3 - (5 + 7)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 3, 5, 7, and 17 that equals 8. One possible way to do this is by combining them in a specific order with operations.\n\nFirst, we can multiply 7 and 17 to get 119. Then, subtract 5 from 119 to get 114. Finally, divide 114 by 17 to get 6. This gives us the expression \\( \\frac{119 - 5}{17} \\).\n\nLet's break it down step-by-step:\n1. Multiply 7 and 17: \\( 7 \\times 17 = 119 \\).\n2. Subtract 5 from 119: \\( 119 - 5 = 114 \\).\n3. Divide 114 by 17: \\( \\frac{114}{17} = 6 \\).\n\nSo, the expression \\( \\frac{119 - 5}{17} \\) uses all the given numbers exactly once and results in 8.\n</reasoning>\n<answer>\\(\\frac{119 - ",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          14,
+          18
+        ],
+        "target": 378,
+        "expected_solution": "(14 * (9 + 18))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 18 by 14 to get a large enough base for our calculations.\nThen, we need to add 9 to that product to reach 378.\nSo, the expression would be: \n(18 * 14) + 9\n</reasoning>\n<answer>(18 * 14) + 9</answer>",
+      "extracted_math": "(18 * 14) + 9",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        9,
+        18,
+        14
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          9,
+          15,
+          18,
+          18,
+          20
+        ],
+        "target": 75,
+        "expected_solution": "(20 * (15 * (9 / (18 + 18))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 18 and 18 to get 36 because they both appear twice. Then, subtract 15 from 36 to get 21. Finally, divide 20 by 21 to get the result of 75.\n</reasoning>\n<answer>(18 + 18 - 15) / 20</answer>",
+      "extracted_math": "(18 + 18 - 15) / 20",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        15,
+        18,
+        18
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          11,
+          17,
+          19
+        ],
+        "target": 20,
+        "expected_solution": "(11 + (19 + (7 - 17)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 7, 11, 17, and 19 that equals 20. One possible way to do this is by combining them with basic arithmetic operations.\n\nFirst, we can add 11 and 9 to get close to 20. Then, we subtract 17 from the result to adjust for the difference needed to reach 20.\n\nHere's how we can construct the expression step-by-step:\n1. Add 11 and 9 to get 20.\n2. Subtract 17 from 20 to get 3.\n3. Finally, multiply 3 by 7 to get 21.\n\nHowever, since we cannot directly use 9 and 17 in our expression without introducing decimals, let's try another approach:\n1. Multiply 11 and 19 to get 209.\n2. Divide 209 by 17 to get approximately 12.2941.\n3. Subtract 11 from 12.2941 to get approximately 1.2941.\n4. Finally, divide 1.2941 by 7 to",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          6,
+          8,
+          15,
+          20
+        ],
+        "target": 4,
+        "expected_solution": "(6 + (15 + (8 - (5 + 20))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 5, 6, 8, 15, and 20 that equals 4. One possible way to do this is by combining them in a specific order with operations.\n\nFirst, we can multiply 8 and 5 to get 40, then subtract 15 from 40 to get 25, and finally add 6 to 25 to get 31. However, this does not work because we need to reach exactly 4.\n\nInstead, let's try another approach:\n1. Multiply 8 and 5 to get 40.\n2. Subtract 15 from 40 to get 25.\n3. Add 6 to 25 to get 31.\n4. Finally, divide 31 by 7.5 to get 4.\n\nHowever, since we cannot use decimals directly, we should consider if there's a simpler combination without decimals. Let's re-evaluate our steps:\n\n1. Multiply 8 and 5 to get 40.\n2. Subtract 15 from 40 to get 25.\n3. Add 6 to 25 to get 3",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          11,
+          16
+        ],
+        "target": 34,
+        "expected_solution": "(11 + (7 + 16))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 16 and 11 to get 27. Then, subtract 7 from 27 to get 20. Finally, add 4 to 20 to get 24. This uses all numbers exactly once without introducing any other integer literals.\n</reasoning>\n<answer>(16 + 11) - 7 + 4</answer>",
+      "extracted_math": "(16 + 11) - 7 + 4",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        4,
+        7,
+        16,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          13,
+          16
+        ],
+        "target": 2288,
+        "expected_solution": "(13 * (11 * 16))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by itself three times because \\(16^3\\) will give us a large enough result quickly. Then, we add 13 to that product since adding 13 will bring us close to our target of 2288. This ensures that we use all the numbers exactly once without introducing any additional integers.\n</reasoning>\n<answer>(16 * 16 * 16) + 13</answer>",
+      "extracted_math": "(16 * 16 * 16) + 13",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        16,
+        16,
+        16
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          5,
+          18
+        ],
+        "target": 9,
+        "expected_solution": "(18 - (5 + 4))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 4, 5, and 18 that equals 9. One possible way to do this is by first subtracting 4 from 18, which gives us 14. Then we can add 5 to get 19, but since we want 9, we should consider another approach. We can try dividing 18 by 2, which gives us 9 directly.\n</reasoning>\n<answer>18 / 2</answer>",
+      "extracted_math": "18 / 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        2
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          8,
+          10
+        ],
+        "target": 2,
+        "expected_solution": "(8 / (10 - 6))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 6, 8, and 10 exactly once that equals 2.\nOne possible solution is to divide 10 by 5, which gives us 2.\n</reasoning>\n<answer>10 / 5</answer>",
+      "extracted_math": "10 / 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          8,
+          12,
+          12
+        ],
+        "target": 60,
+        "expected_solution": "(12 + (8 * (12 - 6)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that uses all four numbers exactly once and equals 60. One possible way to do this is by using multiplication and addition/subtraction operations.\n\nFirst, we can multiply 12 and 5 to get 60. Then, we can add 6 to the result to reach our target value of 60.\n\nSo, the expression would be: \\( 12 \\times 5 + 6 \\).\n\nLet's break it down step-by-step:\n1. Multiply 12 and 5: \\( 12 \\times 5 = 60 \\).\n2. Add 6 to the result: \\( 60 + 6 = 66 \\).\n\nHowever, since we need to ensure that all numbers are used exactly once and there should be no other integers introduced, let's re-evaluate the approach.\n\nInstead, we can try another combination:\n1. Multiply 12 and 5: \\( 12 \\times 5 = 60 \\).\n2. Subtract 12 from the result: \\( 60 - 12 = 48 \\).\n3. Add 12 to the result: \\( 48 + 12",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          13,
+          17,
+          17
+        ],
+        "target": 238,
+        "expected_solution": "(17 + (17 * 13))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by itself twice because \\(17 \\times 17 = 289\\). Then, we add 13 to get the result close to 238. This ensures that all numbers are used exactly once without introducing any additional integers.\n</reasoning>\n<answer>(17 * 17) + 13</answer>",
+      "extracted_math": "(17 * 17) + 13",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        13,
+        17,
+        17
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          12,
+          18
+        ],
+        "target": 15,
+        "expected_solution": "(12 + (18 / (5 + 1)))"
+      },
+      "completion": "<reasoning>\nWe need to use the numbers 1, 5, 12, and 18 exactly once to get the target value of 15 using basic arithmetic operations (+, -, *, /).\n\nOne possible solution is:\n(18 - 12) * 5 = 15\n</reasoning>\n<answer>(18 - 12) * 5</answer>",
+      "extracted_math": "(18 - 12) * 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        18,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          10,
+          17
+        ],
+        "target": 97,
+        "expected_solution": "(17 + (10 * 8))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 8 to get a large enough starting point for our calculation. Then, we need to add some more steps to reach the target of 97. We can do this by adding 10 repeatedly until we reach the desired sum.\n</reasoning>\n<answer>((17 * 8) + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + 10 + ",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          9,
+          18
+        ],
+        "target": 270,
+        "expected_solution": "(18 * (6 + 9))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 18 by 9 to get 162. Then, we need to reach 270 from 162 using 6. We can add 6 to 162 to get 168, then subtract 6 again to get 162, and finally add another 6 to reach 168. This gives us the expression \\(18 \\times 9 + 6 - 6\\).\n</reasoning>\n<answer>18 \\times 9 + 6 - 6</answer>",
+      "extracted_math": "18 \\times 9 + 6 - 6",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          14,
+          17
+        ],
+        "target": 8,
+        "expected_solution": "(14 - (17 - 11))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 11, 14, and 17 exactly once that equals 8.\nOne possible solution is to first subtract 11 from 14 to get 3, then multiply by 17 to get 51, and finally divide by 6 to get 8.\nHowever, we can simplify this further by directly dividing 14 by 17 to get approximately 0.8235, which is close enough to 8 for our purposes.\n</reasoning>\n<answer>14 / 17</answer>",
+      "extracted_math": "14 / 17",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        14,
+        17
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          18
+        ],
+        "target": 13,
+        "expected_solution": "(18 + (2 - 7))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 2, 7, and 18 that equals 13. One possible way to do this is by combining them with basic arithmetic operations.\n</reasoning>\n<answer>(18 - 7) * 2</answer>",
+      "extracted_math": "(18 - 7) * 2",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        18,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          11,
+          13,
+          20
+        ],
+        "target": 1452,
+        "expected_solution": "(11 * (4 * (13 + 20)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to the target value. We can start by multiplying 13 and 20 to get 260. Then, we can add 11 to that result to get 271. Finally, we multiply 4 by 271 to get the final target value of 1084. However, since we need to reach 1452, we should adjust our approach slightly. Instead of adding 11 directly, let's try subtracting 11 from 260 first, which gives us 249. Now, we can add 4 to 249 to get 253, and then multiply by 5 to get 1265. This still doesn't quite reach 1452, so we'll need to make another adjustment. Let's subtract 11 again but this time from 249, giving us 238. Adding 4 to 238 gives us 242, and finally, multiplying by 5 gives us 1210. This is still too low, so we'll need to increase our multiplier.",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          8,
+          11,
+          15,
+          20
+        ],
+        "target": 321,
+        "expected_solution": "(15 - (2 - (11 * (20 + 8))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 11 and 15 to get 26. Then, multiply by 20 to get 520. Finally, add 8 to get 528. This uses all numbers exactly once without introducing any other integers.\n</reasoning>\n<answer>(11 + 15) * 20 + 8</answer>",
+      "extracted_math": "(11 + 15) * 20 + 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        20,
+        11,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          10,
+          10,
+          15,
+          19
+        ],
+        "target": 817,
+        "expected_solution": "(19 * (8 + (15 + (10 + 10))))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to 817. We can start by combining 10 with itself to make 100. Then, we can add 15 to get closer to our target. Next, we can multiply 19 by 8 to get another significant number. Finally, we can subtract 10 from 100 to get 90, which we can then add to 80 to reach 817.\n</reasoning>\n<answer>((10 + 10) * 15) - 10 + (8 * 19) - 80</answer>",
+      "extracted_math": "((10 + 10) * 15) - 10 + (8 * 19) - 80",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        80,
+        10,
+        8,
+        19,
+        15,
+        10,
+        10
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          10,
+          14,
+          20
+        ],
+        "target": 47,
+        "expected_solution": "(20 + (14 + (10 + 3)))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 10 and 14 to get 24. Then, subtract 3 from 24 to get 21. Finally, add 20 to 21 to get the target value of 47.\n</reasoning>\n<answer>(10 + 14 - 3) + 20</answer>",
+      "extracted_math": "(10 + 14 - 3) + 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        3,
+        10,
+        14
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          12,
+          13,
+          13,
+          16
+        ],
+        "target": 22,
+        "expected_solution": "(12 + (13 - (16 - 13)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 12, 13, 13, and 16 that equals 22. One possible way to do this is by first combining some of the numbers with operations to get close to 22, then adjusting if necessary.\n\nFirst, let's try adding 13 twice:\n\\[ 13 + 13 = 26 \\]\n\nNext, we can subtract 16 from this sum:\n\\[ 26 - 16 = 10 \\]\n\nFinally, add 12 to reach 22:\n\\[ 10 + 12 = 22 \\]\n\nSo, the expression \\( (13 + 13) - 16 + 12 \\) works.\n</reasoning>\n<answer>(13 + 13) - 16 + 12</answer>",
+      "extracted_math": "(13 + 13) - 16 + 12",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        12,
+        16,
+        13,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          12,
+          12,
+          16,
+          17
+        ],
+        "target": 68,
+        "expected_solution": "(17 * (12 + (16 - (2 * 12))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 12 and 12 to get 24.\nThen, subtract 16 from 24 to get 8.\nFinally, multiply 8 by 17 to get the target value of 68.\n</reasoning>\n<answer>(12 + 12 - 16) * 17</answer>",
+      "extracted_math": "(12 + 12 - 16) * 17",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        17,
+        16,
+        12,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          12,
+          19
+        ],
+        "target": 155,
+        "expected_solution": "(5 * (19 + 12))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 19 by 5 to get 95. Then, we add 12 to 95 to get 107. Finally, we subtract 1 from 107 to get 106. This uses all the numbers exactly once.\n</reasoning>\n<answer>(19 * 5) + 12 - 1</answer>",
+      "extracted_math": "(19 * 5) + 12 - 1",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        12,
+        19,
+        5
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          4,
+          14
+        ],
+        "target": 68,
+        "expected_solution": "(4 * (3 + 14))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 14 by 3 to get 42. Then, add 4 to 42 to get 46. Finally, subtract 8 from 46 to get 38. This uses all numbers exactly once.\n</reasoning>\n<answer>(14 * 3) + 4 - 8</answer>",
+      "extracted_math": "(14 * 3) + 4 - 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        4,
+        14,
+        3
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          7,
+          9,
+          14,
+          15
+        ],
+        "target": 11347,
+        "expected_solution": "(7 + (14 * (9 * (6 * 15))))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to the target value. We can start by multiplying 14 and 15 to get 210. Then, we can add 7 to get 217. Next, we multiply 6 by 217 to get 1302. Finally, we subtract 9 from 1302 to get 1293. This step-by-step approach ensures that we use each number exactly once without introducing any additional integers.\n</reasoning>\n<answer>(14 * 15) + 7 - 9</answer>",
+      "extracted_math": "(14 * 15) + 7 - 9",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        9,
+        7,
+        14,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          8,
+          13,
+          15,
+          16,
+          20
+        ],
+        "target": 20,
+        "expected_solution": "(16 * (20 / (8 * (15 - 13))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 13 and 15 to get 28 by using 13 + 15 = 28.\nNext, we need to subtract 8 from 28 to get 20.\nSo, the expression becomes (13 + 15) - 8 = 20.\nThis uses all numbers exactly once without introducing any other integer literals.\n</reasoning>\n<answer>(13 + 15) - 8</answer>",
+      "extracted_math": "(13 + 15) - 8",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        13,
+        15
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          6,
+          15,
+          15,
+          18
+        ],
+        "target": 75,
+        "expected_solution": "(6 * (15 * (15 / 18)))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 15 and 15 to get 30.\nThen, we can divide 18 by 30 to get 0.6.\nFinally, multiply 6 by 0.6 to get 75.\n</reasoning>\n<answer>6 * (18 / (15 + 15))</answer>",
+      "extracted_math": "6 * (18 / (15 + 15))",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        6,
+        18,
+        15,
+        15
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          11,
+          20
+        ],
+        "target": 33,
+        "expected_solution": "(11 + (2 + 20))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 20 and 11 to get 31. Then, subtract 2 from 31 to get 29. Finally, divide 29 by 2 to get 14.5, but since we need an integer result, we should consider if there's another way to achieve the exact target using the given numbers without introducing decimals.\n</reasoning>\n<answer>((20 + 11) - 2) / 2</answer>",
+      "extracted_math": "((20 + 11) - 2) / 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        2,
+        2,
+        20,
+        11
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          10,
+          17
+        ],
+        "target": 3,
+        "expected_solution": "(10 - (17 - 10))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 10, 10, and 17 that equals 3. One possible way to do this is by subtracting 17 from 10 twice, which gives us 3.\n</reasoning>\n<answer>(10 - 17) * (10 - 17)</answer>",
+      "extracted_math": "(10 - 17) * (10 - 17)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        17,
+        10,
+        17
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          4,
+          6,
+          16
+        ],
+        "target": 17,
+        "expected_solution": "(16 + (6 / (4 + 2)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 2, 4, 6, and 16 that equals 17. One possible way to do this is by first multiplying 6 and 2, then adding 4, and finally subtracting 16 from the result.\n</reasoning>\n<answer>(6 * 2) + 4 - 16</answer>",
+      "extracted_math": "(6 * 2) + 4 - 16",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        4,
+        6,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          13,
+          20
+        ],
+        "target": 30,
+        "expected_solution": "(20 - (6 - (13 + 3)))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 6 and 13 to get 19. Then, subtract 20 from 19 to get -1. Finally, multiply by 3 to get 30.\n</reasoning>\n<answer>(6 + 13 - 20) * 3</answer>",
+      "extracted_math": "(6 + 13 - 20) * 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        20,
+        6,
+        13
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          8,
+          17,
+          19
+        ],
+        "target": 459,
+        "expected_solution": "(1 * (17 * (8 + 19)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to 459. We can start by using 17 and 19 together because they are relatively large and might help us reach the target quickly. Then, we'll adjust with smaller numbers if necessary.\n\nLet's try combining 17 and 19 first:\n\\[ 17 \\times 19 = 323 \\]\n\nNow, we need \\( 459 - 323 = 136 \\). To get 136 from the remaining numbers, we can use 1 and 8:\n\\[ 136 = 8 \\times 17 - 1 \\]\n\nSo, the expression becomes:\n\\[ 17 \\times 19 - 1 = 459 \\]\n\nThis uses all the given numbers exactly once.\n</reasoning>\n<answer>17 \\times 19 - 1</answer>",
+      "extracted_math": "17 \\times 19 - 1",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          7,
+          14,
+          18
+        ],
+        "target": 167,
+        "expected_solution": "(7 + (5 * (18 + 14)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 14 by 18 to get a large number quickly. Then, we need to adjust the result to reach 167. We can do this by subtracting 5 from the product of 14 and 18, which will give us a value close to our target. Finally, we add 7 to that result to get the exact target.\n</reasoning>\n<answer>(14 * 18) - 5 + 7</answer>",
+      "extracted_math": "(14 * 18) - 5 + 7",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        7,
+        5,
+        14,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          8
+        ],
+        "target": 4,
+        "expected_solution": "(3 * (8 / 6))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 3, 6, and 8 that equals 4.\nOne possible solution is to multiply 6 by 8 and then subtract 3 from the result.\n</reasoning>\n<answer>6 * 8 - 3</answer>",
+      "extracted_math": "6 * 8 - 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        6,
+        8
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          10,
+          13,
+          17,
+          19
+        ],
+        "target": 201,
+        "expected_solution": "(17 - (13 - (7 + (10 * 19))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that uses all the given numbers exactly once and equals 201. One possible approach could involve combining some of the numbers in creative ways using operations like addition, subtraction, multiplication, and division.\n\nLet's start by trying different combinations:\n1. We can try subtracting smaller numbers from larger ones to see if we can get close to 201.\n2. Then, we can add or multiply to reach the exact value.\n\nAfter experimenting with various combinations, here\u2019s one way to achieve the result:\n\n\\[ (19 \\times 17) + (13 \\times 10) - 7 \\]\n\nNow let's break down the steps:\n1. Calculate \\( 19 \\times 17 \\):\n   \\[ 19 \\times 17 = 323 \\]\n\n2. Calculate \\( 13 \\times 10 \\):\n   \\[ 13 \\times 10 = 130 \\]\n\n3. Add the results from step 1 and step 2:\n   \\[ 323 + 130 = 453 \\]\n\n4. Subtract 7 from the sum obtained in step 3",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          8,
+          14,
+          16
+        ],
+        "target": 256,
+        "expected_solution": "(14 * (16 / (7 / 8)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 14 to get a large enough base for our calculations.\nThen, we need to add 7 and 8 to reach the target of 256.\nWe can achieve this by adding 7 to 16 and then multiplying the result by 8.\n</reasoning>\n<answer>(16 * 14) + ((7 + 16))</answer>",
+      "extracted_math": "(16 * 14) + ((7 + 16))",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        16,
+        14,
+        7,
+        16
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          14
+        ],
+        "target": 19,
+        "expected_solution": "(14 + (5 * 1))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 1, 5, and 14 exactly once that equals 19.\nOne possible solution is to first multiply 14 by 5, then add 1 to get the result.\n</reasoning>\n<answer>(14 * 5) + 1</answer>",
+      "extracted_math": "(14 * 5) + 1",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        14,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          10,
+          11,
+          12
+        ],
+        "target": 37,
+        "expected_solution": "(11 + (4 + (10 + 12)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 37 using the numbers 4, 10, 11, and 12 exactly once. One possible way to do this is by combining them in a way that results in the desired sum.\n\nFirst, we can add 10 and 12 together to get 22. Then, we subtract 4 from 22 to get 18. Finally, we multiply 18 by 11 to get 37.\n\nSo, the expression would be: \\( (10 + 12) \\times 11 - 4 \\).\n\nLet's verify if this works correctly:\n\\[ (10 + 12) \\times 11 - 4 = 22 \\times 11 - 4 = 242 - 4 = 238 \\]\n\nIt seems there was an error in the verification step. Let's correct it and ensure the expression is accurate.\n\nThe correct expression should be: \\( (10 + 12) \\times 11 - 4 \\), which simplifies to \\( 22 \\times 11 - 4 = 242 - ",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          18,
+          20
+        ],
+        "target": 1,
+        "expected_solution": "(3 - (20 - 18))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 1 using the numbers 3, 18, and 20 exactly once.\nOne possible solution is to subtract 18 from 20 and then divide by 3.\n</reasoning>\n<answer>(20 - 18) / 3</answer>",
+      "extracted_math": "(20 - 18) / 3",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        20,
+        18
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          8,
+          18
+        ],
+        "target": 6,
+        "expected_solution": "(7 + (8 - (18 / 2)))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 2, 7, 8, and 18 that equals 6. One possible way to do this is by first creating the sum of 2 and 7, then subtracting 8 from that result, and finally dividing by 18. This ensures we use each number exactly once and achieve the target value.\n</reasoning>\n<answer>((2 + 7) - 8) / 18</answer>",
+      "extracted_math": "((2 + 7) - 8) / 18",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        8,
+        2,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          7,
+          9,
+          13,
+          19
+        ],
+        "target": 15561,
+        "expected_solution": "(19 * (9 * (13 * 7)))"
+      },
+      "completion": "<reasoning>\nWe need to construct an expression that uses each number exactly once and equals 15561. One possible approach is to break down the target into smaller parts using multiplication and addition/subtraction operations.\n\nFirst, let's consider how we can combine the numbers to get close to 15561. We can start by multiplying some of the larger numbers together and then adjust with the remaining numbers.\n\nLet's try:\n\\[ 19 \\times 13 \\times 9 \\]\n\nNow, we need to add \\( 7 \\) to this product:\n\\[ 19 \\times 13 \\times 9 + 7 \\]\n\nFinally, we need to multiply the result by another factor to reach 15561. Let's choose \\( 19 \\):\n\\[ (19 \\times 13 \\times 9 + 7) \\times 19 \\]\n\nLet's calculate this step-by-step:\n1. Calculate \\( 19 \\times 13 \\):\n   \\[ 19 \\times 13 = 247 \\]\n\n2. Multiply the result by 9:\n   \\[ 247 \\times 9 = 222",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          3,
+          5,
+          7,
+          20
+        ],
+        "target": 17,
+        "expected_solution": "(20 - (3 * (3 - (7 - 5))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 3, 3, 5, 7, and 20 that equals 17. One possible way to do this is by combining them in a specific order with operations.\n\nFirst, we can multiply 3 and 3 to get 9. Then, we add 5 to 9 to get 14. Next, we subtract 7 from 14 to get 7. Finally, we divide 20 by 7 to get approximately 2.857, which rounds down to 2 when considering whole numbers.\n\nSo, the expression would be: \\( \\frac{20}{(3+3)} + 5 - 7 \\).\n\nLet's break it down step-by-step:\n1. \\( 3 + 3 = 6 \\)\n2. \\( \\frac{20}{6} = \\frac{10}{3} \\approx 3.33 \\)\n3. \\( 3.33 + 5 = 8.33 \\)\n4. \\( 8.33 - 7 = 1.33 \\)\n\nSince we need an exact value of 17, let",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          5,
+          14,
+          17
+        ],
+        "target": 1190,
+        "expected_solution": "(14 * (5 * 17))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 17 by 14 to get a large number quickly. Then, we need to add 5 to that product to reach 1190. This ensures we use all the numbers exactly once without introducing any additional integers.\n</reasoning>\n<answer>(17 * 14) + 5</answer>",
+      "extracted_math": "(17 * 14) + 5",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        17,
+        14
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          4,
+          16,
+          19
+        ],
+        "target": 244,
+        "expected_solution": "(16 + (3 * (4 * 19)))"
+      },
+      "completion": "<reasoning>\nFirst, we need to combine some of the numbers to get close to 244. We can start by multiplying 16 and 19 to get 304. Then, we subtract 3 from 304 to get 301. Finally, we add 3 to 301 to reach 244.\n</reasoning>\n<answer>(16 * 19) - 3 + 3</answer>",
+      "extracted_math": "(16 * 19) - 3 + 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        3,
+        16,
+        19
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          7,
+          8
+        ],
+        "target": 3,
+        "expected_solution": "(8 - (7 - 2))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression using the numbers 2, 7, and 8 that equals 3.\nOne possible solution is to multiply 7 by 2 and then subtract 8 from the result.\n</reasoning>\n<answer>(7 * 2) - 8</answer>",
+      "extracted_math": "(7 * 2) - 8",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        8,
+        7,
+        2
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          4,
+          6,
+          18
+        ],
+        "target": 87,
+        "expected_solution": "(3 - (6 * (4 - 18)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 18 by 3 to get 54.\nThen, add 4 to 54 to get 58.\nFinally, subtract 6 from 58 to get 52.\nHowever, this does not give us the target value of 87.\nWe need to adjust our approach.\nLet's try adding 4 to 18 first to get 22.\nThen, multiply 22 by 3 to get 66.\nNext, add 6 to 66 to get 72.\nFinally, subtract 4 from 72 to get 68.\nAgain, this does not give us the target value of 87.\nLet's try another approach.\nFirst, divide 18 by 3 to get 6.\nThen, multiply 6 by 4 to get 24.\nNext, add 6 to 24 to get 30.\nFinally, subtract 6 from 30 to get 24.\nAgain, this does not give us the target value of 87.\nLet's try another approach.\nFirst, multiply 18 by 3 to get 54.\nThen, add 4 to",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          5,
+          10,
+          18
+        ],
+        "target": 7,
+        "expected_solution": "(18 - (10 + (5 - (1 * 4))))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 7 using the given numbers exactly once. One possible way to do this is by combining some operations to get close to 7 and then adjusting with subtraction or division.\n</reasoning>\n<answer>((10 - 1) * 4) / 5</answer>",
+      "extracted_math": "((10 - 1) * 4) / 5",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        5,
+        4,
+        10,
+        1
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          9,
+          16
+        ],
+        "target": 576,
+        "expected_solution": "(9 * (16 * 4))"
+      },
+      "completion": "<reasoning>\nFirst, we need to express 576 using the given numbers [4, 9, 16] exactly once. We can start by expressing 576 as \\( 16^2 \\), which will help us utilize the largest number efficiently.\n\nNext, we'll break down the problem into smaller steps:\n1. Calculate \\( 16^2 \\).\n2. Then, add 9 to the result from step 1.\n3. Finally, multiply the result from step 2 by 4.\n\nLet's construct the expression step-by-step:\n\\[ 16^2 = 256 \\]\n\\[ 256 + 9 = 265 \\]\n\\[ 265 \\times 4 = 1060 \\]\n\nHowever, this does not match our target of 576. Let's try another approach:\n\n1. Start with \\( 16^2 = 256 \\).\n2. Add 9 to get \\( 256 + 9 = 265 \\).\n3. Multiply by 4 to get \\( 265 \\times 4 = 1060 \\).\n\nWe see that adding 9",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          15,
+          17
+        ],
+        "target": 7,
+        "expected_solution": "(1 * (17 - (15 - 5)))"
+      },
+      "completion": "<reasoning>\nWe need to use the numbers 1, 5, 15, and 17 exactly once to get the result 7 using basic arithmetic operations (+, -, *, /).\n\nOne possible solution is:\n\\[ \\frac{17}{1} - \\left(5 + 15\\right) \\]\n\nLet's break it down step by step:\n1. Calculate \\( 17 \\div 1 \\): This gives us 17.\n2. Add 5 and 15: \\( 5 + 15 = 20 \\).\n3. Subtract the sum from step 2 from the result of step 1: \\( 17 - 20 = -3 \\).\n\nHowever, we need to adjust our approach since we're aiming for 7, not -3. Let's try another combination:\n\\[ \\frac{17}{1} - \\left(\\frac{5}{1} + \\frac{15}{1}\\right) \\]\n\nNow let's calculate again:\n1. Calculate \\( 17 \\div 1 \\): This gives us 17.\n2. Add \\( 5 \\div 1 \\) and \\( 15 \\div ",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          7,
+          19
+        ],
+        "target": 133,
+        "expected_solution": "(7 / (1 / 19))"
+      },
+      "completion": "<reasoning>\nWe need to create an expression that equals 133 using the numbers 1, 7, and 19 exactly once. One possible way to do this is by combining them in a specific order and operation sequence.\n</reasoning>\n<answer>((19 * 7) - 1)</answer>",
+      "extracted_math": "((19 * 7) - 1)",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        19,
+        7
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          12,
+          12,
+          14,
+          14,
+          15
+        ],
+        "target": 2045,
+        "expected_solution": "(15 + (14 + (14 * (12 * 12))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 12 and 12 to get 24.\nNext, we can add 14 and 14 to get 28.\nThen, we can multiply 24 by 28 to get 672.\nFinally, we can add 15 to 672 to get 2045.\n</reasoning>\n<answer>(12 + 12) * (14 + 14) + 15</answer>",
+      "extracted_math": "(12 + 12) * (14 + 14) + 15",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        15,
+        12,
+        12,
+        14,
+        14
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          4,
+          7,
+          16
+        ],
+        "target": 140,
+        "expected_solution": "(7 * (4 + 16))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 7 to get a large enough base for our calculations. Then, we need to add 4 repeatedly until we reach 140. We can achieve this with the following steps:\n1. Multiply 16 by 7 to get 112.\n2. Add 4 twice more to get 116.\n3. Add another 4 to get 120.\n4. Finally, subtract 16 from 120 to get 104.\n5. Subtract 4 again to get 100.\n6. Subtract 4 one last time to get 96.\n7. Subtract 4 one more time to get 92.\n8. Subtract 4 one more time to get 88.\n9. Subtract 4 one more time to get 84.\n10. Subtract 4 one more time to get 80.\n11. Subtract 4 one more time to get 76.\n12. Subtract 4 one more time to get 72.\n13. Subtract 4 one more time to get 68.\n14. Subtract 4 one more time to get 6",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          2,
+          13,
+          20
+        ],
+        "target": 35,
+        "expected_solution": "(20 + (13 + 2))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 20 and 13 to get 33. Then, subtract 2 from 33 to get 31. Finally, divide 31 by 2 to get 15. This uses all numbers exactly once without introducing any other integer literals.\n</reasoning>\n<answer>(20 + 13) - 2 / 2</answer>",
+      "extracted_math": "(20 + 13) - 2 / 2",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        13,
+        2,
+        2
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          18,
+          20
+        ],
+        "target": 35,
+        "expected_solution": "(20 + (18 - 3))"
+      },
+      "completion": "<reasoning>\nFirst, we can add 18 and 20 to get 38. Then, subtract 3 from 38 to get 35.\n</reasoning>\n<answer>(18 + 20) - 3</answer>",
+      "extracted_math": "(18 + 20) - 3",
+      "is_valid": true,
+      "reason": "correct",
+      "reward": 1.0,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        18,
+        20
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          4,
+          4,
+          15,
+          19
+        ],
+        "target": 285,
+        "expected_solution": "(19 * (4 / (4 * (1 / 15))))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by 19 to get a large number quickly. Then, we need to add some smaller numbers that will help us reach the target of 285. We can start with adding 4 twice because \\(4 \\times 4 = 16\\), which is close but less than needed. After that, we can add another 4 to make up for the difference. Finally, we subtract 1 from the total to adjust our sum slightly towards the target.\n</reasoning>\n<answer>((15 * 19) + 4 + 4 + 4 - 1)</answer>",
+      "extracted_math": "((15 * 19) + 4 + 4 + 4 - 1)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        1,
+        4,
+        4,
+        4,
+        15,
+        19
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": true
+    },
+    {
+      "task": {
+        "numbers": [
+          16,
+          18,
+          20,
+          20
+        ],
+        "target": 360,
+        "expected_solution": "(20 * (20 - (18 - 16)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 16 by 20 twice to get 320. Then, we need to add 18 to reach 360. So, we have:\n(16 * 20) * (18)\n</reasoning>\n<answer>(16 * 20) * (18)</answer>",
+      "extracted_math": "(16 * 20) * (18)",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        18,
+        16,
+        20
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          5,
+          11
+        ],
+        "target": 5,
+        "expected_solution": "(11 - (5 + 1))"
+      },
+      "completion": "<reasoning>\nTo achieve the target value of 5 using the numbers 1, 5, and 11 exactly once, we can consider different combinations of operations that might yield 5. One possible approach is to multiply 1 by 5 and then subtract 11 from the result. This ensures that all numbers are used exactly once without introducing any additional literals.\n</reasoning>\n<answer>(1 * 5) - 11</answer>",
+      "extracted_math": "(1 * 5) - 11",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        11,
+        1,
+        5
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          10,
+          15,
+          16,
+          18
+        ],
+        "target": 4500,
+        "expected_solution": "(18 * (10 + (15 * 16)))"
+      },
+      "completion": "<reasoning>\nFirst, we can multiply 15 by 16 to get 240. Then, we need to scale up this result to reach 4500. We can do this by multiplying 240 by 18, which gives us 4320. Finally, we add 10 to this product to get 4500.\n</reasoning>\n<answer>(15 * 16) * 18 + 10</answer>",
+      "extracted_math": "(15 * 16) * 18 + 10",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        10,
+        18,
+        15,
+        16
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          6,
+          12,
+          12,
+          15
+        ],
+        "target": 72,
+        "expected_solution": "(6 * (12 + (15 - (3 + 12))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 12 and 12 to get 24.\nThen, multiply by 3 to get 72.\n</reasoning>\n<answer>12 * 12 * 3</answer>",
+      "extracted_math": "12 * 12 * 3",
+      "is_valid": false,
+      "reason": "wrong_numbers",
+      "reward": 0.05,
+      "safe_parseable": true,
+      "used_numbers": [
+        3,
+        12,
+        12
+      ],
+      "exact_number_usage": false,
+      "uses_too_few_literals": true,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          11,
+          15,
+          19
+        ],
+        "target": 3135,
+        "expected_solution": "(19 * (11 * 15))"
+      },
+      "completion": "<reasoning>\nFirst, we need to break down the target into smaller parts that can be achieved using the given numbers. We start by calculating \\(19 \\times 15\\), which gives us 285. Then, we multiply this result by 11 to get the final target value of 3135. This ensures that all numbers are used exactly once without introducing any additional integers.\n</reasoning>\n<answer>(19 \\times 15) \\times 11</answer>",
+      "extracted_math": "(19 \\times 15) \\times 11",
+      "is_valid": false,
+      "reason": "parse_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          3,
+          14,
+          14,
+          19,
+          20
+        ],
+        "target": 383,
+        "expected_solution": "(3 + (14 * (20 / (14 / 19))))"
+      },
+      "completion": "<reasoning>\nFirst, we can combine 14 and 14 to get 28. Then, multiply by 3 to get 84. Next, add 19 to get 103. Finally, subtract 20 from 103 to get 383.\n</reasoning>\n<answer>(14 + 14) * 3 + 19 - 20</answer>",
+      "extracted_math": "(14 + 14) * 3 + 19 - 20",
+      "is_valid": false,
+      "reason": "wrong_value",
+      "reward": 0.3,
+      "safe_parseable": true,
+      "used_numbers": [
+        20,
+        19,
+        3,
+        14,
+        14
+      ],
+      "exact_number_usage": true,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    },
+    {
+      "task": {
+        "numbers": [
+          1,
+          8,
+          10,
+          13,
+          19
+        ],
+        "target": 19761,
+        "expected_solution": "(1 + (19 * (8 * (10 * 13))))"
+      },
+      "completion": "<reasoning>\nWe need to construct an expression that uses all the given numbers exactly once and equals 19761. One possible approach is to start with a combination of multiplication and addition/subtraction operations that can lead us closer to the target value.\n\nFirst, let's try combining some of the larger numbers to get close to the target. We can start by multiplying 19 and 10 to get 190. Then we can add 8 to get 198. Finally, we can multiply this result by 13 to reach our target.\n\nHere\u2019s how we can do it step-by-step:\n1. \\( 19 \\times 10 = 190 \\)\n2. \\( 190 + 8 = 198 \\)\n3. \\( 198 \\times 13 = 1974 \\)\n\nNow, we still have a small gap from 19761. To make up for this, we can adjust the last operation slightly. Instead of directly multiplying by 13, we can add another 2 to get closer to the target.\n\nSo, the complete expression would be:\n\\[ (19 \\times 10 + ",
+      "extracted_math": null,
+      "is_valid": false,
+      "reason": "format_error",
+      "reward": 0.0,
+      "safe_parseable": false,
+      "used_numbers": null,
+      "exact_number_usage": false,
+      "uses_too_few_literals": false,
+      "introduces_forbidden_literals": false
+    }
+  ]
+}

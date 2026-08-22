@@ -1,0 +1,136 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "train_samples": 2000,
+  "output_dir": "models/Qwen2.5-1.5B-GRPO-correctness-only-step200-seed777",
+  "seed": 777,
+  "optimizer": "adamw_torch",
+  "torch_dtype": "torch.float16",
+  "bf16": false,
+  "fp16": true,
+  "reward_preset": "correctness_only",
+  "reward_mapping": {
+    "correct": 1.0,
+    "empty_expression": 0.0,
+    "parse_error": 0.0,
+    "unsafe_expression": 0.0,
+    "wrong_numbers": 0.0,
+    "wrong_value": 0.0,
+    "division_by_zero": 0.0
+  },
+  "dataset_config": {
+    "min_numbers": 3,
+    "max_numbers": 5,
+    "balanced_by_k": false,
+    "k_distribution": {
+      "3": 888,
+      "4": 638,
+      "5": 474
+    },
+    "sha256": "592b95f6330a03d24a74d465f989166b5355f970884402dc505bfff12d918a45",
+    "historical_pairing_note": "Same-seed regenerated data; historical train_dataset.jsonl artifacts were not retained, so byte identity with shaped runs is not verified."
+  },
+  "hyperparameters": {
+    "max_steps": 200,
+    "learning_rate": 5e-06,
+    "warmup_ratio": 0.1,
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "num_generations": 4,
+    "max_completion_length": 128,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "scale_rewards": "group",
+    "loss_type": "dapo",
+    "beta": 0.0,
+    "save_steps": 100,
+    "save_total_limit": 2
+  },
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "bias": "none",
+    "task_type": "CAUSAL_LM"
+  },
+  "source_hashes": {
+    "src/tasks/countdown/dataset.py": "49f9eeeb4514163de999811c9c702bb1a6cc55e80a576bec2821c9a5cc8f7704",
+    "src/tasks/countdown/prompts.py": "540d1db6ef0c79f1f9c9eaeb2b3213b6f6ff0d4083e245d7c6fd1dc74e7a691f",
+    "src/tasks/countdown/reward.py": "72989d6861a22857fc0e14190a6a3676f68cc956591df8692280e6c3acda009f",
+    "src/tasks/countdown/verifier.py": "2db01e09d6316e641a0e8a8751600b14ead3e21b1d5d6bf831ee05ed7f863ee8",
+    "scripts/train_grpo_countdown.py": "e1760c669e6d1ccaea157e7133ccb20519dd8a1f07a7c52f07f3eaed201312c1"
+  },
+  "git": {
+    "commit": null,
+    "is_dirty": null
+  },
+  "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "tokenizer_revision": null,
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "transformers": "5.0.0",
+    "packages": {
+      "torch": "2.10.0+cu128",
+      "transformers": "5.0.0",
+      "trl": "1.10.0",
+      "peft": "0.19.1",
+      "datasets": "5.0.0",
+      "accelerate": "1.13.0"
+    },
+    "hardware": {
+      "cuda_available": true,
+      "device_name": "Tesla T4",
+      "device_capability": "7.5",
+      "cuda_runtime": "12.8"
+    }
+  },
+  "command": {
+    "argv": [
+      "scripts/train_grpo_countdown.py",
+      "--model",
+      "Qwen/Qwen2.5-1.5B-Instruct",
+      "--train-samples",
+      "2000",
+      "--output-dir",
+      "models/Qwen2.5-1.5B-GRPO-correctness-only-step200-seed777",
+      "--max-steps",
+      "200",
+      "--seed",
+      "777",
+      "--learning-rate",
+      "5e-6",
+      "--warmup-ratio",
+      "0.1",
+      "--per-device-train-batch-size",
+      "1",
+      "--gradient-accumulation-steps",
+      "4",
+      "--num-generations",
+      "4",
+      "--max-completion-length",
+      "128",
+      "--temperature",
+      "0.7",
+      "--top-p",
+      "0.95",
+      "--min-numbers",
+      "3",
+      "--max-numbers",
+      "5",
+      "--reward-preset",
+      "correctness_only",
+      "--save-steps",
+      "100",
+      "--save-total-limit",
+      "2"
+    ]
+  }
+}

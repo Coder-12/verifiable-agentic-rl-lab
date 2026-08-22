@@ -1,8 +1,9 @@
-# Countdown RLVR Milestone 1 Baseline Note
+# Countdown RLVR Milestone 1 Experimental Record
 
 ## Scope
 
-This note documents the final pre-training baseline status for Milestone 1 of the Countdown RLVR project.
+This record documents the completed Milestone 1 Countdown RLVR study, from
+baseline construction through the final bounded closure experiment.
 
 Covered phases:
 
@@ -11,9 +12,11 @@ Covered phases:
 - Phase C: `1.5B` main baseline evaluation on the frozen `200`-example set
 - Phase D: initial `1.5B` GRPO smoke training and checkpoint selection
 - Base-policy trainability audit under the exact GRPO rollout configuration
+- Balanced `k=3/k=4` curriculum follow-up
+- Frozen two-seed correctness-only closure experiment and stopping decision
 
-This note is intended to be the professional reference point for Milestone 1
-baseline and first-pass GRPO smoke results.
+This record is the canonical research and reproducibility reference for the
+completed milestone.
 
 ## Official Artifacts
 
@@ -24,6 +27,11 @@ Use these files as the baseline record:
 - `reports/eval_Qwen2.5-1.5B-Instruct_pass1_results.json`
 - `reports/eval_Qwen2.5-1.5B-Instruct_best_of_8_results.json`
 - `reports/eval_Qwen2.5-1.5B-Instruct_base_policy_capability_tasks200_g4_seed42.json`
+- `reports/eval_Qwen2.5-1.5B-GRPO-k3k4-step200-seed42_pass1_results.json`
+- `reports/eval_Qwen2.5-1.5B-GRPO-correctness-only-step200-seed42_pass1_results.json`
+- `reports/eval_Qwen2.5-1.5B-GRPO-correctness-only-step200-seed777_pass1_results.json`
+- `reports/countdown_milestone1_closure_analysis.json`
+- `reports/countdown_milestone1_closure_plan.md`
 
 Additional Phase D artifacts:
 
@@ -569,7 +577,7 @@ Important caveat:
 - length-limit diagnostics in this audit should be treated as approximate, because batched generation and padding can make length-limit flags conservative
 - the correctness, reward, verifier status, and by-size capability metrics are the primary decision evidence
 
-### Audit Conclusion
+### Audit Conclusion at the Time
 
 The current `1.5B` instruction-tuned model is a valid small-model starting point for Milestone 1, but direct full-distribution GRPO is not the highest-ROI next step.
 
@@ -579,7 +587,9 @@ Evidence-supported conclusion:
 - direct GRPO is weakly supported for `k=4`
 - direct GRPO is not yet supported for `k=5` under the current rollout budget
 
-The next experiment should therefore use curriculum/data shaping toward `k=3` and `k=4`, while continuing to evaluate on the unchanged frozen `200`-example set.
+At this point, the evidence supported a single balanced `k=3/k=4` curriculum
+test while retaining the unchanged frozen 200-task evaluation set. The outcome
+of that test and the subsequent closure experiment are recorded below.
 
 ## Phase D GRPO Smoke Training
 
@@ -786,7 +796,7 @@ The `k=5` frontier remains unsolved:
 
 This confirms that the first GRPO runs mostly affect easier `k=3` and `k=4` tasks.
 
-### Current checkpoint decision
+### Historical smoke checkpoint decision
 
 Preserve the standalone `step200` artifacts as the most informative GRPO smoke artifacts.
 
@@ -801,62 +811,269 @@ Required preserved artifacts:
 
 The seed `42` and seed `123` standalone `step200` runs are the best observed checkpoints by pass@1. The seed `777` run is equally important scientifically because it matched baseline while still improving structural compliance. Do not treat standalone `step300` or the `300`-step sweep checkpoints as improved checkpoints. They improved structural compliance but did not improve the primary metric.
 
-### Next experiment decision
+## Curriculum Follow-Up: Balanced `k=3/k=4`
 
-The immediate reproducibility question has been partially answered at smoke scale:
+### Question and controlled change
 
-- standalone `200`-step GRPO reached `5.50%` on two seeds
-- standalone `200`-step GRPO matched the `4.50%` baseline on a third seed
-- therefore, the structural effect is reliable, but the pass@1 improvement is not yet reliable
+The rollout audit showed the strongest successful-rollout signal at `k=3`, a
+sparse signal at `k=4`, and almost no signal at `k=5`. The next controlled
+intervention therefore changed only the training-task distribution: 2,000
+balanced `k=3/k=4` tasks, excluding `k=5`. The model, prompt, verifier, shaped
+reward, LoRA/GRPO setup, 200-step horizon, and full frozen evaluation remained
+unchanged.
 
-The base-policy trainability audit further explains why: the current rollout distribution has abundant structural reward variance but sparse success variance, especially beyond `k=3`.
+The run used seed `42`, FP16 on a Kaggle T4, `G=4`, temperature `0.7`, top-p
+`0.95`, and rollout length `128`. It was evaluated greedily on the unchanged
+200-task `k=3/4/5` evaluation set.
 
-The next experiment should target the remaining bottleneck rather than simply increasing steps or repeating the same seed sweep.
+### Result
 
-Recommended next direction:
+| Run | Correct | pass@1 | Format error | Safe parseable | Exact usage | Wrong value | Wrong numbers |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Frozen base | `9` | `4.50%` | `9.50%` | `84.50%` | `40.50%` | `72` | `88` |
+| Balanced `k=3/k=4`, step 200, seed `42` | `8` | `4.00%` | `1.00%` | `98.50%` | `62.00%` | `116` | `73` |
 
-- keep standalone `max_steps=200` as the default schedule
-- do not use the `300`-step schedule as the next default
-- modify one factor at a time to improve arithmetic correctness
+The curriculum run improved structural validity but not the primary metric. Its
+correct answers were `6/85` for `k=3`, `2/65` for `k=4`, and `0/50` for `k=5`.
+The full evaluation retained `k=5` intentionally; its absence from training is
+not evidence that the curriculum should have solved it.
 
-Most likely next intervention:
+### Interpretation and decision
 
-- curriculum or data shaping toward `k=3` and `k=4` tasks first
-- continue evaluating on the full frozen `200`-example set
+Balanced `k=3/k=4` training was not a positive result. It reinforced the
+existing pattern: improved format/number compliance can coexist with dominant
+`wrong_value` failures and no reliable gain in exact arithmetic correctness.
+This did not show that curricula are generally ineffective. It only ruled out
+this one distribution-only intervention as a sufficient answer within the
+fixed 200-step setup. Together with the preceding base-policy rollout audit,
+it motivated one final bounded reward test rather than another open-ended
+curriculum or training-length change.
 
-Reason:
+Artifact: `reports/eval_Qwen2.5-1.5B-GRPO-k3k4-step200-seed42_pass1_results.json`.
 
-- all observed gains are in `k=3` and `k=4`
-- the base-policy audit shows enough success-variance signal for `k=3`, sparse but usable signal for `k=4`, and almost no signal for `k=5`
-- `k=5` remains at `0` correct in trained-checkpoint evaluation
-- the dominant remaining failure mode is `wrong_value`, not format error or forbidden literals
-- reward shaping is now doing its structural job, so the next bottleneck is arithmetic search/reasoning
+## Final Closure Experiment: Correctness-Only Partial-Credit Ablation
 
-## Current Milestone Status
+### Predeclared protocol
 
-Milestone 1 has now moved beyond baseline evaluation into first-pass GRPO smoke training.
+`reports/countdown_milestone1_closure_plan.md` was frozen before these runs.
+It defined a bounded final treatment rather than an open reward search. The
+only training treatment change was the reward mapping:
 
-What is established:
+| Verifier outcome | Training reward |
+| --- | ---: |
+| `correct` | `1.0` |
+| Every incorrect or invalid outcome | `0.0` |
 
-- baseline eval was completed on the intended main model
-- latent capability was demonstrated with best-of-8
-- verifier reranking behaved as expected
-- base-policy trainability under GRPO-style rollout settings was measured directly
-- GRPO smoke training runs successfully on Kaggle `T4`
-- revised reward shaping improves structural verifier compliance
-- standalone `max_steps=200` is the most informative training recipe so far
-- standalone `step200` improved pass@1 in `2/3` seeds and matched baseline in `1/3`
+The test is therefore a **correctness-only partial-credit ablation**. It does
+not isolate the historical `wrong_value=0.3` reward alone and cannot prove that
+this component caused prior behavior.
 
-What remains unresolved:
+Two seeds, `42` and `777`, were predeclared and run regardless of the first
+result. Both used the untouched `Qwen/Qwen2.5-1.5B-Instruct` base model; 2,000
+fresh full-distribution `k=3/4/5` training tasks; LoRA (`r=16`, alpha `32`);
+AdamW with learning rate `5e-6`, cosine schedule, and `0.1` warmup; batch size
+`1` with accumulation `4`; DAPO loss with `beta=0`; `G=4`; group reward
+scaling; temperature `0.7`; top-p `0.95`; 128-token rollouts; and a 200-step
+horizon. Training and evaluation used FP16 on a Kaggle Tesla T4.
 
-- whether additional training can convert `wrong_value` failures into correct solutions
-- whether `k=5` can be improved by this setup or needs a stronger curriculum/model/training recipe
-- whether pass@1 gains can be made robust across seeds
+The retained checkpoints were steps 100 and 200. Step 200 was the sole primary
+endpoint. Step 100 was evaluated only because the primary results were not
+positive; it was diagnostic and was never eligible for checkpoint selection.
+All checkpoints used greedy, strict-verifier evaluation on the frozen 200-task
+set with `max_new_tokens=256`.
 
-Current recommendation:
+The generated training distributions were:
 
-- keep standalone `step200` artifacts as the current most informative smoke checkpoints
-- treat the `5.50%` result as promising but not yet robust
-- treat the seed `777` result as evidence that current GRPO mostly teaches verifier compliance, not reliably better arithmetic
-- use the base-policy trainability audit to justify a targeted `k=3/k=4` curriculum GRPO experiment
-- do not expect direct full-distribution GRPO to solve `k=5` yet under the current rollout budget
+| Seed | `k=3` | `k=4` | `k=5` | Dataset SHA-256 |
+| --- | ---: | ---: | ---: | --- |
+| `42` | `855` | `639` | `506` | `e54c8751615f835cf134947c2caa6bc58750a7cdd851028e97672a679c321478` |
+| `777` | `888` | `638` | `474` | `592b95f6330a03d24a74d465f989166b5355f970884402dc505bfff12d918a45` |
+
+The closure configuration resolved the model revision to
+`989aa7980e4cf806f80c7fef2b1adb7bc71aa306`. The recorded environment was
+Python `3.12.13`, PyTorch `2.10.0+cu128`, Transformers `5.0.0`, TRL `1.10.0`,
+PEFT `0.19.1`, Datasets `5.0.0`, and Accelerate `1.13.0` on a Tesla T4
+(compute capability `7.5`, CUDA runtime `12.8`). The two source-hash and full
+configuration records are `models/run_config_closure_exp_seed42.json` and
+`models/run_config_closure_exp_seed777.json`.
+
+### Primary endpoint and frozen decision gates
+
+The historical frozen base report contained `9/200` correct (`4.50%`). The
+same-seed historical shaped references were `11/200` for seed `42` and `9/200`
+for seed `777`. The predeclared paired-success thresholds were therefore 12
+correct for seed `42` and 10 correct for seed `777`.
+
+| Primary step-200 result | Base | Historical shaped reference | Paired-success threshold | Treatment | Result |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Seed `42` | `9` | `11` | `12` | `9` (`4.50%`) | Fail |
+| Seed `777` | `9` | `9` | `10` | `8` (`4.00%`) | Fail |
+
+Neither seed was a paired success. Seed `42` matched base pass@1 but did not
+exceed its shaped reference; seed `777` was below both. The seed-777 run also
+violated every predeclared structural tolerance relative to the frozen base:
+format error was `+9.0` percentage points, safe parseability was `-9.5` points,
+and exact-number usage was `-8.0` points. Seed `42` improved all three
+structural metrics relative to base but did not improve exact correctness.
+
+| Checkpoint | Correct | pass@1 | Format error | Safe parseable | Exact usage | Wrong value | Wrong numbers |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Base | `9` | `4.50%` | `9.50%` | `84.50%` | `40.50%` | `72` | `88` |
+| Seed `42`, step 100 | `9` | `4.50%` | `3.00%` | `95.50%` | `50.00%` | `91` | `91` |
+| Seed `42`, step 200 | `9` | `4.50%` | `2.50%` | `96.00%` | `47.50%` | `86` | `97` |
+| Seed `777`, step 100 | `8` | `4.00%` | `12.00%` | `82.00%` | `36.50%` | `65` | `91` |
+| Seed `777`, step 200 | `8` | `4.00%` | `18.50%` | `75.00%` | `32.50%` | `57` | `85` |
+
+The evaluation `mean_reward` fields retain the legacy shaped diagnostic mapping
+for comparability with prior evaluation reports. They are not the
+correctness-only training objective and are not used to judge the treatment.
+
+### Rollout signal and checkpoint diagnostics
+
+The correctness-only runs did discover correct rollouts, so the protocol's
+exploration-limited terminal condition was not met. However, usable groups were
+rare under group-normalized reward:
+
+| Training diagnostic | Seed `42` | Seed `777` |
+| --- | ---: | ---: |
+| Correct rollouts | `41/800` (`5.12%`) | `40/800` (`5.00%`) |
+| Successful-variance groups | `26/200` (`13.00%`) | `34/200` (`17.00%`) |
+| Zero-variance groups | `174/200` (`87.00%`) | `166/200` (`83.00%`) |
+| All-zero groups | `173/200` (`86.50%`) | `166/200` (`83.00%`) |
+
+Correct rollouts came almost entirely from `k=3`: `39/41` for seed `42` and
+`36/40` for seed `777`. The remaining correct rollouts were `k=4`; neither run
+produced a correct `k=5` rollout. This identifies sparse relative-success
+signal as a plausible contributor to the outcome, but does not uniquely
+separate sparse credit assignment from optimization, capacity, or other
+implementation-specific effects.
+
+Step-100 evaluation does not reveal a missed early optimum. Seed `42` had the
+same nine correct tasks at steps 100 and 200. Seed `777` stayed at eight correct
+tasks, with two gains and two losses, while structural quality worsened from
+step 100 to step 200: format error increased from `12.0%` to `18.5%`, safe
+parseability fell from `82.0%` to `75.0%`, exact usage fell from `36.5%` to
+`32.5%`, and average output length increased from 330 to 373 characters.
+
+### Paired held-out task analysis
+
+The closure analysis compares each step-200 treatment report to the frozen base
+report on the same 200 tasks. It is descriptive, not a population-level
+significance test.
+
+| Treatment | Gained | Lost | Both correct | Both incorrect | Exact sign-test p |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Seed `42` | `6` | `6` | `3` | `185` | `1.0` |
+| Seed `777` | `3` | `4` | `5` | `188` | `1.0` |
+
+There were no `k=5` gains or losses for either seed. Seed `42` had `5` gains and
+`4` losses at `k=3`, plus `1` gain and `2` losses at `k=4`; seed `777` had equal
+`k=3` gains and losses (`3` each) and one `k=4` loss. These transitions provide
+no directional evidence that the treatment improved the frozen task set.
+
+### Final classification and stopping decision
+
+**Milestone 1 is classified as mixed/unstable, with a negative primary
+correctness result.**
+
+The primary correctness result is negative because neither predeclared seed
+met its paired-success gate despite usable successful-variance rollout signal.
+The formal mixed/unstable classification additionally follows from the material
+structural regression in seed `777`, which triggered the protocol's mixed branch.
+This is not an exploration-limited result: correct rollouts and
+success-variance groups occurred in both runs.
+
+The frozen protocol permits no further reward adjustment, seed, training
+extension, curriculum, SFT rescue, verifier change, or hyperparameter search.
+Stopping therefore follows the predeclared decision rules, not a post-hoc
+judgment about effort or outcome.
+
+## Milestone 1 Synthesis
+
+### Objective and progression
+
+Milestone 1 built and tested a small exact-reward Countdown RLVR loop:
+safe symbolic verification, frozen greedy and multi-sample evaluation, rollout
+diagnostics, GRPO/DAPO LoRA training, failure analysis, a balanced curriculum
+test, and a two-seed predeclared closure ablation. The experimental
+progression was:
+
+```text
+strict verifier and frozen evaluation
+-> base greedy and best-of-N capability
+-> GRPO smoke runs and shaped reward behavior
+-> base-policy rollout audit
+-> balanced k=3/k=4 curriculum test
+-> frozen correctness-only closure protocol
+-> two-seed primary evaluation and diagnostic checkpoint analysis
+```
+
+### What succeeded
+
+- A strict AST/Fraction Countdown verifier and reward pipeline were exercised
+  end to end in generation, evaluation, and GRPO training.
+- The frozen base evaluation established modest greedy performance (`9/200`) and
+  substantial conditional sampled capability: best-of-8 reached `23.00%` on the
+  frozen evaluation, while the GRPO-style rollout audit found correct samples
+  in `21/200` prompt groups.
+- Shaped GRPO consistently demonstrated behavioral effects on formatting,
+  parseability, and number-use compliance, even though exact correctness was
+  not robust across seeds.
+- The curriculum and correctness-only interventions were controlled, evaluated
+  on the same held-out set, and retained even when nonpositive.
+- The closure treatment used two predeclared seeds, saved step-100 diagnostics,
+  recorded rollout-status/group-variance evidence, and used paired task
+  transitions rather than only aggregate pass@1.
+
+### What did not succeed
+
+The project did not establish a reliable improvement in greedy held-out exact
+Countdown correctness for the tested 1.5B GRPO/DAPO/LoRA configuration. The
+correctness-only partial-credit ablation tied the frozen base in one seed and
+fell below it in the other; it did not outperform the historical shaped
+references. It also did not improve `k=5` correctness.
+
+### Bounded interpretation
+
+The evidence distinguishes sampled capability from reliably trainable greedy
+capability in this setup. Best-of-N and rollout audits show that the base policy
+can sometimes discover correct expressions, particularly for `k=3`. The tested
+GRPO configurations more consistently changed structural/compliance behavior
+than exact arithmetic success. The final sparse reward retained some successful
+groups but left most groups all-zero, and did not yield stable held-out greedy
+improvement.
+
+This does not establish that GRPO, RLVR, correctness-only reward, or the model
+generally fails for reasoning. It also does not prove that model capacity,
+exploration, optimization, or a single reward component is the unique
+bottleneck. The conclusions apply only to this model, Countdown distribution,
+verifier, rollout budget, LoRA/TRL GRPO/DAPO implementation, two seeds, and
+200-step budget.
+
+### Reproducibility and limitations
+
+- The frozen evaluation set contains 200 tasks; the paired uncertainty values
+  are descriptive and do not support population-level significance claims.
+- The historical shaped-run training datasets were not retained. Closure runs
+  regenerated same-seed data and recorded dataset SHA-256 values, but their
+  byte identity to historical shaped data is not verified.
+- The closure plan requested a contemporaneous Kaggle base rerun. The final
+  analysis instead uses the existing frozen base report (`9/200`); this is a
+  documented protocol deviation. It does not alter the nonpositive decision
+  because neither treatment reaches its historical shaped threshold.
+- Closure run configs record the model revision, package versions, hardware,
+  source hashes, and dataset hashes. They do not contain a Git commit/dirty
+  state or resolved tokenizer revision; those values are null.
+- The repository retains the closure run configs, reward diagnostics,
+  step-100 checkpoints, evaluation JSONs, and paired analysis. Full step-200
+  adapters, generated training JSONL files, and complete historical shaped
+  artifacts must remain archived externally with their recorded hashes if
+  exact reruns are required.
+
+### What carries forward
+
+Later work can reuse the task generator, strict verifier, prompt/evaluation
+stack, reward-preset interface, reproducibility metadata, rollout diagnostics,
+and paired-report analysis. Any curriculum redesign, reward search, SFT/RAFT
+intervention, larger model, altered rollout budget, or longer training is a new
+experimental program and is outside this completed milestone.

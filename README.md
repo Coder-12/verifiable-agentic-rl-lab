@@ -95,9 +95,10 @@ Before training any model, the project first ensures that the verifier is safe, 
 
 ---
 
-## Current Milestone 1 Status
+## Milestone 1 Status
 
-Milestone 1 has completed the baseline and first GRPO smoke-training loop.
+**Milestone 1: Countdown RLVR is closed.** Its final classification is
+**mixed/unstable, with a negative primary correctness result**.
 
 Official evaluation artifacts:
 
@@ -107,6 +108,8 @@ reports/eval_Qwen2.5-0.5B-Instruct_pass1_results.json
 reports/eval_Qwen2.5-0.5B-Instruct_best_of_4_results.json
 reports/eval_Qwen2.5-1.5B-Instruct_pass1_results.json
 reports/eval_Qwen2.5-1.5B-Instruct_best_of_8_results.json
+reports/countdown_milestone1_closure_plan.md
+reports/countdown_milestone1_closure_analysis.json
 ```
 
 Main `1.5B` baseline results on the frozen `data/countdown_eval_200.json` set:
@@ -116,23 +119,25 @@ Qwen/Qwen2.5-1.5B-Instruct greedy pass@1:     4.50%
 Qwen/Qwen2.5-1.5B-Instruct best-of-8:        23.00%
 ```
 
-Best GRPO smoke result so far:
+Historical shaped-GRPO smoke result:
 
 ```text
 Qwen2.5-1.5B GRPO standalone step200 pass@1: 5.50%
 ```
 
-Interpretation:
+Final interpretation:
 
 ```text
-best-of-8 shows nontrivial latent capability
-GRPO improves verifier compliance strongly
-standalone step200 improved pass@1 in 2/3 seeds but matched baseline in 1/3
-longer training with the same setup did not reliably improve pass@1
-k=5 examples remain unsolved and are the main next frontier
+best-of-8 shows nontrivial sampled latent capability
+shaped GRPO improved structural verifier compliance more reliably than exact correctness
+the balanced k=3/k=4 curriculum reached 4.00% greedy pass@1
+the predeclared two-seed correctness-only ablation reached 4.50% and 4.00%
+neither closure seed met its paired held-out correctness gate
+k=5 remained unsolved in the tested greedy GRPO evaluations
 ```
 
-The detailed research interpretation is maintained in:
+The detailed evidence, decision gates, limitations, and stopping rationale are
+maintained in:
 
 ```text
 reports/countdown_rlvr_week1.md

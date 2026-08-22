@@ -1,10 +1,24 @@
+from pathlib import Path
+
 from src.tasks.countdown.eval_utils import (
     analyze_expression,
     completion_ranking_key,
+    resolve_pass1_report_path,
     select_best_completion,
     summarize_seed_sweep,
     trim_generated_ids,
 )
+
+
+def test_resolve_report_path_preserves_legacy_default_and_accepts_unique_path():
+    assert resolve_pass1_report_path("Qwen/Qwen2.5-1.5B-Instruct", None) == Path(
+        "reports/eval_Qwen2.5-1.5B-Instruct_pass1_results.json"
+    )
+    assert resolve_pass1_report_path(
+        "Qwen/Qwen2.5-1.5B-Instruct", "reports/closure_base.json"
+    ) == Path(
+        "reports/closure_base.json"
+    )
 
 
 def test_trim_generated_ids_removes_left_padding_and_prompt_tokens():

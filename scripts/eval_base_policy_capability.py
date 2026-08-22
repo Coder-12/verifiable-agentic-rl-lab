@@ -468,7 +468,7 @@ def generated_token_metadata(
         metadata.append(
             {
                 "generated_token_count": len(visible_token_ids),
-                "hit_length_limit": len(token_ids) >= max_new_tokens,
+                "hit_length_limit": len(visible_token_ids) >= max_new_tokens,
             }
         )
     return metadata

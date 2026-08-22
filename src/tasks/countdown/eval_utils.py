@@ -1,6 +1,7 @@
 import ast
 import math
 from collections import Counter
+from pathlib import Path
 from typing import Any
 
 
@@ -90,6 +91,14 @@ def trim_generated_ids(
         generated_sequences.append(trimmed_sample[prompt_length:])
 
     return generated_sequences
+
+
+def resolve_pass1_report_path(model: str, requested_path: str | None) -> Path:
+    """Uses an explicit pass@1 report path while retaining the legacy default name."""
+    if requested_path is not None:
+        return Path(requested_path)
+    safe_model_name = model.split("/")[-1]
+    return Path("reports") / f"eval_{safe_model_name}_pass1_results.json"
 
 
 def completion_ranking_key(completion_result: dict[str, Any]) -> tuple[Any, ...]:

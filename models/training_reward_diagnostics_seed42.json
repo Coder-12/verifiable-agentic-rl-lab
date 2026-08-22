@@ -1,0 +1,50 @@
+{
+  "num_generations": 4,
+  "total_completions": 800,
+  "total_groups": 200,
+  "correct_rollout_count": 41,
+  "correct_rollout_rate": 0.05125,
+  "successful_variance_group_count": 26,
+  "successful_variance_group_rate": 0.13,
+  "zero_variance_group_count": 174,
+  "zero_variance_group_rate": 0.87,
+  "all_zero_group_count": 173,
+  "all_zero_group_rate": 0.865,
+  "status_counts": {
+    "format_error": 73,
+    "wrong_numbers": 433,
+    "wrong_value": 241,
+    "parse_error": 7,
+    "correct": 41,
+    "unsafe_expression": 5
+  },
+  "status_counts_by_k": {
+    "3": {
+      "wrong_value": 154,
+      "format_error": 14,
+      "wrong_numbers": 137,
+      "correct": 39,
+      "parse_error": 1,
+      "unsafe_expression": 3
+    },
+    "4": {
+      "wrong_numbers": 130,
+      "format_error": 19,
+      "wrong_value": 66,
+      "parse_error": 2,
+      "correct": 2,
+      "unsafe_expression": 1
+    },
+    "5": {
+      "format_error": 40,
+      "wrong_numbers": 166,
+      "wrong_value": 21,
+      "parse_error": 4,
+      "unsafe_expression": 1
+    }
+  },
+  "reward_counts": {
+    "0.0": 759,
+    "1.0": 41
+  }
+}
