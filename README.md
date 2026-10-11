@@ -282,28 +282,13 @@ mappings.
 verifiable-agentic-rl-lab/
   pyproject.toml
   README.md
-
-  src/
-    tasks/
-      countdown/
-        verifier.py
-        reward.py
-        dataset.py
-        prompts.py
-
-  tests/
-    test_countdown_verifier.py
-    test_countdown_reward.py
-
-  scripts/
-    generate_countdown_dataset.py
-    eval_base_model.py
-    eval_best_of_n.py
-    train_grpo_countdown.py
-    eval_grpo_model.py
-
-  reports/
-    countdown_rlvr_week1.md
+  data/        frozen Countdown eval sets
+  models/      run configs and training reward diagnostics (no weights)
+  reports/     evaluation results and the Milestone 1 closure protocol/analysis
+  scripts/     dataset generation, base / best-of-N / GRPO evaluation,
+               base-policy capability audit, GRPO training, closure analysis
+  src/tasks/countdown/   verifier, reward, dataset, prompts, eval utilities
+  tests/       verifier, reward, dataset, prompts, eval and training-script tests
 ```
 
 ---
@@ -758,29 +743,25 @@ The project follows these principles:
 
 ## Status
 
-Current status:
-
 ```text
-Countdown verifier implemented and tested.
-Baseline pass@1 and best-of-N evaluation implemented.
-Phase A-C baseline report completed.
-Phase D GRPO smoke training completed.
-Best current GRPO smoke checkpoint: standalone step200.
+Milestone 1 (Countdown RLVR): closed, mixed/unstable with a negative primary correctness result.
+Verifier, reward, dataset generator, base/best-of-N/GRPO evaluation and closure analysis: implemented and tested.
+Next: Milestone 2 (GSM8K-mini) and Milestone 3 (code execution rewards). Not yet started in this repository.
 ```
 
-Immediate next research direction:
+Findings carried forward into the next milestones:
 
 ```text
-do not simply train longer with the same setup
-improve the wrong_value arithmetic failure mode
-consider curriculum or reward changes focused on valid-number arithmetic
-preserve frozen evaluation comparability
+best-of-N (23.0%) far exceeds greedy pass@1 (4.5%), so latent capability exists but is not being converted by this GRPO setup
+shaped rewards raised structural compliance more than exact correctness
+any new reward shaping is tested against a pre-declared protocol and frozen held-out set
 ```
 
-For the current evidence trail and decision logic, read:
+For the full evidence trail and decision logic, read:
 
 ```text
 reports/countdown_rlvr_week1.md
+reports/countdown_milestone1_closure_plan.md
 ```
 
 ---
