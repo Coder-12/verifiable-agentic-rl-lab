@@ -91,10 +91,16 @@ Evaluate the original 1.5B policy on the frozen set:
 python scripts/eval_base_model.py \
   --model Qwen/Qwen2.5-1.5B-Instruct \
   --dataset data/countdown_eval_200.json \
-  --batch-size 1
+  --batch-size 1 \
+  --max-new-tokens 256 \
+  --report-path reports/local_Qwen2.5-1.5B-Instruct_pass1_results.json
 ```
 
 Sample eight completions per task with verifier-based selection:
+
+Run this example in a disposable checkout or preserve the existing report
+first: the script writes to the fixed path
+`reports/eval_Qwen2.5-1.5B-Instruct_best_of_8_results.json`, replacing that file.
 
 ```bash
 python scripts/eval_best_of_n.py \
