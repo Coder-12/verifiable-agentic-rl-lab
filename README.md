@@ -1,6 +1,6 @@
 # Verifiable Agentic RL Lab
 
-**Reproducible, compute-conscious research engineering for verifiable language-model post-training.** This repository starts with controlled symbolic reasoning, then outlines a path toward execution-verified code repair and tool-using agents.
+**Research engineering for verifiable reasoning, reliable feedback, and agent post-training.** The implemented Countdown study examines what a small language model can learn from exact rewards; the broader roadmap targets execution-verified coding and interactive agent environments.
 
 > **Current evidence:** Countdown RLVR Milestone 1 is **closed**. The training and verification pipeline was exercised end to end, but the final controlled experiments **did not establish a reliable improvement in held-out exact correctness**. Subsequent milestones are research directions, not implemented results.
 
@@ -16,7 +16,7 @@
 
 **Core principle:** an increase in training reward, output validity, or test-suite pass rate is not automatically an increase in task-solving ability. Claims are determined by controlled, independent evaluation.
 
-## Milestone 1 — Countdown RLVR (closed)
+## Milestone 1 — Verifiable Symbolic Reasoning & RLVR (closed)
 
 **Task.** Given a set of integers and a target, generate an arithmetic expression that uses each provided number exactly once and evaluates to the target. The verifier uses a restricted AST interpreter with `fractions.Fraction`; it does not execute model output with raw `eval`.
 
@@ -115,23 +115,23 @@ For training commands, pinned model revisions, historical package versions, seed
 
 The main held-out sample contains 200 tasks. The final correctness-only closure used two predeclared seeds; historical shaped-run datasets were not all retained, and a contemporaneous base rerun specified in the closure plan was not completed. These caveats are documented, not silently resolved. Model checkpoints and large run artifacts may be held outside Git, with recorded identities where available.
 
-## Research roadmap
+## Research roadmap — completed work and future directions
 
-The original numbered roadmap is preserved below. **Status distinguishes verified implementation from future intentions.** The order is adaptive: follow-up work is selected by feasibility, research value, and evidence rather than completing milestones mechanically.
+The original seven-stage structure remains, with titles standardized around research capabilities rather than individual benchmarks or training algorithms. **Only Milestone 1 has verified results in this repository.** Future stages are directions, not claims of implemented systems, and execution order is determined by evidence and feasibility.
 
-| Original milestone | Focus | Status |
+| Stage | Research focus | Status |
 | --- | --- | --- |
-| **1. Countdown RLVR** | Exact symbolic verifier, sampling, LoRA GRPO, controlled closure | **Closed — negative primary correctness result** |
-| **2. GSM8K-mini RLVR** | Natural-language mathematical reasoning with verifiable answers | **Deferred; not implemented** |
-| **3. Code RL with unit tests** | Executable correctness feedback for code repair | **Prioritized as a separate project; initial feasibility gate** |
-| **4. Tool-use SFT / RL** | Learning from constrained tool-call trajectories | Proposed |
-| **5. Agentic RAG RL** | Evidence-grounded answers, citation and retrieval feedback | Proposed |
-| **6. Mini SWE Agent RL** | Longer-horizon repository interaction and repair | Proposed |
-| **7. Process rewards and agentic verifiers** | Intermediate-action verification and credit assignment | Proposed |
+| **1. Verifiable Symbolic Reasoning & RLVR** | Exact arithmetic verification, rollout analysis, controlled LoRA GRPO evaluation | **Closed — negative primary correctness result** |
+| **2. Outcome-Verified Mathematical Reasoning** | Natural-language mathematical reasoning and exact outcome evaluation | Deferred; not implemented |
+| **3. Execution-Verified Code Repair & Agent Training** | Real Python defects, isolated execution, independent tests, SFT and conditional RL | **Prioritized as a separate project; feasibility stage** |
+| **4. Tool-Use Policy Learning & Trajectory Evaluation** | Constrained tool interaction, behavioral adaptation, trajectory evaluation | Proposed |
+| **5. Evidence-Grounded Retrieval Agent Training** | Retrieval actions, evidence sufficiency, citation and answer verification | Proposed |
+| **6. Long-Horizon Repository Repair Agents** | Multi-step, repository-level debugging and repair beyond bounded patch tasks | Proposed |
+| **7. Process-Level Credit Assignment & Agentic Verification** | Intermediate feedback, reliable verifiers, and long-horizon attribution | Proposed |
 
-### Next focused workstream: Execution-Verified Code Repair & Agent Training
+### Prioritized next project — Execution-Verified Code Repair & Agent Training
 
-The separately scoped next project brings forward **the intent of original Milestone 3**, without claiming that this repository already supports real-repository execution or agent training.
+This separately scoped project advances **the intent of original Milestone 3** without claiming that this repository already supports real-repository execution or agent training.
 
 Its planned progression is:
 
@@ -144,7 +144,7 @@ Authentic reproducible Python bugs
 → held-out functional repair evaluation + reproducible report
 ```
 
-This is an **engineering and research plan, not a performance claim**. The initial gate is to validate real bug sources, reference repairs, test quality, environment costs, and execution security. Any code-execution harness belongs in a separately validated implementation repository; it will be linked here once it exists and is ready for review. The full Mini SWE Agent RL milestone remains a later, more autonomous objective.
+This is an **engineering and research plan, not a performance claim**. The initial gate is to validate real bug sources, reference repairs, test quality, environment costs, and execution security. Any code-execution harness belongs in a separately validated implementation repository; it will be linked here once it exists and is ready for review. The long-horizon repository repair milestone (Stage 6) remains a later, more autonomous objective.
 
 ## Research and safety standards
 
