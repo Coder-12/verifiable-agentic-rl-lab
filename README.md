@@ -1,5 +1,28 @@
 # Verifiable Agentic RL Lab
 
+An end-to-end Countdown RLVR study using **Qwen2.5-1.5B-Instruct, LoRA, and
+TRL GRPO with DAPO loss**, evaluated on a frozen 200-task held-out set.
+
+- **Exact verification:** a safe AST-based symbolic verifier checks number
+  usage and target equality using rational arithmetic.
+- **Measured sampled capability:** the untouched base model solved **46/200
+  tasks with verifier-selected best-of-8 (23.0%) versus 9/200 with greedy
+  decoding (4.5%)** on the same frozen set. Best-of-8 uses eight sampled
+  attempts per task and is an inference-time result.
+- **Controlled training experiments:** shaped rewards, a balanced `k=3/k=4`
+  curriculum, rollout-signal diagnostics, and a correctness-only ablation with
+  two predeclared seeds and fixed decision gates.
+- **Documented outcome:** the final treatment achieved **4.5% and 4.0% greedy
+  pass@1**, establishing no reliable correctness improvement. Milestone 1
+  closed as **mixed/unstable, with a negative primary correctness result**.
+
+See the [experimental record](reports/countdown_rlvr_week1.md),
+[frozen closure protocol](reports/countdown_milestone1_closure_plan.md), and
+[paired task analysis](reports/countdown_milestone1_closure_analysis.json)
+for configurations, raw evidence, limitations, and the stopping decision.
+
+## Broader Project Scope
+
 A small-budget research-engineering project for studying **verifiable RL fine-tuning** of language models, starting from simple exact-reward reasoning tasks and gradually scaling toward code, tool-use, RAG agents, and mini software-engineering agents.
 
 The goal is to build the same core loop used in modern LLM post-training research:
@@ -15,7 +38,10 @@ policy model
 → improve verifier, reward, data, and environment
 ```
 
-This project starts with a controlled **Countdown arithmetic RLVR** setup because it has an exact symbolic verifier, low compute requirements, and clear failure modes. The same framework will later extend to natural-language math, code execution rewards, tool-use agents, agentic RAG, and mini SWE-style tasks.
+The completed study uses **Countdown arithmetic RLVR**, with an exact symbolic
+verifier and a small training budget. Natural-language math, code execution,
+tool use, and agentic tasks are proposed later milestones; their implementation
+and results are outside the completed study.
 
 ---
 
@@ -68,15 +94,15 @@ The project gradually investigates:
 
 ---
 
-## Current Milestone
+## Completed Milestone
 
-The current milestone is:
+The completed milestone is:
 
 ```text
 Milestone 1: Countdown RLVR Foundation
 ```
 
-This milestone builds the smallest complete verifiable RLFT loop:
+This milestone implements the following verifiable training and evaluation loop:
 
 ```text
 Countdown task
@@ -89,9 +115,9 @@ Countdown task
 → failure analysis
 ```
 
-The first implementation step is the **Countdown verifier**.
-
-Before training any model, the project first ensures that the verifier is safe, strict, and well-tested. In RLVR, the verifier is the reward oracle. A weak verifier produces fake progress.
+The **Countdown verifier** is the correctness authority throughout evaluation
+and training. It uses restricted AST evaluation and exact rational arithmetic;
+generated answers must satisfy both number-use constraints and target equality.
 
 ---
 
@@ -112,36 +138,26 @@ reports/countdown_milestone1_closure_plan.md
 reports/countdown_milestone1_closure_analysis.json
 ```
 
-Main `1.5B` baseline results on the frozen `data/countdown_eval_200.json` set:
+Results on the frozen `data/countdown_eval_200.json` set:
 
-```text
-Qwen/Qwen2.5-1.5B-Instruct greedy pass@1:     4.50%
-Qwen/Qwen2.5-1.5B-Instruct best-of-8:        23.00%
-```
+| Evaluation | Correct tasks | Success rate | Interpretation |
+| --- | ---: | ---: | --- |
+| Untouched base, greedy | 9 | 4.5% | Single-output reference |
+| Untouched base, verifier-selected best-of-8 | 46 | 23.0% | Eight sampled attempts per task |
+| Shaped GRPO, 200 steps, seeds 42 / 123 / 777 | 11 / 11 / 9 | 5.5% / 5.5% / 4.5% | Exploratory gains did not hold across all seeds |
+| Balanced `k=3/k=4` GRPO, 200 steps, seed 42 | 8 | 4.0% | Curriculum treatment did not improve correctness |
+| Correctness-only GRPO, 200 steps, seeds 42 / 777 | 9 / 8 | 4.5% / 4.0% | Neither seed met the predeclared paired-success gate |
 
-Historical shaped-GRPO smoke result:
+The study measures a gap between capability recoverable by sampling and
+capability this training setup reliably converts into greedy accuracy. The
+200-task set and two closure seeds support a bounded conclusion. Historical
+training-data identity could not be verified, and the planned contemporaneous
+Kaggle base rerun was skipped; the report records these reproducibility limits.
 
-```text
-Qwen2.5-1.5B GRPO standalone step200 pass@1: 5.50%
-```
-
-Final interpretation:
-
-```text
-best-of-8 shows nontrivial sampled latent capability
-shaped GRPO improved structural verifier compliance more reliably than exact correctness
-the balanced k=3/k=4 curriculum reached 4.00% greedy pass@1
-the predeclared two-seed correctness-only ablation reached 4.50% and 4.00%
-neither closure seed met its paired held-out correctness gate
-k=5 remained unsolved in the tested greedy GRPO evaluations
-```
-
-The detailed evidence, decision gates, limitations, and stopping rationale are
-maintained in:
-
-```text
-reports/countdown_rlvr_week1.md
-```
+Shaped training improved structural compliance more consistently than exact
+correctness. `k=5` remained unsolved in the tested greedy GRPO evaluations. The
+[experimental record](reports/countdown_rlvr_week1.md) contains per-difficulty
+results, rollout diagnostics, and the stopping rationale.
 
 ---
 
@@ -186,7 +202,9 @@ Allowed operators:
 ()
 ```
 
-The first version expects clean expression strings. Handling messy model outputs such as `"The answer is ..."` will be added during model evaluation.
+Model completions use `<reasoning>` and `<answer>` tags. The evaluation path
+extracts the answer expression before applying the strict verifier and records
+format, syntax, number-use, and arithmetic failures separately.
 
 ---
 
@@ -255,8 +273,7 @@ This is valid because two separate `2`s are provided and two `2`s are used.
 
 ## Reward Design
 
-The current Countdown reward function is intentionally strict but shaped enough
-to avoid treating different failure modes as equally useful:
+The default `shaped` preset assigns different rewards to verifier outcomes:
 
 ```text
 1.0 = correct expression
@@ -267,8 +284,15 @@ to avoid treating different failure modes as equally useful:
 
 The earlier Phase A-C baseline used a simpler dense reward where wrong value
 and wrong number usage both received `0.2`. During Phase D, that mapping was
-changed after smoke training showed that rewarding wrong number usage too much
-encouraged partial compliance without improving exact task success.
+changed after smoke training improved structural compliance without improving
+exact task success. This observation motivated the change; it did not isolate
+the original reward mapping as the cause.
+
+The final `correctness_only` training preset gives `1.0` for correct expressions
+and `0.0` for every incorrect outcome. It removes all partial credit and tests
+that ablation, rather than isolating the wrong-value reward alone. Evaluation
+reports retain shaped reward as a diagnostic; verifier correctness remains the
+primary outcome.
 
 `pass@1` and verifier status counts remain comparable across reports. Mean
 reward should not be compared directly across runs that use different reward
@@ -339,17 +363,17 @@ mypy src
 
 ---
 
-## Initial Implementation Plan
+## Implemented Components
 
 ### Step 1: Countdown Verifier
 
-Implement:
+Implementation:
 
 ```text
 src/tasks/countdown/verifier.py
 ```
 
-This file should provide:
+This file provides:
 
 ```text
 VerificationResult
@@ -375,24 +399,25 @@ division_by_zero
 
 ### Step 2: Countdown Reward
 
-Implement:
+Implementation:
 
 ```text
 src/tasks/countdown/reward.py
 ```
 
-This file should convert verifier results into scalar rewards.
+This file converts verifier results into scalar rewards and exposes named
+shaped and correctness-only presets.
 
 ### Step 3: Unit Tests
 
-Implement:
+Implementation:
 
 ```text
 tests/test_countdown_verifier.py
 tests/test_countdown_reward.py
 ```
 
-Tests should cover:
+Tests cover:
 
 ```text
 correct expression
@@ -410,7 +435,7 @@ reward mapping
 
 ### Step 4: Baseline Evaluation
 
-After the verifier is tested, add scripts to evaluate a base model:
+Base-model evaluation scripts:
 
 ```text
 scripts/eval_base_model.py
@@ -430,16 +455,14 @@ failure categories
 
 ### Step 5: GRPO Smoke Training
 
-After baseline evaluation works, run a small GRPO training experiment.
+Completed GRPO runs validated the training loop and tested held-out correctness,
+structural behavior, reward treatments, and seed/checkpoint stability.
 
-The first training objective is not to achieve state-of-the-art performance. It is to verify that the full RLFT loop runs correctly.
-
-Questions to answer:
+Diagnostics examined during the experiments:
 
 ```text
 Does reward increase during training?
 Does held-out pass@1 improve?
-Does best-of-N still outperform the trained policy?
 Does the model learn invalid shortcuts?
 Does output length inflate?
 Does train reward diverge from eval reward?
@@ -451,7 +474,7 @@ Does train reward diverge from eval reward?
 
 This project prioritizes honest evaluation over headline numbers.
 
-Every milestone should compare:
+Future studies may extend the comparisons with:
 
 ```text
 base model
@@ -482,11 +505,12 @@ A run where reward increases but held-out accuracy does not improve is still use
 
 ---
 
-## Baseline Methods Covered
+## Implemented and Proposed Comparison Methods
 
-This project evaluates reinforcement learning against progressively stronger non-RL baselines. Online RLFT is introduced only after those baselines are established, and its gains are measured relative to them.
-
-The main baseline methods are:
+Milestone 1 implemented untouched-base greedy evaluation, verifier-selected
+best-of-N, and GRPO trained-model greedy evaluation. RAFT, DPO, and trained-model
+best-of-N below are proposed comparisons for future studies, with no completed
+results claimed here.
 
 ### Base Model Evaluation
 
@@ -510,7 +534,7 @@ measure whether the model already has latent capability that can be extracted th
 
 This is an important baseline before RLFT because if best-of-N works well, the model may already know how to solve the task sometimes.
 
-### Reward-Ranked Fine-Tuning / RAFT
+### Reward-Ranked Fine-Tuning / RAFT (Proposed)
 
 Sample multiple outputs, score them with a verifier or reward function, keep the best outputs, and fine-tune on those selected outputs.
 
@@ -520,7 +544,7 @@ Purpose:
 learn from high-reward trajectories without running online RL
 ```
 
-### Direct Preference Optimization / DPO
+### Direct Preference Optimization / DPO (Proposed)
 
 Use chosen and rejected outputs to train the model with a preference objective.
 
@@ -540,7 +564,7 @@ Purpose:
 train the policy directly from verifiable rewards
 ```
 
-### RLFT + Best-of-N
+### RLFT + Best-of-N (Proposed)
 
 Evaluate whether the RL-trained model also benefits from verifier-based test-time sampling.
 
@@ -564,7 +588,8 @@ base model
 
 ## Foundation to Frontier Roadmap
 
-This project follows a staged roadmap.
+Milestone 1 is complete. Milestones 2-7 describe proposed directions rather than
+implemented systems or committed experiments.
 
 ### Milestone 1: Countdown RLVR
 
@@ -743,26 +768,19 @@ The project follows these principles:
 
 ## Status
 
-```text
-Milestone 1 (Countdown RLVR): closed, mixed/unstable with a negative primary correctness result.
-Verifier, reward, dataset generator, base/best-of-N/GRPO evaluation and closure analysis: implemented and tested.
-Next: Milestone 2 (GSM8K-mini) and Milestone 3 (code execution rewards). Not yet started in this repository.
-```
+Milestone 1 is closed as **mixed/unstable, with a negative primary correctness
+result**. Both predeclared closure runs and their diagnostic checkpoints have
+been evaluated. The frozen protocol's stopping conditions have been met.
 
-Findings carried forward into the next milestones:
+Further training interventions would be a separate study. See the
+[canonical experimental record](reports/countdown_rlvr_week1.md) for the evidence
+and [closure protocol](reports/countdown_milestone1_closure_plan.md) for the
+predeclared gates and post-execution annotation.
 
-```text
-best-of-N (23.0%) far exceeds greedy pass@1 (4.5%), so latent capability exists but is not being converted by this GRPO setup
-shaped rewards raised structural compliance more than exact correctness
-any new reward shaping is tested against a pre-declared protocol and frozen held-out set
-```
-
-For the full evidence trail and decision logic, read:
-
-```text
-reports/countdown_rlvr_week1.md
-reports/countdown_milestone1_closure_plan.md
-```
+The verifier, dataset generator, reward presets, evaluation scripts, GRPO
+training, and closure analysis are implemented. Milestone 2 (GSM8K-mini) and
+Milestone 3 (code execution rewards) remain proposed and have not started in
+this repository.
 
 ---
 
